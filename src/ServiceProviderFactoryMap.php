@@ -57,7 +57,7 @@ final class ServiceProviderFactoryMap implements FactoryMapInterface
         catch (\InvalidArgumentException $e) {
             throw new \UnexpectedValueException(
                 (string) new ArrayReturnTypeErrorMessage(
-                    sprintf('function %s::getFactories()', get_class($provider)),
+                    sprintf('%s::getFactories()', get_class($provider)),
                     'callable',
                     $factories
                 )
@@ -82,7 +82,7 @@ final class ServiceProviderFactoryMap implements FactoryMapInterface
         catch (\InvalidArgumentException $e) {
             throw new \UnexpectedValueException(
                 (string) new ArrayReturnTypeErrorMessage(
-                    sprintf('function %s::getExtensions()', get_class($provider)),
+                    sprintf('%s::getExtensions()', get_class($provider)),
                     'callable',
                     $extensions
                 )

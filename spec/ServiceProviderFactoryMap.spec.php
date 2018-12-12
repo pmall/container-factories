@@ -191,7 +191,7 @@ describe('ServiceProviderFactoryMap', function () {
                         expect([$this->map, 'factories'])->toThrow(
                             new UnexpectedValueException(
                                 (string) new ArrayReturnTypeErrorMessage(
-                                    sprintf('function %s::getExtensions()', get_class($this->provider2->get())),
+                                    sprintf('%s::getExtensions()', get_class($this->provider2->get())),
                                     'callable',
                                     $invalid
                                 )
@@ -231,7 +231,7 @@ describe('ServiceProviderFactoryMap', function () {
                     expect([$this->map, 'factories'])->toThrow(
                         new UnexpectedValueException(
                             (string) new ArrayReturnTypeErrorMessage(
-                                sprintf('function %s::getFactories()', get_class($this->provider2->get())),
+                                sprintf('%s::getFactories()', get_class($this->provider2->get())),
                                 'callable',
                                 $invalid
                             )
