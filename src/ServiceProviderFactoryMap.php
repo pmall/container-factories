@@ -4,6 +4,7 @@ namespace Quanta\Container;
 
 use Interop\Container\ServiceProviderInterface;
 
+use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
 
 final class ServiceProviderFactoryMap implements FactoryMapInterface
@@ -51,6 +52,16 @@ final class ServiceProviderFactoryMap implements FactoryMapInterface
     {
         $factories = $provider->getFactories();
 
+        if (! is_array($factories)) {
+            throw new \UnexpectedValueException(
+                (string) new ReturnTypeErrorMessage(
+                    sprintf('%s::getFactories()', get_class($provider)),
+                    'array',
+                    $factories
+                )
+            );
+        }
+
         try {
             return new FactoryMap($factories);
         }
@@ -75,6 +86,16 @@ final class ServiceProviderFactoryMap implements FactoryMapInterface
     private function extensionMap(ServiceProviderInterface $provider): FactoryMap
     {
         $extensions = $provider->getExtensions();
+
+        if (! is_array($extensions)) {
+            throw new \UnexpectedValueException(
+                (string) new ReturnTypeErrorMessage(
+                    sprintf('%s::getExtensions()', get_class($provider)),
+                    'array',
+                    $extensions
+                )
+            );
+        }
 
         try {
             return new FactoryMap($extensions);
