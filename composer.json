@@ -1,5 +1,5 @@
 {
-    "name": "quanta/container-service-providers",
+    "name": "quanta/container-configuration",
     "type": "library",
     "description": "Library for creating quanta Psr-11 container factory maps from service providers",
     "keywords": [
@@ -9,10 +9,10 @@
         "service-provider"
     ],
     "license": "MIT",
-    "homepage": "https://github.com/quanta/container-service-providers",
+    "homepage": "https://github.com/quanta/container-configuration",
     "support": {
-        "issues": "https://github.com/quanta/container-service-providers/issues",
-        "source": "https://github.com/quanta/container-service-providers"
+        "issues": "https://github.com/quanta/container-configuration/issues",
+        "source": "https://github.com/quanta/container-configuration"
     },
     "authors": [
         {

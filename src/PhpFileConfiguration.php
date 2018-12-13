@@ -6,7 +6,7 @@ use Quanta\Exceptions\ArrayTypeCheckTrait;
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
 
-final class PhpFileConfiguration implements ServiceProviderCollectionInterface
+final class PhpFileConfiguration implements ConfigurationInterface
 {
     use ArrayTypeCheckTrait;
 

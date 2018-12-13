@@ -7,23 +7,23 @@ use Interop\Container\ServiceProviderInterface;
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
 
-final class ServiceProviderFactoryMap implements FactoryMapInterface
+final class ConfigurationFactoryMap implements FactoryMapInterface
 {
     /**
-     * Service providers to merge as a factory map.
+     * The configurations.
      *
-     * @var \Interop\Container\ServiceProviderInterface[]
+     * @var \Quanta\Container\ConfigurationInterface[]
      */
-    private $providers;
+    private $configurations;
 
     /**
      * Constructor.
      *
-     * @param \Interop\Container\ServiceProviderInterface ...$providers
+     * @param \Quanta\Container\ConfigurationInterface ...$configurations
      */
-    public function __construct(ServiceProviderInterface ...$providers)
+    public function __construct(ConfigurationInterface ...$configurations)
     {
-        $this->providers = $providers;
+        $this->configurations = $configurations;
     }
 
     /**
@@ -31,14 +31,28 @@ final class ServiceProviderFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
+        $providers = array_map([$this, 'providers'], $this->configurations);
+        $providers = array_merge([], ...$providers);
+
         $map = new ExtendedFactoryMap(
             new MergedFactoryMap(
-                ...array_map([$this, 'factoryMap'], $this->providers)
+                ...array_map([$this, 'factoryMap'], $providers)
             ),
-            ...array_map([$this, 'extensionMap'], $this->providers)
+            ...array_map([$this, 'extensionMap'], $providers)
         );
 
         return $map->factories();
+    }
+
+    /**
+     * Return the service providers provided by the given collection.
+     *
+     * @param \Quanta\Container\ConfigurationInterface $configuration
+     * @return \Interop\Container\ServiceProviderInterface[]
+     */
+    private function providers(ConfigurationInterface $configuration): array
+    {
+        return $configuration->providers();
     }
 
     /**
@@ -110,5 +124,4 @@ final class ServiceProviderFactoryMap implements FactoryMapInterface
             );
         }
     }
-
 }

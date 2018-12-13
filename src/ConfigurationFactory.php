@@ -10,9 +10,9 @@ final class ConfigurationFactory
      * Return a php file configuration from the given glob patterns.
      *
      * @param string ...$patterns
-     * @return \Quanta\Container\ServiceProviderCollectionInterface
+     * @return \Quanta\Container\ConfigurationInterface
      */
-    public function files(string ...$patterns): ServiceProviderCollectionInterface
+    public function files(string ...$patterns): ConfigurationInterface
     {
         return new PhpFileConfiguration(...$patterns);
     }
@@ -23,12 +23,12 @@ final class ConfigurationFactory
      *
      * @param string $path
      * @param string ...$xs
-     * @return \Quanta\Container\ServiceProviderCollectionInterface
+     * @return \Quanta\Container\ConfigurationInterface
      */
-    public function vendor(string $path, string ...$xs): ServiceProviderCollectionInterface
+    public function vendor(string $path, string ...$xs): ConfigurationInterface
     {
         $collection = new VendorDirectory($path);
 
-        return new ServiceProviderCollection($collection, ...$xs);
+        return new ClassNameCollectionConfiguration($collection, ...$xs);
     }
 }

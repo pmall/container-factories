@@ -2,7 +2,7 @@
 
 namespace Quanta\Container;
 
-interface ServiceProviderCollectionInterface
+interface ConfigurationInterface
 {
     /**
      * Return an array of ServiceProviderInterface implementations.

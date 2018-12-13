@@ -6,7 +6,7 @@ use Interop\Container\ServiceProviderInterface;
 
 use Quanta\Utils\ClassNameCollectionInterface;
 
-final class ServiceProviderCollection implements ServiceProviderCollectionInterface
+final class ClassNameCollectionConfiguration implements ConfigurationInterface
 {
     /**
      * The class name collection.

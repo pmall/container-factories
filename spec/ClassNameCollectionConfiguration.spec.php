@@ -2,15 +2,15 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\ServiceProviderCollection;
-use Quanta\Container\ServiceProviderCollectionInterface;
+use Quanta\Container\ConfigurationInterface;
+use Quanta\Container\ClassNameCollectionConfiguration;
 
 use Quanta\Utils\ClassNameCollectionInterface;
 
 require_once __DIR__ . '/test/namespace1.php';
 require_once __DIR__ . '/test/namespace2.php';
 
-describe('ServiceProviderCollection', function () {
+describe('ClassNameCollectionConfiguration', function () {
 
     beforeEach(function () {
 
@@ -33,11 +33,11 @@ describe('ServiceProviderCollection', function () {
 
     });
 
-    it('should implement ServiceProviderCollectionInterface', function () {
+    it('should implement ConfigurationInterface', function () {
 
-        $test = new ServiceProviderCollection($this->collection->get());
+        $test = new ClassNameCollectionConfiguration($this->collection->get());
 
-        expect($test)->toBeAnInstanceOf(ServiceProviderCollectionInterface::class);
+        expect($test)->toBeAnInstanceOf(ConfigurationInterface::class);
 
     });
 
@@ -47,7 +47,7 @@ describe('ServiceProviderCollection', function () {
 
             it('should return an array of all implementations of ServiceProviderInterface provided by the collection', function () {
 
-                $configuration = new ServiceProviderCollection($this->collection->get());
+                $configuration = new ClassNameCollectionConfiguration($this->collection->get());
 
                 $test = $configuration->providers();
 
@@ -70,7 +70,7 @@ describe('ServiceProviderCollection', function () {
 
                 it('should return an array of all implementations of ServiceProviderInterface provided by the collection and matching the pattern', function () {
 
-                    $configuration = new ServiceProviderCollection(...[
+                    $configuration = new ClassNameCollectionConfiguration(...[
                         $this->collection->get(),
                         '/^Test1.+?[1-2]$/'
                     ]);
@@ -90,7 +90,7 @@ describe('ServiceProviderCollection', function () {
 
                 it('should return an array of all implementations of ServiceProviderInterface provided by the collection, matching the pattern and not matching any blackist pattern', function () {
 
-                    $configuration = new ServiceProviderCollection(...[
+                    $configuration = new ClassNameCollectionConfiguration(...[
                         $this->collection->get(),
                         '/^Test1/',
                         'Test1\\*1',
