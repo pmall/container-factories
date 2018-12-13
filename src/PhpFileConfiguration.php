@@ -34,7 +34,7 @@ final class PhpFileConfiguration implements ServiceProviderCollectionInterface
     {
         $providers = [];
 
-        foreach ($this->patterns as $patterns) {
+        foreach ($this->patterns as $pattern) {
             foreach (glob($pattern) as $path) {
                 $configuration = require $path;
 
