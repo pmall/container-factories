@@ -2,10 +2,23 @@
 
 namespace Quanta\Container;
 
+use Interop\Container\ServiceProviderInterface;
+
 use Quanta\Utils\VendorDirectory;
 
 final class ConfigurationFactory
 {
+    /**
+     * Return a configuration from the given service providers.
+     *
+     * @param \Interop\Container\ServiceProviderInterface ...$providers
+     * @return \Quanta\Container\ConfigurationInterface
+     */
+    public function create(ServiceProviderInterface ...$providers): ConfigurationInterface
+    {
+        return new Configuration(...$providers);
+    }
+
     /**
      * Return a php file configuration from the given glob patterns.
      *

@@ -1,6 +1,11 @@
 <?php
 
+use function Eloquent\Phony\Kahlan\mock;
+
+use Interop\container\ServiceProviderInterface;
+
 use Quanta\Utils\VendorDirectory;
+use Quanta\Container\Configuration;
 use Quanta\Container\ConfigurationFactory;
 use Quanta\Container\PhpFileConfiguration;
 use Quanta\Container\ClassNameCollectionConfiguration;
@@ -10,6 +15,24 @@ describe('ConfigurationFactory', function () {
     beforeEach(function () {
 
         $this->factory = new ConfigurationFactory;
+
+    });
+
+    describe('->create()',function () {
+
+        it('should return a new Configuration using the given service providers', function () {
+
+            $providers = [
+                mock(ServiceProviderInterface::class)->get(),
+                mock(ServiceProviderInterface::class)->get(),
+                mock(ServiceProviderInterface::class)->get(),
+            ];
+
+            $test = $this->factory->create(...$providers);
+
+            expect($test)->toEqual(new Configuration(...$providers));
+
+        });
 
     });
 
