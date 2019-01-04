@@ -69,9 +69,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
         if (! is_array($factories)) {
             throw new \UnexpectedValueException(
                 (string) new ReturnTypeErrorMessage(
-                    sprintf('%s::getFactories()', get_class($provider)),
-                    'array',
-                    $factories
+                    sprintf('%s::getFactories()', get_class($provider)), 'array', $factories
                 )
             );
         }
@@ -79,12 +77,11 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
         try {
             return new FactoryMap($factories);
         }
+
         catch (\InvalidArgumentException $e) {
             throw new \UnexpectedValueException(
                 (string) new ArrayReturnTypeErrorMessage(
-                    sprintf('%s::getFactories()', get_class($provider)),
-                    'callable',
-                    $factories
+                    sprintf('%s::getFactories()', get_class($provider)), 'callable', $factories
                 )
             );
         }
@@ -104,9 +101,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
         if (! is_array($extensions)) {
             throw new \UnexpectedValueException(
                 (string) new ReturnTypeErrorMessage(
-                    sprintf('%s::getExtensions()', get_class($provider)),
-                    'array',
-                    $extensions
+                    sprintf('%s::getExtensions()', get_class($provider)), 'array', $extensions
                 )
             );
         }
@@ -114,12 +109,11 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
         try {
             return new FactoryMap($extensions);
         }
+
         catch (\InvalidArgumentException $e) {
             throw new \UnexpectedValueException(
                 (string) new ArrayReturnTypeErrorMessage(
-                    sprintf('%s::getExtensions()', get_class($provider)),
-                    'callable',
-                    $extensions
+                    sprintf('%s::getExtensions()', get_class($provider)), 'callable', $extensions
                 )
             );
         }

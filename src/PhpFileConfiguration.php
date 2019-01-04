@@ -2,14 +2,12 @@
 
 namespace Quanta\Container;
 
-use Quanta\Exceptions\ArrayTypeCheckTrait;
+use function Quanta\Exceptions\areAllTypedAs;
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
 
 final class PhpFileConfiguration implements ConfigurationInterface
 {
-    use ArrayTypeCheckTrait;
-
     /**
      * Glob patterns matching files returning array of factories.
      *
@@ -46,7 +44,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
                     );
                 }
 
-                if (! $this->areAllTypedAs('array', $configuration)) {
+                if (! areAllTypedAs('array', $configuration)) {
                     throw new \UnexpectedValueException(
                         (string) new ArrayReturnTypeErrorMessage(
                             sprintf('the file located at %s', $path), 'array', $configuration
