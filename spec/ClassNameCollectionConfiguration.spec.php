@@ -27,7 +27,6 @@ describe('ClassNameCollectionConfiguration', function () {
             Test2\ServiceProvider1::class,
             Test2\ServiceProvider2::class,
             Test2\ServiceProvider3::class,
-            Quanta\Container\ServiceProvider::class,
             Interop\Container\ServiceProviderInterface::class,
         ]);
 
