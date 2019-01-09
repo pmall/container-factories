@@ -20,16 +20,20 @@
             "email": "pierre.mallinjoud@gmail.com"
         }
     ],
+    "config": {
+        "sort-packages": true
+    },
     "require": {
         "php": ">=7.0",
         "container-interop/service-provider": "^0.4.0",
-        "quanta/exceptions": "^0.4.0",
         "quanta/class-names": "^0.2.0",
-        "quanta/container-factories": "^0.4.0"
+        "quanta/container-factories": "^0.5.0",
+        "quanta/exceptions": "^0.4.0"
     },
     "require-dev": {
-        "kahlan/kahlan": "^4.0",
         "eloquent/phony-kahlan": "^2.0",
+        "kahlan/kahlan": "^4.0",
+        "phpstan/phpstan": "^0.10.8",
         "psr/container": "^1.0"
     },
     "autoload": {

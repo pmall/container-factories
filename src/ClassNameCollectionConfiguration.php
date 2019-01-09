@@ -18,14 +18,14 @@ final class ClassNameCollectionConfiguration implements ConfigurationInterface
     /**
      * The pattern class names must match.
      *
-     * @param string
+     * @var string
      */
     private $pattern;
 
     /**
-     * The blacklisted classes.
+     * The blacklisted patterns class names must not match.
      *
-     * @param string[]
+     * @var string[]
      */
     private $blacklisted;
 
@@ -43,10 +43,7 @@ final class ClassNameCollectionConfiguration implements ConfigurationInterface
     {
         $this->collection = $collection;
         $this->pattern = $pattern;
-        $this->blacklisted = array_merge($blacklisted, [
-            ServiceProvider::class,
-            ServiceProviderInterface::class,
-        ]);
+        $this->blacklisted = $blacklisted;
     }
 
     /**
@@ -54,69 +51,48 @@ final class ClassNameCollectionConfiguration implements ConfigurationInterface
      */
     public function providers(): array
     {
-        return iterator_to_array($this->instances());
+        $classes = $this->collection->classes();
+        $classes = array_filter($classes, [$this, 'filter']);
+        $classes = array_values($classes);
+
+        return array_map([$this, 'provider'], $classes);
     }
 
     /**
-     * Return whether the given class name is matching the pattern and not
-     * matched by any blacklist pattern.
+     * Return an instance of the given service provider class name.
+     *
+     * @param string $class
+     * @return \Interop\Container\ServiceProviderInterface
+     */
+    private function provider(string $class): ServiceProviderInterface
+    {
+        return new $class;
+    }
+
+    /**
+     * Return whether the given string is the name of a class implementing
+     * ServiceProviderInterface and is matching the pattern but not any
+     * blacklist pattern.
      *
      * @param string $class
      * @return bool
      */
-    private function isMatching(string $class): bool
+    private function filter(string $class): bool
     {
-        if (preg_match($this->pattern, $class) === 1) {
-            foreach ($this->blacklisted as $blacklisted) {
-                if (fnmatch($blacklisted, $class, FNM_NOESCAPE)) {
-                    return false;
-                }
-            }
-
-            return true;
+        if (! is_subclass_of($class, ServiceProviderInterface::class, true)) {
+            return false;
         }
 
-        return false;
-    }
+        if (preg_match($this->pattern, $class) === 0) {
+            return false;
+        }
 
-    /**
-     * Yield the class names matching the pattern and not matching any blacklist
-     * pattern.
-     *
-     * @return \Generator
-     */
-    private function matching(): \Generator
-    {
-        foreach ($this->collection->classes() as $class) {
-            if ($this->isMatching($class)) {
-                yield $class;
+        foreach ($this->blacklisted as $blacklisted) {
+            if (fnmatch($blacklisted, $class, FNM_NOESCAPE)) {
+                return false;
             }
         }
-    }
 
-    /**
-     * Yield the names of the classes implementing ServiceProviderInterface.
-     *
-     * @return \Generator
-     */
-    private function implementations(): \Generator
-    {
-        foreach ($this->matching() as $class) {
-            if (is_a($class, ServiceProviderInterface::class, true)) {
-                yield $class;
-            }
-        }
-    }
-
-    /**
-     * Yield the service provider instances.
-     *
-     * @return \Generator
-     */
-    private function instances()
-    {
-        foreach ($this->implementations() as $class) {
-            yield new $class;
-        }
+        return true;
     }
 }

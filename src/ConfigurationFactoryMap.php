@@ -45,7 +45,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     }
 
     /**
-     * Return the service providers provided by the given collection.
+     * Return the service providers provided by the given configuration.
      *
      * @param \Quanta\Container\ConfigurationInterface $configuration
      * @return \Interop\Container\ServiceProviderInterface[]
@@ -59,7 +59,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
      * Return the factory map of the given service provider.
      *
      * @param \Interop\Container\ServiceProviderInterface $provider
-     * @return \Quanta\Container\Factories\FactoryMap
+     * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
     private function factoryMap(ServiceProviderInterface $provider): FactoryMap
@@ -91,7 +91,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
      * Return the extension map of the given service provider.
      *
      * @param \Interop\Container\ServiceProviderInterface $provider
-     * @return \Quanta\Container\Factories\FactoryMap
+     * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
     private function extensionMap(ServiceProviderInterface $provider): FactoryMap

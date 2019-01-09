@@ -7,8 +7,8 @@ use Quanta\Container\ClassNameCollectionConfiguration;
 
 use Quanta\Utils\ClassNameCollectionInterface;
 
-require_once __DIR__ . '/test/namespace1.php';
-require_once __DIR__ . '/test/namespace2.php';
+require_once __DIR__ . '/.test/namespace1.php';
+require_once __DIR__ . '/.test/namespace2.php';
 
 describe('ClassNameCollectionConfiguration', function () {
 
@@ -33,77 +33,99 @@ describe('ClassNameCollectionConfiguration', function () {
 
     });
 
-    it('should implement ConfigurationInterface', function () {
+    context('when there is no pattern', function () {
 
-        $test = new ClassNameCollectionConfiguration($this->collection->get());
+        beforeEach(function () {
 
-        expect($test)->toBeAnInstanceOf(ConfigurationInterface::class);
+            $this->configuration = new ClassNameCollectionConfiguration($this->collection->get());
 
-    });
+        });
 
-    describe('->providers()', function () {
+        it('should implement ConfigurationInterface', function () {
 
-        context('when there is no pattern', function () {
+            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
-            it('should return an array of all implementations of ServiceProviderInterface provided by the collection', function () {
+        });
 
-                $configuration = new ClassNameCollectionConfiguration($this->collection->get());
+        describe('->providers()', function () {
 
-                $test = $configuration->providers();
+            it('should return an array of ServiceProviderInterface implementations from the class names provided by the collection', function () {
 
-                expect($test)->toBeAn('array');
-                expect($test)->toHaveLength(6);
-                expect($test[0])->toEqual(new Test1\ServiceProvider1);
-                expect($test[1])->toEqual(new Test1\ServiceProvider2);
-                expect($test[2])->toEqual(new Test1\ServiceProvider3);
-                expect($test[3])->toEqual(new Test2\ServiceProvider1);
-                expect($test[4])->toEqual(new Test2\ServiceProvider2);
-                expect($test[5])->toEqual(new Test2\ServiceProvider3);
+                $test = $this->configuration->providers();
+
+                expect($test)->toEqual([
+                    new Test1\ServiceProvider1,
+                    new Test1\ServiceProvider2,
+                    new Test1\ServiceProvider3,
+                    new Test2\ServiceProvider1,
+                    new Test2\ServiceProvider2,
+                    new Test2\ServiceProvider3,
+                ]);
 
             });
 
         });
 
-        context('when there is a pattern', function () {
+    });
 
-            context('when the blacklist is empty', function () {
+    context('when there is a pattern', function () {
 
-                it('should return an array of all implementations of ServiceProviderInterface provided by the collection and matching the pattern', function () {
+        context('when there is no blackist pattern', function () {
 
-                    $configuration = new ClassNameCollectionConfiguration(...[
-                        $this->collection->get(),
-                        '/^Test1.+?[1-2]$/'
-                    ]);
+            beforeEach(function () {
 
-                    $test = $configuration->providers();
-
-                    expect($test)->toBeAn('array');
-                    expect($test)->toHaveLength(2);
-                    expect($test[0])->toEqual(new Test1\ServiceProvider1);
-                    expect($test[1])->toEqual(new Test1\ServiceProvider2);
-
-                });
+                $this->configuration = new ClassNameCollectionConfiguration(...[
+                    $this->collection->get(),
+                    '/^Test1.+?(1|3)$/',
+                ]);
 
             });
 
-            context('when the blacklist is not empty', function () {
+            it('should implement ConfigurationInterface', function () {
 
-                it('should return an array of all implementations of ServiceProviderInterface provided by the collection, matching the pattern and not matching any blackist pattern', function () {
+                expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
-                    $configuration = new ClassNameCollectionConfiguration(...[
-                        $this->collection->get(),
-                        '/^Test1/',
-                        'Test1\\*1',
-                        'Test1\\*3',
-                    ]);
+            });
 
-                    $test = $configuration->providers();
+            it('should return an array of ServiceProviderInterface implementations from the class names provided by the collection and matching the pattern', function () {
 
-                    expect($test)->toBeAn('array');
-                    expect($test)->toHaveLength(1);
-                    expect($test[0])->toEqual(new Test1\ServiceProvider2);
+                $test = $this->configuration->providers();
 
-                });
+                expect($test)->toEqual([
+                    new Test1\ServiceProvider1,
+                    new Test1\ServiceProvider3,
+                ]);
+
+            });
+
+        });
+
+        context('when there is blacklist patterns', function () {
+
+            beforeEach(function () {
+
+                $this->configuration = new ClassNameCollectionConfiguration(...[
+                    $this->collection->get(),
+                    '/^Test1/',
+                    'Test1\\*1',
+                    'Test1\\*3',
+                ]);
+
+            });
+
+            it('should implement ConfigurationInterface', function () {
+
+                expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
+
+            });
+
+            it('should return an array of ServiceProviderInterface implementations from the class names provided by the collection and matching the pattern but not any blacklist pattern', function () {
+
+                $test = $this->configuration->providers();
+
+                expect($test)->toEqual([
+                    new Test1\ServiceProvider2,
+                ]);
 
             });
 

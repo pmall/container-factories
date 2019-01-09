@@ -5,9 +5,28 @@ namespace Quanta\Container;
 use Interop\Container\ServiceProviderInterface;
 
 use Quanta\Utils\VendorDirectory;
+use Quanta\Container\Values\ValueFactoryInterface;
 
 final class ConfigurationFactory
 {
+    /**
+     * The value factory used to parse parameter values as ValueInterface
+     * implementations.
+     *
+     * @var \Quanta\Container\Values\ValueFactoryInterface
+     */
+    private $factory;
+
+    /**
+     * Constructor.
+     *
+     * @param \Quanta\Container\Values\ValueFactoryInterface $factory
+     */
+    public function __construct(ValueFactoryInterface $factory)
+    {
+        $this->factory = $factory;
+    }
+
     /**
      * Return a configuration from the given service providers.
      *
@@ -27,7 +46,7 @@ final class ConfigurationFactory
      */
     public function files(string ...$patterns): ConfigurationInterface
     {
-        return new PhpFileConfiguration(...$patterns);
+        return new PhpFileConfiguration($this->factory, ...$patterns);
     }
 
     /**

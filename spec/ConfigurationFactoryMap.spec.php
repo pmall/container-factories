@@ -15,7 +15,7 @@ use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
 
 use Quanta\Container\Factories\Extension;
 
-require_once __DIR__ . '/test/classes.php';
+require_once __DIR__ . '/.test/classes.php';
 
 describe('ConfigurationFactoryMap', function () {
 

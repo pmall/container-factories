@@ -5,16 +5,21 @@ use function Eloquent\Phony\Kahlan\mock;
 use Interop\container\ServiceProviderInterface;
 
 use Quanta\Utils\VendorDirectory;
+
 use Quanta\Container\Configuration;
 use Quanta\Container\ConfigurationFactory;
 use Quanta\Container\PhpFileConfiguration;
 use Quanta\Container\ClassNameCollectionConfiguration;
 
+use Quanta\Container\Values\ValueFactoryInterface;
+
 describe('ConfigurationFactory', function () {
 
     beforeEach(function () {
 
-        $this->factory = new ConfigurationFactory;
+        $this->values = mock(ValueFactoryInterface::class);
+
+        $this->factory = new ConfigurationFactory($this->values->get());
 
     });
 
@@ -44,7 +49,7 @@ describe('ConfigurationFactory', function () {
 
             $test = $this->factory->files(...$patterns);
 
-            expect($test)->toEqual(new PhpFileConfiguration(...$patterns));
+            expect($test)->toEqual(new PhpFileConfiguration($this->values->get(), ...$patterns));
 
         });
 
