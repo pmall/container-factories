@@ -62,10 +62,10 @@ final class PhpFileConfiguration implements ConfigurationInterface
             foreach (glob($pattern) as $path) {
                 $configuration = $this->configuration($path);
 
-                $factories = array_merge(...[
-                    $parameters = $this->parameters($configuration[self::KEYS['parameters']]),
-                    $aliases = $this->aliases($path, $configuration[self::KEYS['aliases']]),
-                    $factories = $this->factories($path, $configuration[self::KEYS['factories']]),
+                $factories = new MergedFactoryMap(...[
+                    $this->parameters($configuration[self::KEYS['parameters']]),
+                    $this->aliases($path, $configuration[self::KEYS['aliases']]),
+                    $this->factories($path, $configuration[self::KEYS['factories']]),
                 ]);
 
                 $extensions = $this->extensions($path, $configuration[self::KEYS['extensions']]);
@@ -141,17 +141,11 @@ final class PhpFileConfiguration implements ConfigurationInterface
         }
 
         catch (\InvalidArgumentException $e) {
-            $tpl = implode(' ', [
-                'The \'%s\' key of the array returned by the file located at %s',
-                'must be an array of string values,',
-                '%s associated to key %s',
-            ]);
-
-            throw new \UnexpectedValueException(vsprintf($tpl, [
-                self::KEYS['aliases'],
-                new InvalidType('string', $aliases),
-                new InvalidKey('string', $aliases),
-            ]));
+            throw new \UnexpectedValueException(
+                $this->invalidTypeErrorMessage(
+                    self::KEYS['aliases'], 'string', $path, $aliases
+                )
+            );
         }
     }
 
@@ -172,17 +166,11 @@ final class PhpFileConfiguration implements ConfigurationInterface
         }
 
         catch (\InvalidArgumentException $e) {
-            $tpl = implode(' ', [
-                'The \'%s\' key of the array returned by the file located at %s',
-                'must be an array of callable values,',
-                '%s associated to key %s',
-            ]);
-
-            throw new \UnexpectedValueException(vsprintf($tpl, [
-                self::KEYS['factories'],
-                new InvalidType('callable', $factories),
-                new InvalidKey('callable', $factories),
-            ]));
+            throw new \UnexpectedValueException(
+                $this->invalidTypeErrorMessage(
+                    self::KEYS['factories'], 'callable', $path, $factories
+                )
+            );
         }
     }
 
@@ -203,35 +191,29 @@ final class PhpFileConfiguration implements ConfigurationInterface
         }
 
         catch (\InvalidArgumentException $e) {
-            $tpl = implode(' ', [
-                'The \'%s\' key of the array returned by the file located at %s',
-                'must be an array of callable values,',
-                '%s associated to key %s',
-            ]);
-
-            throw new \UnexpectedValueException(vsprintf($tpl, [
-                self::KEYS['extensions'],
-                new InvalidType('callable', $extensions),
-                new InvalidKey('callable', $extensions),
-            ]));
+            throw new \UnexpectedValueException(
+                $this->invalidTypeErrorMessage(
+                    self::KEYS['extensions'], 'callable', $path, $extensions
+                )
+            );
         }
     }
 
     /**
      * Return a service provider with the given factories and extensions.
      *
-     * @param \Quanta\Container\FactoryMap $factories
-     * @param \Quanta\Container\FactoryMap $extensions
+     * @param \Quanta\Container\FactoryMapInterface $factories
+     * @param \Quanta\Container\FactoryMapInterface $extensions
      * @return \Interop\Container\ServiceProviderInterface
      */
-    private function provider(FactoryMap $factories, FactoryMap $extensions): ServiceProviderInterface
+    private function provider(FactoryMapInterface $factories, FactoryMapInterface $extensions): ServiceProviderInterface
     {
         return new class ($factories, $extensions) implements ServiceProviderInterface
         {
             private $factories;
             private $extensions;
 
-            public function __construct(FactoryMap $factories, FactoryMap $extensions)
+            public function __construct(FactoryMapInterface $factories, FactoryMapInterface $extensions)
             {
                 $this->factories = $factories;
                 $this->extensions = $extensions;
@@ -247,5 +229,29 @@ final class PhpFileConfiguration implements ConfigurationInterface
                 return $this->extensions->factories();
             }
         };
+    }
+
+    /**
+     * Return the message of exceptions thrown when an array contains at least
+     * one value with a wrong type.
+     *
+     * @param string $key
+     * @param string $type
+     * @param string $path
+     * @param array $values
+     * @return string
+     */
+    private function invalidTypeErrorMessage(string $key, string $type, string $path, array $values): string
+    {
+        $tpl = implode(' ', [
+            'The \'%s\' key of the array returned by the file located at %s',
+            'must be an array of %s values,',
+            '%s associated to key %s',
+        ]);
+
+        return sprintf($tpl, $key, $path, $type, ...[
+            new InvalidType($type, $values),
+            new InvalidKey($type, $values),
+        ]);
     }
 }
