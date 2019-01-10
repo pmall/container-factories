@@ -143,19 +143,31 @@ describe('PhpFileConfiguration', function () {
 
             });
 
+            it('should throw an exception with a message containing the file path', function () {
+
+                try { $this->configuration->providers(); }
+
+                catch (UnexpectedValueException $e) {
+                    $test = $e->getMessage();
+                }
+
+                expect($test)->toContain(__DIR__ . '/.test/config/invalid_not_array.php');
+
+            });
+
         });
 
     });
 
     context('when all the values returned by the files are arrays', function () {
 
-        context('when the \'aliases\' key of an array returned by a file does not contain only strings', function () {
+        context('when a value of an array returned by a file is not an array', function () {
 
             beforeEach(function () {
 
                 $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
                     __DIR__ . '/.test/config/valid_full1.php',
-                    __DIR__ . '/.test/config/invalid_aliases.php',
+                    __DIR__ . '/.test/config/invalid_not_containing_only_array.php',
                     __DIR__ . '/.test/config/valid_full2.php',
                 ]);
 
@@ -175,18 +187,6 @@ describe('PhpFileConfiguration', function () {
 
                 });
 
-                it('should throw an exception with a message containing \'aliases\'', function () {
-
-                    try { $this->configuration->providers(); }
-
-                    catch (UnexpectedValueException $e) {
-                        $test = $e->getMessage();
-                    }
-
-                    expect($test)->toContain('aliases');
-
-                });
-
                 it('should throw an exception with a message containing the file path', function () {
 
                     try { $this->configuration->providers(); }
@@ -195,7 +195,7 @@ describe('PhpFileConfiguration', function () {
                         $test = $e->getMessage();
                     }
 
-                    expect($test)->toContain(__DIR__ . '/.test/config/invalid_aliases.php');
+                    expect($test)->toContain(__DIR__ . '/.test/config/invalid_not_containing_only_array.php');
 
                 });
 
@@ -203,107 +203,165 @@ describe('PhpFileConfiguration', function () {
 
         });
 
-        context('when the \'factories\' key of an array returned by a file does not contain only callables', function () {
+        context('when all the values of the arrays returned by the files are arrays', function () {
 
-            beforeEach(function () {
+            context('when the \'aliases\' key of an array returned by a file does not contain only strings', function () {
 
-                $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
-                    __DIR__ . '/.test/config/valid_full1.php',
-                    __DIR__ . '/.test/config/invalid_factories.php',
-                    __DIR__ . '/.test/config/valid_full2.php',
-                ]);
+                beforeEach(function () {
 
-            });
-
-            it('should implement ConfigurationInterface', function () {
-
-                expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
-
-            });
-
-            describe('->providers()', function () {
-
-                it('should throw an UnexpectedValueException', function () {
-
-                    expect([$this->configuration, 'providers'])->toThrow(new UnexpectedValueException);
+                    $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
+                        __DIR__ . '/.test/config/valid_full1.php',
+                        __DIR__ . '/.test/config/invalid_aliases.php',
+                        __DIR__ . '/.test/config/valid_full2.php',
+                    ]);
 
                 });
 
-                it('should throw an exception with a message containing \'factories\'', function () {
+                it('should implement ConfigurationInterface', function () {
 
-                    try { $this->configuration->providers(); }
-
-                    catch (UnexpectedValueException $e) {
-                        $test = $e->getMessage();
-                    }
-
-                    expect($test)->toContain('factories');
+                    expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
                 });
 
-                it('should throw an exception with a message containing the file path', function () {
+                describe('->providers()', function () {
 
-                    try { $this->configuration->providers(); }
+                    it('should throw an UnexpectedValueException', function () {
 
-                    catch (UnexpectedValueException $e) {
-                        $test = $e->getMessage();
-                    }
+                        expect([$this->configuration, 'providers'])->toThrow(new UnexpectedValueException);
 
-                    expect($test)->toContain(__DIR__ . '/.test/config/invalid_factories.php');
+                    });
+
+                    it('should throw an exception with a message containing \'aliases\'', function () {
+
+                        try { $this->configuration->providers(); }
+
+                        catch (UnexpectedValueException $e) {
+                            $test = $e->getMessage();
+                        }
+
+                        expect($test)->toContain('aliases');
+
+                    });
+
+                    it('should throw an exception with a message containing the file path', function () {
+
+                        try { $this->configuration->providers(); }
+
+                        catch (UnexpectedValueException $e) {
+                            $test = $e->getMessage();
+                        }
+
+                        expect($test)->toContain(__DIR__ . '/.test/config/invalid_aliases.php');
+
+                    });
 
                 });
 
             });
 
-        });
+            context('when the \'factories\' key of an array returned by a file does not contain only callables', function () {
 
-        context('when the \'extensions\' key of an array returned by a file does not contain only callables', function () {
+                beforeEach(function () {
 
-            beforeEach(function () {
-
-                $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
-                    __DIR__ . '/.test/config/valid_full1.php',
-                    __DIR__ . '/.test/config/invalid_extensions.php',
-                    __DIR__ . '/.test/config/valid_full2.php',
-                ]);
-
-            });
-
-            it('should implement ConfigurationInterface', function () {
-
-                expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
-
-            });
-
-            describe('->providers()', function () {
-
-                it('should throw an UnexpectedValueException', function () {
-
-                    expect([$this->configuration, 'providers'])->toThrow(new UnexpectedValueException);
+                    $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
+                        __DIR__ . '/.test/config/valid_full1.php',
+                        __DIR__ . '/.test/config/invalid_factories.php',
+                        __DIR__ . '/.test/config/valid_full2.php',
+                    ]);
 
                 });
 
-                it('should throw an exception with a message containing \'extensions\'', function () {
+                it('should implement ConfigurationInterface', function () {
 
-                    try { $this->configuration->providers(); }
-
-                    catch (UnexpectedValueException $e) {
-                        $test = $e->getMessage();
-                    }
-
-                    expect($test)->toContain('extensions');
+                    expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
                 });
 
-                it('should throw an exception with a message containing the file path', function () {
+                describe('->providers()', function () {
 
-                    try { $this->configuration->providers(); }
+                    it('should throw an UnexpectedValueException', function () {
 
-                    catch (UnexpectedValueException $e) {
-                        $test = $e->getMessage();
-                    }
+                        expect([$this->configuration, 'providers'])->toThrow(new UnexpectedValueException);
 
-                    expect($test)->toContain(__DIR__ . '/.test/config/invalid_extensions.php');
+                    });
+
+                    it('should throw an exception with a message containing \'factories\'', function () {
+
+                        try { $this->configuration->providers(); }
+
+                        catch (UnexpectedValueException $e) {
+                            $test = $e->getMessage();
+                        }
+
+                        expect($test)->toContain('factories');
+
+                    });
+
+                    it('should throw an exception with a message containing the file path', function () {
+
+                        try { $this->configuration->providers(); }
+
+                        catch (UnexpectedValueException $e) {
+                            $test = $e->getMessage();
+                        }
+
+                        expect($test)->toContain(__DIR__ . '/.test/config/invalid_factories.php');
+
+                    });
+
+                });
+
+            });
+
+            context('when the \'extensions\' key of an array returned by a file does not contain only callables', function () {
+
+                beforeEach(function () {
+
+                    $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
+                        __DIR__ . '/.test/config/valid_full1.php',
+                        __DIR__ . '/.test/config/invalid_extensions.php',
+                        __DIR__ . '/.test/config/valid_full2.php',
+                    ]);
+
+                });
+
+                it('should implement ConfigurationInterface', function () {
+
+                    expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
+
+                });
+
+                describe('->providers()', function () {
+
+                    it('should throw an UnexpectedValueException', function () {
+
+                        expect([$this->configuration, 'providers'])->toThrow(new UnexpectedValueException);
+
+                    });
+
+                    it('should throw an exception with a message containing \'extensions\'', function () {
+
+                        try { $this->configuration->providers(); }
+
+                        catch (UnexpectedValueException $e) {
+                            $test = $e->getMessage();
+                        }
+
+                        expect($test)->toContain('extensions');
+
+                    });
+
+                    it('should throw an exception with a message containing the file path', function () {
+
+                        try { $this->configuration->providers(); }
+
+                        catch (UnexpectedValueException $e) {
+                            $test = $e->getMessage();
+                        }
+
+                        expect($test)->toContain(__DIR__ . '/.test/config/invalid_extensions.php');
+
+                    });
 
                 });
 
