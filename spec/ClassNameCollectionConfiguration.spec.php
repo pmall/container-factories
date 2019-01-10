@@ -16,117 +16,59 @@ describe('ClassNameCollectionConfiguration', function () {
 
         $this->collection = mock(ClassNameCollectionInterface::class);
 
-        $this->collection->classes->returns([
-            Test1\TestClass1::class,
-            Test1\TestClass2::class,
-            Test1\ServiceProvider1::class,
-            Test1\ServiceProvider2::class,
-            Test1\ServiceProvider3::class,
-            Test2\TestClass1::class,
-            Test2\TestClass2::class,
-            Test2\ServiceProvider1::class,
-            Test2\ServiceProvider2::class,
-            Test2\ServiceProvider3::class,
-            Interop\Container\ServiceProviderInterface::class,
-        ]);
+        $this->configuration = new ClassNameCollectionConfiguration($this->collection->get());
 
     });
 
-    context('when there is no pattern', function () {
+    it('should implement ConfigurationInterface', function () {
 
-        beforeEach(function () {
-
-            $this->configuration = new ClassNameCollectionConfiguration($this->collection->get());
-
-        });
-
-        it('should implement ConfigurationInterface', function () {
-
-            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
-
-        });
-
-        describe('->providers()', function () {
-
-            it('should return an array of ServiceProviderInterface implementations from the class names provided by the collection', function () {
-
-                $test = $this->configuration->providers();
-
-                expect($test)->toEqual([
-                    new Test1\ServiceProvider1,
-                    new Test1\ServiceProvider2,
-                    new Test1\ServiceProvider3,
-                    new Test2\ServiceProvider1,
-                    new Test2\ServiceProvider2,
-                    new Test2\ServiceProvider3,
-                ]);
-
-            });
-
-        });
+        expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
     });
 
-    context('when there is a pattern', function () {
+    describe('->providers()', function () {
 
-        context('when there is no blackist pattern', function () {
+        it('should return an array of instances of the ServiceProviderInterface implementations returned by the collection ->classes() method', function () {
 
-            beforeEach(function () {
+            $this->collection->classes->returns([
+                Test1\TestClass1::class,
+                Test1\TestClass2::class,
+                Test1\ServiceProvider1::class,
+                Test1\ServiceProvider2::class,
+                Test1\ServiceProvider3::class,
+                Test2\TestClass1::class,
+                Test2\TestClass2::class,
+                Test2\ServiceProvider1::class,
+                Test2\ServiceProvider2::class,
+                Test2\ServiceProvider3::class,
+            ]);
 
-                $this->configuration = new ClassNameCollectionConfiguration(...[
-                    $this->collection->get(),
-                    '/^Test1.+?(1|3)$/',
-                ]);
+            $test = $this->configuration->providers();
 
-            });
-
-            it('should implement ConfigurationInterface', function () {
-
-                expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
-
-            });
-
-            it('should return an array of ServiceProviderInterface implementations from the class names provided by the collection and matching the pattern', function () {
-
-                $test = $this->configuration->providers();
-
-                expect($test)->toEqual([
-                    new Test1\ServiceProvider1,
-                    new Test1\ServiceProvider3,
-                ]);
-
-            });
+            expect($test)->toEqual([
+                new Test1\ServiceProvider1,
+                new Test1\ServiceProvider2,
+                new Test1\ServiceProvider3,
+                new Test2\ServiceProvider1,
+                new Test2\ServiceProvider2,
+                new Test2\ServiceProvider3,
+            ]);
 
         });
 
-        context('when there is blacklist patterns', function () {
+        it('should not try to instantiate ServiceProviderInterface', function () {
 
-            beforeEach(function () {
+            $this->collection->classes->returns([
+                Test1\ServiceProvider1::class,
+                Test1\ServiceProvider2::class,
+                Test1\ServiceProvider3::class,
+                Test2\ServiceProvider1::class,
+                Test2\ServiceProvider2::class,
+                Test2\ServiceProvider3::class,
+                Interop\Container\ServiceProviderInterface::class,
+            ]);
 
-                $this->configuration = new ClassNameCollectionConfiguration(...[
-                    $this->collection->get(),
-                    '/^Test1/',
-                    'Test1\\*1',
-                    'Test1\\*3',
-                ]);
-
-            });
-
-            it('should implement ConfigurationInterface', function () {
-
-                expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
-
-            });
-
-            it('should return an array of ServiceProviderInterface implementations from the class names provided by the collection and matching the pattern but not any blacklist pattern', function () {
-
-                $test = $this->configuration->providers();
-
-                expect($test)->toEqual([
-                    new Test1\ServiceProvider2,
-                ]);
-
-            });
+            expect([$this->configuration, 'providers'])->not->toThrow();
 
         });
 

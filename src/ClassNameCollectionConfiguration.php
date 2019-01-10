@@ -16,34 +16,13 @@ final class ClassNameCollectionConfiguration implements ConfigurationInterface
     private $collection;
 
     /**
-     * The pattern class names must match.
-     *
-     * @var string
-     */
-    private $pattern;
-
-    /**
-     * The blacklisted patterns class names must not match.
-     *
-     * @var string[]
-     */
-    private $blacklisted;
-
-    /**
      * Constructor.
      *
-     * This package service provider and service provider interface are always
-     * blacklisted.
-     *
-     * @param \Quanta\Utils\ClassNameCollectionInterface    $collection
-     * @param string                                        $pattern
-     * @param string                                        ...$blacklisted
+     * @param \Quanta\Utils\ClassNameCollectionInterface $collection
      */
-    public function __construct(ClassNameCollectionInterface $collection, string $pattern = '/.*?/', string ...$blacklisted)
+    public function __construct(ClassNameCollectionInterface $collection)
     {
         $this->collection = $collection;
-        $this->pattern = $pattern;
-        $this->blacklisted = $blacklisted;
     }
 
     /**
@@ -53,9 +32,10 @@ final class ClassNameCollectionConfiguration implements ConfigurationInterface
     {
         $classes = $this->collection->classes();
         $classes = array_filter($classes, [$this, 'filter']);
-        $classes = array_values($classes);
 
-        return array_map([$this, 'provider'], $classes);
+        $providers = array_map([$this, 'provider'], $classes);
+
+        return array_values($providers);
     }
 
     /**
@@ -71,28 +51,13 @@ final class ClassNameCollectionConfiguration implements ConfigurationInterface
 
     /**
      * Return whether the given string is the name of a class implementing
-     * ServiceProviderInterface and is matching the pattern but not any
-     * blacklist pattern.
+     * ServiceProviderInterface.
      *
      * @param string $class
      * @return bool
      */
     private function filter(string $class): bool
     {
-        if (! is_subclass_of($class, ServiceProviderInterface::class, true)) {
-            return false;
-        }
-
-        if (preg_match($this->pattern, $class) === 0) {
-            return false;
-        }
-
-        foreach ($this->blacklisted as $blacklisted) {
-            if (fnmatch($blacklisted, $class, FNM_NOESCAPE)) {
-                return false;
-            }
-        }
-
-        return true;
+        return is_subclass_of($class, ServiceProviderInterface::class, true);
     }
 }
