@@ -4,6 +4,9 @@ namespace Quanta\Container;
 
 use Interop\Container\ServiceProviderInterface;
 
+use Quanta\Container\Factories\Alias;
+use Quanta\Container\Factories\Parameter;
+
 use Quanta\Container\Values\ValueFactoryInterface;
 
 use function Quanta\Exceptions\areAllTypedAs;
@@ -62,7 +65,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
             foreach (glob($pattern) as $path) {
                 $configuration = $this->configuration($path);
 
-                $factories = new MergedFactoryMap(...[
+                $factories = array_merge(...[
                     $this->parameters($configuration[self::KEYS['parameters']]),
                     $this->aliases($path, $configuration[self::KEYS['aliases']]),
                     $this->factories($path, $configuration[self::KEYS['factories']]),
@@ -113,34 +116,56 @@ final class PhpFileConfiguration implements ConfigurationInterface
     }
 
     /**
-     * Return a ParametersFactoryMap with the value factory and the given array
-     * of values.
+     * Return a parameter from the given value using the factory to parse it as
+     * a ValueInterface implementation.
      *
-     * @param array $values
-     * @return \Quanta\Container\ParametersFactoryMap
+     * @param mixed $value
+     * @return \Quanta\Container\Factories\Parameter
      */
-    private function parameters(array $values): ParametersFactoryMap
+    private function parameter($value): Parameter
     {
-        return new ParametersFactoryMap($this->factory, $values);
+        return new Parameter(($this->factory)($value));
     }
 
     /**
-     * Return an AliasesFactoryMap with the given array of aliases.
+     * Return an array of parameters from the given array.
+     *
+     * @param array $values
+     * @return array
+     */
+    private function parameters(array $values): array
+    {
+        return array_map([$this, 'parameter'], $values);
+    }
+
+    /**
+     * Return an alias from the given container entry id.
+     *
+     * @param string $id
+     * @return \Quanta\Container\Factories\Alias
+     */
+    private function alias(string $id): Alias
+    {
+        return new Alias($id);
+    }
+
+    /**
+     * Return an array of aliases from the given array of container entry ids.
      *
      * The file path is given in order to throw a descriptive exception.
      *
      * @param string $path
      * @param array $aliases
-     * @return \Quanta\Container\AliasesFactoryMap
+     * @return array
      * @throws \UnexpectedValueException
      */
-    private function aliases(string $path, array $aliases): AliasesFactoryMap
+    private function aliases(string $path, array $aliases): array
     {
         try {
-            return new AliasesFactoryMap($aliases);
+            return array_map([$this, 'alias'], $aliases);
         }
 
-        catch (\InvalidArgumentException $e) {
+        catch (\TypeError $e) {
             throw new \UnexpectedValueException(
                 $this->invalidTypeErrorMessage(
                     self::KEYS['aliases'], 'string', $path, $aliases
@@ -150,70 +175,66 @@ final class PhpFileConfiguration implements ConfigurationInterface
     }
 
     /**
-     * Return a FactoryMap with the given array of factories.
+     * Ensure all values of the given array of factories are callable.
      *
      * The file path is given in order to throw a descriptive exception.
      *
      * @param string $path
      * @param array $factories
-     * @return \Quanta\Container\FactoryMap
+     * @return array
      * @throws \UnexpectedValueException
      */
-    private function factories(string $path, array $factories): FactoryMap
+    private function factories(string $path, array $factories): array
     {
-        try {
-            return new FactoryMap($factories);
-        }
-
-        catch (\InvalidArgumentException $e) {
+        if (! areAllTypedAs('callable', $factories)) {
             throw new \UnexpectedValueException(
                 $this->invalidTypeErrorMessage(
                     self::KEYS['factories'], 'callable', $path, $factories
                 )
             );
         }
+
+        return $factories;
     }
 
     /**
-     * Return a FactoryMap with the given array of extensions.
+     * Ensure all values of the given array of extensions are callable.
      *
      * The file path is given in order to throw a descriptive exception.
      *
      * @param string $path
      * @param array $extensions
-     * @return \Quanta\Container\FactoryMap
+     * @return array
      * @throws \UnexpectedValueException
      */
-    private function extensions(string $path, array $extensions): FactoryMap
+    private function extensions(string $path, array $extensions): array
     {
-        try {
-            return new FactoryMap($extensions);
-        }
-
-        catch (\InvalidArgumentException $e) {
+        if (! areAllTypedAs('callable', $extensions)) {
             throw new \UnexpectedValueException(
                 $this->invalidTypeErrorMessage(
                     self::KEYS['extensions'], 'callable', $path, $extensions
                 )
             );
         }
+
+        return $extensions;
     }
 
     /**
      * Return a service provider with the given factories and extensions.
      *
-     * @param \Quanta\Container\FactoryMapInterface $factories
-     * @param \Quanta\Container\FactoryMapInterface $extensions
+     * @param array $factories
+     * @param array $extensions
      * @return \Interop\Container\ServiceProviderInterface
      */
-    private function provider(FactoryMapInterface $factories, FactoryMapInterface $extensions): ServiceProviderInterface
+    private function provider(array $factories, array $extensions): ServiceProviderInterface
     {
         return new class ($factories, $extensions) implements ServiceProviderInterface
         {
             private $factories;
             private $extensions;
 
-            public function __construct(FactoryMapInterface $factories, FactoryMapInterface $extensions)
+            public function __construct(array $factories, array $extensions)
             {
                 $this->factories = $factories;
                 $this->extensions = $extensions;
@@ -221,12 +242,12 @@ final class PhpFileConfiguration implements ConfigurationInterface
 
             public function getFactories()
             {
-                return $this->factories->factories();
+                return $this->factories;
             }
 
             public function getExtensions()
             {
-                return $this->extensions->factories();
+                return $this->extensions;
             }
         };
     }
