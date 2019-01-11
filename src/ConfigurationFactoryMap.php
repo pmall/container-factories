@@ -66,16 +66,16 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     {
         $factories = $provider->getFactories();
 
-        if (! is_array($factories)) {
+        try {
+            return new FactoryMap($factories);
+        }
+
+        catch (\TypeError $e) {
             throw new \UnexpectedValueException(
                 (string) new ReturnTypeErrorMessage(
                     sprintf('%s::getFactories()', get_class($provider)), 'array', $factories
                 )
             );
-        }
-
-        try {
-            return new FactoryMap($factories);
         }
 
         catch (\InvalidArgumentException $e) {
@@ -98,16 +98,16 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     {
         $extensions = $provider->getExtensions();
 
-        if (! is_array($extensions)) {
+        try {
+            return new FactoryMap($extensions);
+        }
+
+        catch (\TypeError $e) {
             throw new \UnexpectedValueException(
                 (string) new ReturnTypeErrorMessage(
                     sprintf('%s::getExtensions()', get_class($provider)), 'array', $extensions
                 )
             );
-        }
-
-        try {
-            return new FactoryMap($extensions);
         }
 
         catch (\InvalidArgumentException $e) {
