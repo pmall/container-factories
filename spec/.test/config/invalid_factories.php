@@ -9,4 +9,5 @@ return [
         'id3' => function () {},
     ],
     'extensions' => [],
+    'tags' => [],
 ];

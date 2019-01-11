@@ -4,6 +4,7 @@ namespace Quanta\Container;
 
 use Interop\Container\ServiceProviderInterface;
 
+use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
 use Quanta\Container\Factories\Parameter;
 
@@ -27,6 +28,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
         'aliases' => 'aliases',
         'factories' => 'factories',
         'extensions' => 'extensions',
+        'tags' => 'tags',
     ];
 
     /**
@@ -63,56 +65,40 @@ final class PhpFileConfiguration implements ConfigurationInterface
     {
         foreach ($this->patterns as $pattern) {
             foreach (glob($pattern) as $path) {
-                $configuration = $this->configuration($path);
+                $config = require $path;
+
+                if (! is_array($config)) {
+                    throw new \UnexpectedValueException(
+                        (string) new ReturnTypeErrorMessage(
+                            sprintf('the file located at %s', $path), 'array', $config
+                        )
+                    );
+                }
+
+                if (! areAllTypedAs('array', $config)) {
+                    throw new \UnexpectedValueException(
+                        (string) new ArrayReturnTypeErrorMessage(
+                            sprintf('the file located at %s', $path), 'array', $config
+                        )
+                    );
+                }
 
                 $factories = array_merge(...[
-                    $this->parameters($configuration[self::KEYS['parameters']]),
-                    $this->aliases($path, $configuration[self::KEYS['aliases']]),
-                    $this->factories($path, $configuration[self::KEYS['factories']]),
+                    $this->parameters($config[self::KEYS['parameters']] ?? []),
+                    $this->aliases($path, $config[self::KEYS['aliases']] ?? []),
+                    $this->factories($path, $config[self::KEYS['factories']] ?? []),
                 ]);
 
-                $extensions = $this->extensions($path, $configuration[self::KEYS['extensions']]);
+                $extensions = array_merge(...[
+                    $this->extensions($path, $config[self::KEYS['extensions']] ?? []),
+                    $this->tags($path, $config[self::KEYS['tags']] ?? []),
+                ]);
 
                 $providers[] = $this->provider($factories, $extensions);
             }
         }
 
         return $providers ?? [];
-    }
-
-    /**
-     * Return the configuration provided by the file located as the gien path.
-     *
-     * @param string $path
-     * @return array[]
-     * @throws \UnexpectedValueException
-     */
-    private function configuration(string $path): array
-    {
-        $contents = require $path;
-
-        if (! is_array($contents)) {
-            throw new \UnexpectedValueException(
-                (string) new ReturnTypeErrorMessage(
-                    sprintf('the file located at %s', $path), 'array', $contents
-                )
-            );
-        }
-
-        if (! areAllTypedAs('array', $contents)) {
-            throw new \UnexpectedValueException(
-                (string) new ArrayReturnTypeErrorMessage(
-                    sprintf('the file located at %s', $path), 'array', $contents
-                )
-            );
-        }
-
-        return [
-            'parameters' => $contents[self::KEYS['parameters']] ?? [],
-            'aliases' => $contents[self::KEYS['aliases']] ?? [],
-            'factories' => $contents[self::KEYS['factories']] ?? [],
-            'extensions' => $contents[self::KEYS['extensions']] ?? [],
-        ];
     }
 
     /**
@@ -131,7 +117,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      * Return an array of parameters from the given array.
      *
      * @param array $values
-     * @return array
+     * @return \Quanta\Container\Factories\Parameter[]
      */
     private function parameters(array $values): array
     {
@@ -156,7 +142,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string $path
      * @param array $aliases
-     * @return array
+     * @return \Quanta\Container\Factories\Alias[]
      * @throws \UnexpectedValueException
      */
     private function aliases(string $path, array $aliases): array
@@ -167,11 +153,47 @@ final class PhpFileConfiguration implements ConfigurationInterface
 
         catch (\TypeError $e) {
             throw new \UnexpectedValueException(
-                $this->invalidTypeErrorMessage(
-                    self::KEYS['aliases'], 'string', $path, $aliases
+                $this->invalidKeyTypeErrorMessage(
+                    $path, self::KEYS['aliases'], 'string', $aliases
                 )
             );
         }
+    }
+
+    /**
+     * Return an array of tags from the given array of container entry
+     * identifier arrays.
+     *
+     * The file path is given in order to throw a descriptive exception.
+     *
+     * @param string $path
+     * @param array $tags
+     * @return \Quanta\Container\Factories\Tag[]
+     * @throws \UnexpectedValueException
+     */
+    private function tags(string $path, array $tags): array
+    {
+        if (! areAllTypedAs('array', $tags)) {
+            throw new \UnexpectedValueException(
+                $this->invalidKeyTypeErrorMessage(
+                    $path, self::KEYS['tags'], 'array', $tags
+                )
+            );
+        }
+
+        foreach ($tags as $id => $aliases) {
+            try {
+                $extensions[$id] = new Tag(...array_values($aliases));
+            }
+
+            catch (\TypeError $e) {
+                throw new \UnexpectedValueException(
+                    $this->invalidTagTypeErrorMessage($path, $id, $aliases)
+                );
+            }
+        }
+
+        return $extensions ?? [];
     }
 
     /**
@@ -188,8 +210,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
     {
         if (! areAllTypedAs('callable', $factories)) {
             throw new \UnexpectedValueException(
-                $this->invalidTypeErrorMessage(
-                    self::KEYS['factories'], 'callable', $path, $factories
+                $this->invalidKeyTypeErrorMessage(
+                    $path, self::KEYS['factories'], 'callable', $factories
                 )
             );
         }
@@ -211,8 +233,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
     {
         if (! areAllTypedAs('callable', $extensions)) {
             throw new \UnexpectedValueException(
-                $this->invalidTypeErrorMessage(
-                    self::KEYS['extensions'], 'callable', $path, $extensions
+                $this->invalidKeyTypeErrorMessage(
+                    $path, self::KEYS['extensions'], 'callable', $extensions
                 )
             );
         }
@@ -256,13 +278,13 @@ final class PhpFileConfiguration implements ConfigurationInterface
      * Return the message of exceptions thrown when an array contains at least
      * one value with a wrong type.
      *
+     * @param string $path
      * @param string $key
      * @param string $type
-     * @param string $path
      * @param array $values
      * @return string
      */
-    private function invalidTypeErrorMessage(string $key, string $type, string $path, array $values): string
+    private function invalidKeyTypeErrorMessage(string $path, string $key, string $type, array $values): string
     {
         $tpl = implode(' ', [
             'The \'%s\' key of the array returned by the file located at %s',
@@ -273,6 +295,29 @@ final class PhpFileConfiguration implements ConfigurationInterface
         return sprintf($tpl, $key, $path, $type, ...[
             new InvalidType($type, $values),
             new InvalidKey($type, $values),
+        ]);
+    }
+
+    /**
+     * Return the message of exceptions thrown when a value of a tag definition
+     * array is not a string.
+     *
+     * @param string        $path
+     * @param int|string    $id
+     * @param array         $values
+     * @return string
+     */
+    private function invalidTagTypeErrorMessage(string $path, $id, array $values): string
+    {
+        $tpl = implode(' ', [
+            'The tag \'%s\' defined by the file located at %s',
+            'must be an array of string values,',
+            '%s associated to key %s',
+        ]);
+
+        return sprintf($tpl, $id, $path, ...[
+            new InvalidType('string', $values),
+            new InvalidKey('string', $values),
         ]);
     }
 }

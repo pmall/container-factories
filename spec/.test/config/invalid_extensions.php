@@ -9,4 +9,5 @@ return [
         'id2' => 1,
         'id3' => function () {},
     ],
+    'tags' => [],
 ];
