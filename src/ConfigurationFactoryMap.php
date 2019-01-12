@@ -2,28 +2,26 @@
 
 namespace Quanta\Container;
 
-use Interop\Container\ServiceProviderInterface;
-
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
 
 final class ConfigurationFactoryMap implements FactoryMapInterface
 {
     /**
-     * The configurations.
+     * The configuration.
      *
-     * @var \Quanta\Container\ConfigurationInterface[]
+     * @var \Quanta\Container\ConfigurationInterface
      */
-    private $configurations;
+    private $configuration;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\ConfigurationInterface ...$configurations
+     * @param \Quanta\Container\ConfigurationInterface $configuration
      */
-    public function __construct(ConfigurationInterface ...$configurations)
+    public function __construct(ConfigurationInterface $configuration)
     {
-        $this->configurations = $configurations;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -31,8 +29,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        $providers = array_map([$this, 'providers'], $this->configurations);
-        $providers = array_merge([], ...$providers);
+        $providers = $this->configuration->providers();
 
         $map = new ExtendedFactoryMap(
             new MergedFactoryMap(
@@ -45,77 +42,35 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     }
 
     /**
-     * Return the service providers provided by the given configuration.
+     * Return the factory map provided by the given service provider.
      *
-     * @param \Quanta\Container\ConfigurationInterface $configuration
-     * @return \Interop\Container\ServiceProviderInterface[]
+     * @param \Quanta\Container\TaggedServiceProviderInterface $provider
+     * @return \Quanta\Container\FactoryMapInterface
      */
-    private function providers(ConfigurationInterface $configuration): array
+    private function factoryMap(TaggedServiceProviderInterface $provider): FactoryMapInterface
     {
-        return $configuration->providers();
+        return $provider->factories();
     }
 
     /**
-     * Return the factory map of the given service provider.
+     * Return the extension map provided by the given service provider.
      *
-     * @param \Interop\Container\ServiceProviderInterface $provider
-     * @return \Quanta\Container\FactoryMap
-     * @throws \UnexpectedValueException
+     * @param \Quanta\Container\TaggedServiceProviderInterface $provider
+     * @return \Quanta\Container\FactoryMapInterface
      */
-    private function factoryMap(ServiceProviderInterface $provider): FactoryMap
+    private function extensionMap(TaggedServiceProviderInterface $provider): FactoryMapInterface
     {
-        $factories = $provider->getFactories();
-
-        try {
-            return new FactoryMap($factories);
-        }
-
-        catch (\TypeError $e) {
-            throw new \UnexpectedValueException(
-                (string) new ReturnTypeErrorMessage(
-                    sprintf('%s::getFactories()', get_class($provider)), 'array', $factories
-                )
-            );
-        }
-
-        catch (\InvalidArgumentException $e) {
-            throw new \UnexpectedValueException(
-                (string) new ArrayReturnTypeErrorMessage(
-                    sprintf('%s::getFactories()', get_class($provider)), 'callable', $factories
-                )
-            );
-        }
+        return $provider->extensions();
     }
 
     /**
-     * Return the extension map of the given service provider.
+     * Return the extension map provided by the given service provider.
      *
-     * @param \Interop\Container\ServiceProviderInterface $provider
-     * @return \Quanta\Container\FactoryMap
-     * @throws \UnexpectedValueException
+     * @param \Quanta\Container\TaggedServiceProviderInterface $provider
+     * @return array[]
      */
-    private function extensionMap(ServiceProviderInterface $provider): FactoryMap
+    private function tags(TaggedServiceProviderInterface $provider): array
     {
-        $extensions = $provider->getExtensions();
-
-        try {
-            return new FactoryMap($extensions);
-        }
-
-        catch (\TypeError $e) {
-            throw new \UnexpectedValueException(
-                (string) new ReturnTypeErrorMessage(
-                    sprintf('%s::getExtensions()', get_class($provider)), 'array', $extensions
-                )
-            );
-        }
-
-        catch (\InvalidArgumentException $e) {
-            throw new \UnexpectedValueException(
-                (string) new ArrayReturnTypeErrorMessage(
-                    sprintf('%s::getExtensions()', get_class($provider)), 'callable', $extensions
-                )
-            );
-        }
+        return $provider->tags();
     }
 }

@@ -2,6 +2,7 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
+use Quanta\Container\ExternalServiceProvider;
 use Quanta\Container\ConfigurationInterface;
 use Quanta\Container\ClassNameCollectionConfiguration;
 
@@ -28,7 +29,7 @@ describe('ClassNameCollectionConfiguration', function () {
 
     describe('->providers()', function () {
 
-        it('should return an array of instances of the ServiceProviderInterface implementations returned by the collection ->classes() method', function () {
+        it('should return an array of ExternalServiceProvider instances from the ServiceProviderInterface implementation class names returned by the collection ->classes() method', function () {
 
             $this->collection->classes->returns([
                 Test1\TestClass1::class,
@@ -46,12 +47,12 @@ describe('ClassNameCollectionConfiguration', function () {
             $test = $this->configuration->providers();
 
             expect($test)->toEqual([
-                new Test1\ServiceProvider1,
-                new Test1\ServiceProvider2,
-                new Test1\ServiceProvider3,
-                new Test2\ServiceProvider1,
-                new Test2\ServiceProvider2,
-                new Test2\ServiceProvider3,
+                new ExternalServiceProvider(new Test1\ServiceProvider1),
+                new ExternalServiceProvider(new Test1\ServiceProvider2),
+                new ExternalServiceProvider(new Test1\ServiceProvider3),
+                new ExternalServiceProvider(new Test2\ServiceProvider1),
+                new ExternalServiceProvider(new Test2\ServiceProvider2),
+                new ExternalServiceProvider(new Test2\ServiceProvider3),
             ]);
 
         });

@@ -39,14 +39,15 @@ final class ClassNameCollectionConfiguration implements ConfigurationInterface
     }
 
     /**
-     * Return an instance of the given service provider class name.
+     * Return a tagged service provider from the given service provider class
+     * name.
      *
      * @param string $class
-     * @return \Interop\Container\ServiceProviderInterface
+     * @return \Quanta\Container\ExternalServiceProvider
      */
-    private function provider(string $class): ServiceProviderInterface
+    private function provider(string $class): ExternalServiceProvider
     {
-        return new $class;
+        return new ExternalServiceProvider(new $class);
     }
 
     /**

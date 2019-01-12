@@ -2,11 +2,11 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Interop\Container\ServiceProviderInterface;
-
 use Quanta\Container\PhpFileConfiguration;
 use Quanta\Container\ConfigurationInterface;
+use Quanta\Container\TaggedServiceProviderInterface;
 
+use Quanta\Container\FactoryMap;
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
 use Quanta\Container\Factories\Parameter;
@@ -55,72 +55,72 @@ describe('PhpFileConfiguration', function () {
                 expect($test)->toHaveLength(7);
 
                 // 0 is valid_full1.php
-                expect($test[0])->toBeAnInstanceOf(ServiceProviderInterface::class);
-                expect($test[0]->getFactories())->toEqual([
+                expect($test[0])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[0]->factories())->toEqual(new FactoryMap([
                     'id1' => new Parameter(new Value('parameter11')),
                     'id2' => new Alias('alias11'),
                     'id3' => new Test\TestFactory('factory11'),
                     'id4' => new Test\TestFactory('factory12'),
-                ]);
-                expect($test[0]->getExtensions())->toEqual([
+                ]));
+                expect($test[0]->extensions())->toEqual(new FactoryMap([
                     'id4' => new Test\TestFactory('extension11'),
-                    'id5' => new Tag('alias111', 'alias112'),
+                    'id5' => new Test\TestFactory('extension12'),
                     'id6' => new Tag('alias121', 'alias122'),
-                ]);
+                ]));
 
                 // 1 is valid_full2.php
-                expect($test[1])->toBeAnInstanceOf(ServiceProviderInterface::class);
-                expect($test[1]->getFactories())->toEqual([
+                expect($test[1])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[1]->factories())->toEqual(new FactoryMap([
                     'id1' => new Parameter(new Value('parameter21')),
                     'id2' => new Alias('alias21'),
                     'id3' => new Test\TestFactory('factory21'),
                     'id4' => new Test\TestFactory('factory22'),
-                ]);
-                expect($test[1]->getExtensions())->toEqual([
+                ]));
+                expect($test[1]->extensions())->toEqual(new FactoryMap([
                     'id4' => new Test\TestFactory('extension21'),
-                    'id5' => new Tag('alias211', 'alias212'),
+                    'id5' => new Test\TestFactory('extension22'),
                     'id6' => new Tag('alias221', 'alias222'),
-                ]);
+                ]));
 
                 // 2 is valid_only_aliases.php
-                expect($test[2])->toBeAnInstanceOf(ServiceProviderInterface::class);
-                expect($test[2]->getFactories())->toEqual([
+                expect($test[2])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[2]->factories())->toEqual(new FactoryMap([
                     'id1' => new Alias('alias31'),
                     'id2' => new Alias('alias32'),
-                ]);
-                expect($test[2]->getExtensions())->toEqual([]);
+                ]));
+                expect($test[2]->extensions())->toEqual(new FactoryMap([]));
 
                 // 3 is valid_only_extensions.php
-                expect($test[3])->toBeAnInstanceOf(ServiceProviderInterface::class);
-                expect($test[3]->getFactories())->toEqual([]);
-                expect($test[3]->getExtensions())->toEqual([
+                expect($test[3])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[3]->factories())->toEqual(new FactoryMap([]));
+                expect($test[3]->extensions())->toEqual(new FactoryMap([
                     'id1' => new Test\TestFactory('extension31'),
                     'id2' => new Test\TestFactory('extension32'),
-                ]);
+                ]));
 
                 // 4 is valid_only_factories.php
-                expect($test[4])->toBeAnInstanceOf(ServiceProviderInterface::class);
-                expect($test[4]->getFactories())->toEqual([
+                expect($test[4])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[4]->factories())->toEqual(new FactoryMap([
                     'id1' => new Test\TestFactory('factory31'),
                     'id2' => new Test\TestFactory('factory32'),
-                ]);
-                expect($test[4]->getExtensions())->toEqual([]);
+                ]));
+                expect($test[4]->extensions())->toEqual(new FactoryMap([]));
 
                 // 5 is valid_only_parameters.php
-                expect($test[5])->toBeAnInstanceOf(ServiceProviderInterface::class);
-                expect($test[5]->getFactories())->toEqual([
+                expect($test[5])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[5]->factories())->toEqual(new FactoryMap([
                     'id1' => new Parameter(new Value('parameter31')),
                     'id2' => new Parameter(new Value('parameter32')),
-                ]);
-                expect($test[5]->getExtensions())->toEqual([]);
+                ]));
+                expect($test[5]->extensions())->toEqual(new FactoryMap([]));
 
                 // 6 is valid_only_tags.php
-                expect($test[6])->toBeAnInstanceOf(ServiceProviderInterface::class);
-                expect($test[6]->getFactories())->toEqual([]);
-                expect($test[6]->getExtensions())->toEqual([
+                expect($test[6])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[6]->factories())->toEqual(new FactoryMap([]));
+                expect($test[6]->extensions())->toEqual(new FactoryMap([
                     'id1' => new Tag('aliases311', 'aliases312'),
                     'id2' => new Tag('aliases321', 'aliases322'),
-                ]);
+                ]));
 
             });
 

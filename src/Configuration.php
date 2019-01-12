@@ -28,6 +28,17 @@ final class Configuration implements ConfigurationInterface
      */
     public function providers(): array
     {
-        return $this->providers;
+        return array_map([$this, 'provider'], $this->providers);
+    }
+
+    /**
+     * Return a tagged service provider from the given service provider.
+     *
+     * @param \Interop\Container\ServiceProviderInterface $provider
+     * @return \Quanta\Container\ExternalServiceProvider
+     */
+    private function provider(ServiceProviderInterface $provider): ExternalServiceProvider
+    {
+        return new ExternalServiceProvider($provider);
     }
 }

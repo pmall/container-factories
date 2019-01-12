@@ -6,6 +6,7 @@ use Interop\Container\ServiceProviderInterface;
 
 use Quanta\Container\Configuration;
 use Quanta\Container\ConfigurationInterface;
+use Quanta\Container\ExternalServiceProvider;
 
 describe('Configuration', function () {
 
@@ -31,15 +32,15 @@ describe('Configuration', function () {
 
     describe('->providers()', function () {
 
-        it('should return the service providers', function () {
+        it('should return an array of ExternalServiceProvider instances from the service providers', function () {
 
             $test = $this->configuration->providers();
 
             expect($test)->toBeAn('array');
             expect($test)->toHaveLength(3);
-            expect($test[0])->toBe($this->provider1->get());
-            expect($test[1])->toBe($this->provider2->get());
-            expect($test[2])->toBe($this->provider3->get());
+            expect($test[0])->toEqual(new ExternalServiceProvider($this->provider1->get()));
+            expect($test[1])->toEqual(new ExternalServiceProvider($this->provider2->get()));
+            expect($test[2])->toEqual(new ExternalServiceProvider($this->provider3->get()));
 
         });
 

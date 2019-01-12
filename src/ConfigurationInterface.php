@@ -5,9 +5,9 @@ namespace Quanta\Container;
 interface ConfigurationInterface
 {
     /**
-     * Return an array of ServiceProviderInterface implementations.
+     * Return an array of tagged service providers.
      *
-     * @return \Interop\Container\ServiceProviderInterface[]
+     * @return \Quanta\Container\TaggedServiceProviderInterface[]
      */
     public function providers(): array;
 }

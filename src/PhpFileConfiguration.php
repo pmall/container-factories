@@ -83,18 +83,24 @@ final class PhpFileConfiguration implements ConfigurationInterface
                     );
                 }
 
-                $factories = array_merge(...[
-                    $this->parameters($config[self::KEYS['parameters']] ?? []),
-                    $this->aliases($path, $config[self::KEYS['aliases']] ?? []),
-                    $this->factories($path, $config[self::KEYS['factories']] ?? []),
-                ]);
+                $parameters = $config[self::KEYS['parameters']] ?? [];
+                $aliases = $config[self::KEYS['aliases']] ?? [];
+                $tags = $config[self::KEYS['tags']] ?? [];
+                $factories = $config[self::KEYS['factories']] ?? [];
+                $extensions = $config[self::KEYS['extensions']] ?? [];
 
-                $extensions = array_merge(...[
-                    $this->extensions($path, $config[self::KEYS['extensions']] ?? []),
-                    $this->tags($path, $config[self::KEYS['tags']] ?? []),
-                ]);
+                $factories = $this->factories($path, array_merge(...[
+                    $this->parameters($parameters),
+                    $this->aliases($path, $aliases),
+                    $factories,
+                ]));
 
-                $providers[] = $this->provider($factories, $extensions);
+                $extensions = $this->extensions($path, array_merge(...[
+                    $this->tags($path, $tags),
+                    $extensions,
+                ]));
+
+                $providers[] = $this->provider($factories, $extensions, []);
             }
         }
 
@@ -203,20 +209,22 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string $path
      * @param array $factories
-     * @return array
+     * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
-    private function factories(string $path, array $factories): array
+    private function factories(string $path, array $factories): FactoryMap
     {
-        if (! areAllTypedAs('callable', $factories)) {
+        try {
+            return new FactoryMap($factories);
+        }
+
+        catch (\InvalidArgumentException $e) {
             throw new \UnexpectedValueException(
                 $this->invalidKeyTypeErrorMessage(
                     $path, self::KEYS['factories'], 'callable', $factories
                 )
             );
         }
-
-        return $factories;
     }
 
     /**
@@ -226,50 +234,61 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string $path
      * @param array $extensions
-     * @return array
+     * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
-    private function extensions(string $path, array $extensions): array
+    private function extensions(string $path, array $extensions): FactoryMap
     {
-        if (! areAllTypedAs('callable', $extensions)) {
+        try {
+            return new FactoryMap($extensions);
+        }
+
+        catch (\InvalidArgumentException $e) {
             throw new \UnexpectedValueException(
                 $this->invalidKeyTypeErrorMessage(
                     $path, self::KEYS['extensions'], 'callable', $extensions
                 )
             );
         }
-
-        return $extensions;
     }
 
     /**
-     * Return a service provider with the given factories and extensions.
+     * Return a tagged service provider with the given factory map, extension
+     * map and tags.
      *
-     * @param array $factories
-     * @param array $extensions
-     * @return \Interop\Container\ServiceProviderInterface
+     * @param \Quanta\Container\FactoryMap  $factories
+     * @param \Quanta\Container\FactoryMap  $extensions
+     * @param array[]                       $tags
+     * @return \Quanta\Container\TaggedServiceProviderInterface
      */
-    private function provider(array $factories, array $extensions): ServiceProviderInterface
+    private function provider(FactoryMap $factories, FactoryMap $extensions, array $tags): TaggedServiceProviderInterface
     {
-        return new class ($factories, $extensions) implements ServiceProviderInterface
+        return new class ($factories, $extensions, $tags) implements TaggedServiceProviderInterface
         {
             private $factories;
             private $extensions;
+            private $tags;
 
-            public function __construct(array $factories, array $extensions)
+            public function __construct($factories, $extensions, $tags)
             {
                 $this->factories = $factories;
                 $this->extensions = $extensions;
+                $this->tags = $tags;
             }
 
-            public function getFactories()
+            public function factories(): FactoryMapInterface
             {
                 return $this->factories;
             }
 
-            public function getExtensions()
+            public function extensions(): FactoryMapInterface
             {
                 return $this->extensions;
+            }
+
+            public function tags(): array
+            {
+                return $this->tags;
             }
         };
     }
