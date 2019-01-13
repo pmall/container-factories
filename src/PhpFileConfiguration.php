@@ -331,7 +331,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
     {
         $tpl = implode(' ', [
             'The tag \'%s\' defined by the file located at %s',
-            'must be an array of string values,',
+            'must be an array of array values,',
             '%s associated to key %s',
         ]);
 
