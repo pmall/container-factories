@@ -2,7 +2,7 @@
 
 namespace Quanta\Container;
 
-final class CompositeConfiguration implements ConfigurationInterface
+final class MergedConfiguration implements ConfigurationInterface
 {
     /**
      * The configuration to treat as a single one.

@@ -3,16 +3,16 @@
 use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\ConfigurationInterface;
-use Quanta\Container\CompositeConfiguration;
+use Quanta\Container\MergedConfiguration;
 use Quanta\Container\TaggedServiceProviderInterface;
 
-describe('CompositeConfiguration', function () {
+describe('MergedConfiguration', function () {
 
     context('when there is no configuration', function () {
 
         beforeEach(function () {
 
-            $this->configuration = new CompositeConfiguration;
+            $this->configuration = new MergedConfiguration;
 
         });
 
@@ -44,7 +44,7 @@ describe('CompositeConfiguration', function () {
             $this->delegate2 = mock(ConfigurationInterface::class);
             $this->delegate3 = mock(ConfigurationInterface::class);
 
-            $this->configuration = new CompositeConfiguration(...[
+            $this->configuration = new MergedConfiguration(...[
                 $this->delegate1->get(),
                 $this->delegate2->get(),
                 $this->delegate3->get(),
