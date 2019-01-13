@@ -83,24 +83,31 @@ final class PhpFileConfiguration implements ConfigurationInterface
                     );
                 }
 
-                $parameters = $config[self::KEYS['parameters']] ?? [];
-                $aliases = $config[self::KEYS['aliases']] ?? [];
-                $tags = $config[self::KEYS['tags']] ?? [];
-                $factories = $config[self::KEYS['factories']] ?? [];
-                $extensions = $config[self::KEYS['extensions']] ?? [];
+                // give default values to missing keys.
+                $config = [
+                    'parameters' => $config[self::KEYS['parameters']] ?? [],
+                    'aliases' => $config[self::KEYS['aliases']] ?? [],
+                    'factories' => $config[self::KEYS['factories']] ?? [],
+                    'extensions' => $config[self::KEYS['extensions']] ?? [],
+                    'tags' => $config[self::KEYS['tags']] ?? [],
+                ];
 
-                $factories = $this->factories($path, array_merge(...[
-                    $this->parameters($parameters),
-                    $this->aliases($path, $aliases),
-                    $factories,
-                ]));
+                // build factory maps from the definitions.
+                $parameters = $this->parameters($config['parameters']);
+                $aliases = $this->aliases($path, $config['aliases']);
+                $factories = $this->factories($path, $config['factories']);
+                $extensions = $this->extensions($path, $config['extensions']);
+                $tags = $this->tags($path, $config['tags']);
 
-                $extensions = $this->extensions($path, array_merge(...[
-                    $this->tags($path, $tags),
-                    $extensions,
-                ]));
-
-                $providers[] = $this->provider($factories, $extensions, []);
+                // add an anonymous tagged service provider.
+                $providers[] = $this->provider(...[
+                    new MergedFactoryMap($parameters, $aliases, $factories),
+                    new MergedFactoryMap($extensions, $tags),
+                    array_merge(...[
+                        $this->tagsFromIds($config['aliases']),
+                        $config['tags'],
+                    ]),
+                ]);
             }
         }
 
@@ -123,11 +130,11 @@ final class PhpFileConfiguration implements ConfigurationInterface
      * Return an array of parameters from the given array.
      *
      * @param array $values
-     * @return \Quanta\Container\Factories\Parameter[]
+     * @return \Quanta\Container\FactoryMap
      */
-    private function parameters(array $values): array
+    private function parameters(array $values): FactoryMap
     {
-        return array_map([$this, 'parameter'], $values);
+        return new FactoryMap(array_map([$this, 'parameter'], $values));
     }
 
     /**
@@ -148,13 +155,13 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string $path
      * @param array $aliases
-     * @return \Quanta\Container\Factories\Alias[]
+     * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
-    private function aliases(string $path, array $aliases): array
+    private function aliases(string $path, array $aliases): FactoryMap
     {
         try {
-            return array_map([$this, 'alias'], $aliases);
+            return new FactoryMap(array_map([$this, 'alias'], $aliases));
         }
 
         catch (\TypeError $e) {
@@ -164,43 +171,6 @@ final class PhpFileConfiguration implements ConfigurationInterface
                 )
             );
         }
-    }
-
-    /**
-     * Return an array of tags from the given array of container entry
-     * identifier arrays.
-     *
-     * The file path is given in order to throw a descriptive exception.
-     *
-     * @param string $path
-     * @param array $tags
-     * @return \Quanta\Container\Factories\Tag[]
-     * @throws \UnexpectedValueException
-     */
-    private function tags(string $path, array $tags): array
-    {
-        if (! areAllTypedAs('array', $tags)) {
-            throw new \UnexpectedValueException(
-                $this->invalidKeyTypeErrorMessage(
-                    $path, self::KEYS['tags'], 'array', $tags
-                )
-            );
-        }
-
-        foreach ($tags as $id => $tag) {
-            if (! areAllTypedAs('array', $tag)) {
-                throw new \UnexpectedValueException(
-                    $this->invalidTagTypeErrorMessage($path, $id, $tag)
-                );
-            }
-
-            $aliases = array_keys($tag);
-            $aliases = array_map('strval', $aliases);
-
-            $extensions[$id] = new Tag(...$aliases);
-        }
-
-        return $extensions ?? [];
     }
 
     /**
@@ -254,15 +224,74 @@ final class PhpFileConfiguration implements ConfigurationInterface
     }
 
     /**
+     * Return an array of tags from the given array of container entry
+     * identifier arrays.
+     *
+     * The file path is given in order to throw a descriptive exception.
+     *
+     * @param string $path
+     * @param array $tags
+     * @return \Quanta\Container\FactoryMap
+     * @throws \UnexpectedValueException
+     */
+    private function tags(string $path, array $tags): FactoryMap
+    {
+        if (! areAllTypedAs('array', $tags)) {
+            throw new \UnexpectedValueException(
+                $this->invalidKeyTypeErrorMessage(
+                    $path, self::KEYS['tags'], 'array', $tags
+                )
+            );
+        }
+
+        foreach ($tags as $id => $tag) {
+            if (! areAllTypedAs('array', $tag)) {
+                throw new \UnexpectedValueException(
+                    $this->invalidTagTypeErrorMessage($path, $id, $tag)
+                );
+            }
+
+            $aliases = array_keys($tag);
+            $aliases = array_map('strval', $aliases);
+
+            $extensions[$id] = new Tag(...$aliases);
+        }
+
+        return new FactoryMap($extensions ?? []);
+    }
+
+    /**
+     * Return a tag definition from the given identifier.
+     *
+     * @param string $id
+     * @return array[]
+     */
+    private function tagFromId(string $id): array
+    {
+        return [$id => []];
+    }
+
+    /**
+     * Return a tag definition list from the given array of identifiers.
+     *
+     * @param string[]  $ids
+     * @return array[]
+     */
+    private function tagsFromIds(array $ids): array
+    {
+        return array_map([$this, 'tagFromId'], $ids);
+    }
+
+    /**
      * Return a tagged service provider with the given factory map, extension
      * map and tags.
      *
-     * @param \Quanta\Container\FactoryMap  $factories
-     * @param \Quanta\Container\FactoryMap  $extensions
-     * @param array[]                       $tags
+     * @param \Quanta\Container\FactoryMapInterface $factories
+     * @param \Quanta\Container\FactoryMapInterface $extensions
+     * @param array[]                               $tags
      * @return \Quanta\Container\TaggedServiceProviderInterface
      */
-    private function provider(FactoryMap $factories, FactoryMap $extensions, array $tags): TaggedServiceProviderInterface
+    private function provider(FactoryMapInterface $factories, FactoryMapInterface $extensions, array $tags): TaggedServiceProviderInterface
     {
         return new class ($factories, $extensions, $tags) implements TaggedServiceProviderInterface
         {
