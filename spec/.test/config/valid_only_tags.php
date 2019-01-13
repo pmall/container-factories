@@ -2,7 +2,13 @@
 
 return [
     'tags' => [
-        'id1' => ['aliases311', 'aliases312'],
-        'id2' => ['aliases321', 'aliases322'],
+        'id1' => [
+            'alias311' => [],
+            'alias312' => [],
+        ],
+        'id2' => [
+            'alias321' => [],
+            'alias322' => [],
+        ],
     ],
 ];

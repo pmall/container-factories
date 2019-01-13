@@ -187,16 +187,17 @@ final class PhpFileConfiguration implements ConfigurationInterface
             );
         }
 
-        foreach ($tags as $id => $aliases) {
-            try {
-                $extensions[$id] = new Tag(...array_values($aliases));
-            }
-
-            catch (\TypeError $e) {
+        foreach ($tags as $id => $tag) {
+            if (! areAllTypedAs('array', $tag)) {
                 throw new \UnexpectedValueException(
-                    $this->invalidTagTypeErrorMessage($path, $id, $aliases)
+                    $this->invalidTagTypeErrorMessage($path, $id, $tag)
                 );
             }
+
+            $aliases = array_keys($tag);
+            $aliases = array_map('strval', $aliases);
+
+            $extensions[$id] = new Tag(...$aliases);
         }
 
         return $extensions ?? [];
@@ -335,8 +336,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
         ]);
 
         return sprintf($tpl, $id, $path, ...[
-            new InvalidType('string', $values),
-            new InvalidKey('string', $values),
+            new InvalidType('array', $values),
+            new InvalidKey('array', $values),
         ]);
     }
 }

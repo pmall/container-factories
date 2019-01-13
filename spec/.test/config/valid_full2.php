@@ -18,8 +18,14 @@ return [
         'id5' => new Test\TestFactory('extension22'),
     ],
     'tags' => [
-        'id5' => ['alias211', 'alias212'],
-        'id6' => ['alias221', 'alias222'],
+        'id5' => [
+            'alias211' => [],
+            'alias212' => [],
+        ],
+        'id6' => [
+            'alias221' => [],
+            'alias222' => [],
+        ],
     ],
     'another_key' => [
         'id7' => 'only here to ensure extra keys are ignored without errors',

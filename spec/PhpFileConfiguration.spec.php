@@ -118,8 +118,8 @@ describe('PhpFileConfiguration', function () {
                 expect($test[6])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
                 expect($test[6]->factories())->toEqual(new FactoryMap([]));
                 expect($test[6]->extensions())->toEqual(new FactoryMap([
-                    'id1' => new Tag('aliases311', 'aliases312'),
-                    'id2' => new Tag('aliases321', 'aliases322'),
+                    'id1' => new Tag('alias311', 'alias312'),
+                    'id2' => new Tag('alias321', 'alias322'),
                 ]));
 
             });
@@ -352,7 +352,7 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when a value of a tag definition array is not a string', function () {
+            context('when a value associated with a tag is not an array', function () {
 
                 beforeEach(function () {
 
