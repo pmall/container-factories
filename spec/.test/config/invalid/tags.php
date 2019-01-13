@@ -6,8 +6,8 @@ return [
     'factories' => [],
     'extensions' => [],
     'tags' => [
-        'id1' => [],
-        'id2' => 1,
-        'id3' => [],
+        'tag1' => [],
+        'tag2' => 1,
+        'tag3' => [],
     ]
 ];

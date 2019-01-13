@@ -3,9 +3,9 @@
 return [
     'parameters' => [],
     'aliases' => [
-        'id1' => 'alias1',
-        'id2' => [],
-        'id3' => 'alias3',
+        'alias1' => 'id1',
+        'alias2' => [],
+        'alias3' => 'id3',
     ],
     'factories' => [],
     'extensions' => [],

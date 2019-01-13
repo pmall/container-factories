@@ -65,6 +65,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
     {
         foreach ($this->patterns as $pattern) {
             foreach (glob($pattern) as $path) {
+
+                // get the file content and ensure it is an array.
                 $config = require $path;
 
                 if (! is_array($config)) {
@@ -75,15 +77,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
                     );
                 }
 
-                if (! areAllTypedAs('array', $config)) {
-                    throw new \UnexpectedValueException(
-                        (string) new ArrayReturnTypeErrorMessage(
-                            sprintf('the file located at %s', $path), 'array', $config
-                        )
-                    );
-                }
-
-                // give default values to missing keys.
+                // get all the keys and ensure their values are arrays.
                 $config = [
                     'parameters' => $config[self::KEYS['parameters']] ?? [],
                     'aliases' => $config[self::KEYS['aliases']] ?? [],
@@ -92,12 +86,28 @@ final class PhpFileConfiguration implements ConfigurationInterface
                     'tags' => $config[self::KEYS['tags']] ?? [],
                 ];
 
+                if (! areAllTypedAs('array', $config)) {
+                    throw new \UnexpectedValueException(
+                        (string) new ArrayReturnTypeErrorMessage(
+                            sprintf('the file located at %s', $path), 'array', $config
+                        )
+                    );
+                }
+
                 // build factory maps from the definitions.
                 $parameters = $this->parameters($config['parameters']);
                 $aliases = $this->aliases($path, $config['aliases']);
                 $factories = $this->factories($path, $config['factories']);
                 $extensions = $this->extensions($path, $config['extensions']);
                 $tags = $this->tags($path, $config['tags']);
+
+                // ensure all aliases are uniques.
+                $this->validateAliases($path, $config);
+
+                // ensure all tags are uniques.
+                $this->validateTags($path, $config);
+
+                // ensure an tags are uniques.
 
                 // add an anonymous tagged service provider.
                 $providers[] = $this->provider(...[
@@ -280,6 +290,80 @@ final class PhpFileConfiguration implements ConfigurationInterface
     private function tagsFromIds(array $ids): array
     {
         return array_map([$this, 'tagFromId'], $ids);
+    }
+
+    /**
+     * Fail when an alias is present in another array.
+     *
+     * @param string    $path
+     * @param array[]   $config
+     * @return void
+     * @throws \LogicException
+     */
+    private function validateAliases(string $path, array $config)
+    {
+        $tpl = 'The alias \'%s\' is also defined as %s in the file located at %s';
+
+        $isect = array_intersect_key($config['aliases'], $config['parameters']);
+
+        if (count($isect) > 0) {
+            throw new \LogicException(sprintf($tpl, key($isect), 'a parameter', $path));
+        }
+
+        $isect = array_intersect_key($config['aliases'], $config['factories']);
+
+        if (count($isect) > 0) {
+            throw new \LogicException(sprintf($tpl, key($isect), 'a factory', $path));
+        }
+
+        $isect = array_intersect_key($config['aliases'], $config['extensions']);
+
+        if (count($isect) > 0) {
+            throw new \LogicException(sprintf($tpl, key($isect), 'an extension', $path));
+        }
+
+        $isect = array_intersect_key($config['aliases'], $config['tags']);
+
+        if (count($isect) > 0) {
+            throw new \LogicException(sprintf($tpl, key($isect), 'a tag', $path));
+        }
+    }
+
+    /**
+     * Fail when a tag is present in another array.
+     *
+     * @param string    $path
+     * @param array[]   $config
+     * @return void
+     * @throws \LogicException
+     */
+    private function validateTags(string $path, array $config)
+    {
+        $tpl = 'The tag \'%s\' is also defined as %s in the file located at %s';
+
+        $isect = array_intersect_key($config['tags'], $config['parameters']);
+
+        if (count($isect) > 0) {
+            throw new \LogicException(sprintf($tpl, key($isect), 'a parameter', $path));
+        }
+
+        $isect = array_intersect_key($config['tags'], $config['aliases']);
+
+        if (count($isect) > 0) {
+            throw new \LogicException(sprintf($tpl, key($isect), 'an alias', $path));
+        }
+
+        $isect = array_intersect_key($config['tags'], $config['factories']);
+
+        if (count($isect) > 0) {
+            throw new \LogicException(sprintf($tpl, key($isect), 'a factory', $path));
+        }
+
+        $isect = array_intersect_key($config['tags'], $config['extensions']);
+
+        if (count($isect) > 0) {
+            throw new \LogicException(sprintf($tpl, key($isect), 'an extension', $path));
+        }
     }
 
     /**

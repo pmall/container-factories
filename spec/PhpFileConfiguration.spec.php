@@ -29,7 +29,7 @@ describe('PhpFileConfiguration', function () {
         beforeEach(function () {
 
             $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
-                __DIR__ . '/.test/config/valid_*.php',
+                __DIR__ . '/.test/config/valid/*.php',
             ]);
 
         });
@@ -57,54 +57,56 @@ describe('PhpFileConfiguration', function () {
                 expect($test[0])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
                 expect($test[0]->factories()->factories())->toEqual([
                     'id1' => new Parameter(new Value('parameter11')),
-                    'id2' => new Alias('alias11'),
-                    'id3' => new Test\TestFactory('factory11'),
-                    'id4' => new Test\TestFactory('factory12'),
+                    'alias1' => new Alias('id11'),
+                    'alias2' => new Alias('id12'),
+                    'id2' => new Test\TestFactory('factory11'),
+                    'id3' => new Test\TestFactory('factory12'),
                 ]);
                 expect($test[0]->extensions()->factories())->toEqual([
-                    'id4' => new Test\TestFactory('extension11'),
-                    'id5' => new Test\TestFactory('extension12'),
-                    'id6' => new Tag('alias111', 'alias112'),
-                    'id7' => new Tag('alias121', 'alias122'),
+                    'id3' => new Test\TestFactory('extension11'),
+                    'id4' => new Test\TestFactory('extension12'),
+                    'tag1' => new Tag('id111', 'id112'),
+                    'tag2' => new Tag('id121', 'id122'),
                 ]);
                 expect($test[0]->tags())->toEqual([
-                    'id2' => ['alias11' => []],
-                    'id3' => ['alias12' => []],
-                    'id6' => ['alias111' => [], 'alias112' => []],
-                    'id7' => ['alias121' => [], 'alias122' => []],
+                    'alias1' => ['id11' => []],
+                    'alias2' => ['id12' => []],
+                    'tag1' => ['id111' => [], 'id112' => []],
+                    'tag2' => ['id121' => [], 'id122' => []],
                 ]);
 
                 // 1 is valid_full2.php
                 expect($test[1])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
                 expect($test[1]->factories()->factories())->toEqual([
                     'id1' => new Parameter(new Value('parameter21')),
-                    'id2' => new Alias('alias21'),
-                    'id3' => new Test\TestFactory('factory21'),
-                    'id4' => new Test\TestFactory('factory22'),
+                    'alias1' => new Alias('id21'),
+                    'alias2' => new Alias('id22'),
+                    'id2' => new Test\TestFactory('factory21'),
+                    'id3' => new Test\TestFactory('factory22'),
                 ]);
                 expect($test[1]->extensions()->factories())->toEqual([
-                    'id4' => new Test\TestFactory('extension21'),
-                    'id5' => new Test\TestFactory('extension22'),
-                    'id6' => new Tag('alias211', 'alias212'),
-                    'id7' => new Tag('alias221', 'alias222'),
+                    'id3' => new Test\TestFactory('extension21'),
+                    'id4' => new Test\TestFactory('extension22'),
+                    'tag1' => new Tag('id211', 'id212'),
+                    'tag2' => new Tag('id221', 'id222'),
                 ]);
                 expect($test[1]->tags())->toEqual([
-                    'id2' => ['alias21' => []],
-                    'id3' => ['alias22' => []],
-                    'id6' => ['alias211' => [], 'alias212' => []],
-                    'id7' => ['alias221' => [], 'alias222' => []],
+                    'alias1' => ['id21' => []],
+                    'alias2' => ['id22' => []],
+                    'tag1' => ['id211' => [], 'id212' => []],
+                    'tag2' => ['id221' => [], 'id222' => []],
                 ]);
 
                 // 2 is valid_only_aliases.php
                 expect($test[2])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
                 expect($test[2]->factories()->factories())->toEqual([
-                    'id1' => new Alias('alias31'),
-                    'id2' => new Alias('alias32'),
+                    'alias1' => new Alias('id31'),
+                    'alias2' => new Alias('id32'),
                 ]);
                 expect($test[2]->extensions()->factories())->toEqual([]);
                 expect($test[2]->tags())->toEqual([
-                    'id1' => ['alias31' => []],
-                    'id2' => ['alias32' => []],
+                    'alias1' => ['id31' => []],
+                    'alias2' => ['id32' => []],
                 ]);
 
                 // 3 is valid_only_extensions.php
@@ -138,12 +140,12 @@ describe('PhpFileConfiguration', function () {
                 expect($test[6])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
                 expect($test[6]->factories()->factories())->toEqual([]);
                 expect($test[6]->extensions()->factories())->toEqual([
-                    'id1' => new Tag('alias311', 'alias312'),
-                    'id2' => new Tag('alias321', 'alias322'),
+                    'tag1' => new Tag('id311', 'id312'),
+                    'tag2' => new Tag('id321', 'id322'),
                 ]);
                 expect($test[6]->tags())->toEqual([
-                    'id1' => ['alias311' => [], 'alias312' => []],
-                    'id2' => ['alias321' => [], 'alias322' => []],
+                    'tag1' => ['id311' => [], 'id312' => []],
+                    'tag2' => ['id321' => [], 'id322' => []],
                 ]);
 
             });
@@ -152,73 +154,43 @@ describe('PhpFileConfiguration', function () {
 
     });
 
-    context('when a value returned by a file is not an array', function () {
+    context('when a file is not valid', function () {
 
         beforeEach(function () {
 
-            $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
-                __DIR__ . '/.test/config/valid_full1.php',
-                __DIR__ . '/.test/config/invalid_not_array.php',
-                __DIR__ . '/.test/config/valid_full2.php',
-            ]);
+            $this->test = function (string $file, string $exception, string ...$strs) {
 
-        });
-
-        it('should implement ConfigurationInterface', function () {
-
-            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
-
-        });
-
-        describe('->providers()', function () {
-
-            it('should throw an UnexpectedValueException containing the file path', function () {
-
-                try { $this->configuration->providers(); }
-
-                catch (UnexpectedValueException $e) {
-                    $test = $e->getMessage();
-                }
-
-                expect($test)->toContain(__DIR__ . '/.test/config/invalid_not_array.php');
-
-            });
-
-        });
-
-    });
-
-    context('when all the values returned by the files are arrays', function () {
-
-        context('when a value of an array returned by a file is not an array', function () {
-
-            beforeEach(function () {
-
-                $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
-                    __DIR__ . '/.test/config/valid_full1.php',
-                    __DIR__ . '/.test/config/invalid_not_containing_only_array.php',
-                    __DIR__ . '/.test/config/valid_full2.php',
+                $configuration = new PhpFileConfiguration($this->factory->get(), ...[
+                    __DIR__ . '/.test/config/valid/full1.php',
+                    $file,
+                    __DIR__ . '/.test/config/valid/full2.php',
                 ]);
 
-            });
+                try { $configuration->providers(); }
 
-            it('should implement ConfigurationInterface', function () {
+                catch (Throwable $e) {
+                    $test = $e;
+                }
 
-                expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
+                expect(get_class($e))->toEqual($exception);
+                expect($e->getMessage())->toContain($file);
 
-            });
+                foreach ($strs as $str) {
+                    expect($e->getMessage())->toContain($str);
+                }
+            };
+
+        });
+
+        context('when a value returned by a file is not an array', function () {
 
             describe('->providers()', function () {
 
                 it('should throw an UnexpectedValueException containing the file path', function () {
 
-                    try { $this->configuration->providers(); }
+                    $file = __DIR__ . '/.test/config/invalid/not_array.php';
 
-                    catch (UnexpectedValueException $e) {
-                        $test = $e->getMessage();
-                    }
-
-                    expect($test)->toContain(__DIR__ . '/.test/config/invalid_not_containing_only_array.php');
+                    $this->test($file, UnexpectedValueException::class);
 
                 });
 
@@ -226,38 +198,93 @@ describe('PhpFileConfiguration', function () {
 
         });
 
-        context('when all the values of the arrays returned by the files are arrays', function () {
+        context('when all the values returned by the files are arrays', function () {
 
-            context('when the \'aliases\' key of an array returned by a file does not contain only strings', function () {
-
-                beforeEach(function () {
-
-                    $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
-                        __DIR__ . '/.test/config/valid_full1.php',
-                        __DIR__ . '/.test/config/invalid_aliases.php',
-                        __DIR__ . '/.test/config/valid_full2.php',
-                    ]);
-
-                });
-
-                it('should implement ConfigurationInterface', function () {
-
-                    expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
-
-                });
+            context('when the parameters key of an array returned by a file is not an array', function () {
 
                 describe('->providers()', function () {
 
-                    it('should throw an UnexpectedValueException containing aliases and the file path', function () {
+                    it('should throw an UnexpectedValueException containing parameters', function () {
 
-                        try { $this->configuration->providers(); }
+                        $file = __DIR__ . '/.test/config/invalid/not_array/parameters.php';
 
-                        catch (UnexpectedValueException $e) {
-                            $test = $e->getMessage();
-                        }
+                        $this->test($file, UnexpectedValueException::class, 'parameters');
 
-                        expect($test)->toContain('aliases');
-                        expect($test)->toContain(__DIR__ . '/.test/config/invalid_aliases.php');
+                    });
+
+                });
+
+            });
+
+            context('when the aliases key of an array returned by a file is not an array', function () {
+
+                describe('->providers()', function () {
+
+                    it('should throw an UnexpectedValueException containing aliases', function () {
+
+                        $file = __DIR__ . '/.test/config/invalid/not_array/aliases.php';
+
+                        $this->test($file, UnexpectedValueException::class, 'aliases');
+
+                    });
+
+                });
+
+            });
+
+            context('when the \'aliases\' key of an array returned by a file does not contain only strings', function () {
+
+                describe('->providers()', function () {
+
+                    it('should throw an UnexpectedValueException containing aliases', function () {
+
+                        $file = __DIR__ . '/.test/config/invalid/aliases.php';
+
+                        $this->test($file, UnexpectedValueException::class, 'aliases');
+
+                    });
+
+                });
+
+            });
+
+            context('when the \'aliases\' key of an array is sharing an identifier with another array', function () {
+
+                describe('->providers()', function () {
+
+                    it('should throw an LogicException containing the id of the alias and the name of the other array', function () {
+
+                        $file = __DIR__ . '/.test/config/invalid/isect/aliases/parameters.php';
+
+                        $this->test($file, LogicException::class, 'alias', 'id', 'parameters');
+
+                        $file = __DIR__ . '/.test/config/invalid/isect/aliases/factories.php';
+
+                        $this->test($file, LogicException::class, 'alias', 'id', 'factories');
+
+                        $file = __DIR__ . '/.test/config/invalid/isect/aliases/extensions.php';
+
+                        $this->test($file, LogicException::class, 'alias', 'id', 'extensions');
+
+                        $file = __DIR__ . '/.test/config/invalid/isect/aliases/tags.php';
+
+                        $this->test($file, LogicException::class, 'alias', 'id', 'tags');
+
+                    });
+
+                });
+
+            });
+
+            context('when the factories key of an array returned by a file is not an array', function () {
+
+                describe('->providers()', function () {
+
+                    it('should throw an UnexpectedValueException containing factories', function () {
+
+                        $file = __DIR__ . '/.test/config/invalid/not_array/factories.php';
+
+                        $this->test($file, UnexpectedValueException::class, 'factories');
 
                     });
 
@@ -267,34 +294,29 @@ describe('PhpFileConfiguration', function () {
 
             context('when the \'factories\' key of an array returned by a file does not contain only callables', function () {
 
-                beforeEach(function () {
+                describe('->providers()', function () {
 
-                    $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
-                        __DIR__ . '/.test/config/valid_full1.php',
-                        __DIR__ . '/.test/config/invalid_factories.php',
-                        __DIR__ . '/.test/config/valid_full2.php',
-                    ]);
+                    it('should throw an UnexpectedValueException containing factories', function () {
 
-                });
+                        $file = __DIR__ . '/.test/config/invalid/factories.php';
 
-                it('should implement ConfigurationInterface', function () {
+                        $this->test($file, UnexpectedValueException::class, 'factories');
 
-                    expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
+                    });
 
                 });
+
+            });
+
+            context('when the extensions key of an array returned by a file is not an array', function () {
 
                 describe('->providers()', function () {
 
-                    it('should throw an UnexpectedValueException containing factories and the file path', function () {
+                    it('should throw an UnexpectedValueException containing extensions', function () {
 
-                        try { $this->configuration->providers(); }
+                        $file = __DIR__ . '/.test/config/invalid/not_array/extensions.php';
 
-                        catch (UnexpectedValueException $e) {
-                            $test = $e->getMessage();
-                        }
-
-                        expect($test)->toContain('factories');
-                        expect($test)->toContain(__DIR__ . '/.test/config/invalid_factories.php');
+                        $this->test($file, UnexpectedValueException::class, 'extensions');
 
                     });
 
@@ -304,34 +326,29 @@ describe('PhpFileConfiguration', function () {
 
             context('when the \'extensions\' key of an array returned by a file does not contain only callables', function () {
 
-                beforeEach(function () {
+                describe('->providers()', function () {
 
-                    $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
-                        __DIR__ . '/.test/config/valid_full1.php',
-                        __DIR__ . '/.test/config/invalid_extensions.php',
-                        __DIR__ . '/.test/config/valid_full2.php',
-                    ]);
+                    it('should throw an UnexpectedValueException containing extensions', function () {
 
-                });
+                        $file = __DIR__ . '/.test/config/invalid/extensions.php';
 
-                it('should implement ConfigurationInterface', function () {
+                        $this->test($file, UnexpectedValueException::class, 'extensions');
 
-                    expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
+                    });
 
                 });
+
+            });
+
+            context('when the tags key of an array returned by a file is not an array', function () {
 
                 describe('->providers()', function () {
 
-                    it('should throw an UnexpectedValueException containing extensions and the file path', function () {
+                    it('should throw an UnexpectedValueException containing tags', function () {
 
-                        try { $this->configuration->providers(); }
+                        $file = __DIR__ . '/.test/config/invalid/not_array/tags.php';
 
-                        catch (UnexpectedValueException $e) {
-                            $test = $e->getMessage();
-                        }
-
-                        expect($test)->toContain('extensions');
-                        expect($test)->toContain(__DIR__ . '/.test/config/invalid_extensions.php');
+                        $this->test($file, UnexpectedValueException::class, 'tags');
 
                     });
 
@@ -341,34 +358,13 @@ describe('PhpFileConfiguration', function () {
 
             context('when the \'tags\' key of an array returned by a file does not contain only arrays', function () {
 
-                beforeEach(function () {
-
-                    $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
-                        __DIR__ . '/.test/config/valid_full1.php',
-                        __DIR__ . '/.test/config/invalid_tags_not_array.php',
-                        __DIR__ . '/.test/config/valid_full2.php',
-                    ]);
-
-                });
-
-                it('should implement ConfigurationInterface', function () {
-
-                    expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
-
-                });
-
                 describe('->providers()', function () {
 
-                    it('should throw an UnexpectedValueException containing tags and the file path', function () {
+                    it('should throw an UnexpectedValueException containing tags', function () {
 
-                        try { $this->configuration->providers(); }
+                        $file = __DIR__ . '/.test/config/invalid/tags.php';
 
-                        catch (UnexpectedValueException $e) {
-                            $test = $e->getMessage();
-                        }
-
-                        expect($test)->toContain('tags');
-                        expect($test)->toContain(__DIR__ . '/.test/config/invalid_tags_not_array.php');
+                        $this->test($file, UnexpectedValueException::class, 'tags');
 
                     });
 
@@ -376,30 +372,43 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when a value associated with a tag is not an array', function () {
-
-                beforeEach(function () {
-
-                    $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
-                        __DIR__ . '/.test/config/valid_full1.php',
-                        __DIR__ . '/.test/config/invalid_tags_not_string.php',
-                        __DIR__ . '/.test/config/valid_full2.php',
-                    ]);
-
-                });
+            context('when a tag attribute is not an array', function () {
 
                 describe('->providers()', function () {
 
-                    it('should throw an UnexpectedValueException containing the tag name and the file path', function () {
+                    it('should throw an UnexpectedValueException containing the tag name', function () {
 
-                        try { $this->configuration->providers(); }
+                        $file = __DIR__ . '/.test/config/invalid/tags_attributes.php';
 
-                        catch (UnexpectedValueException $e) {
-                            $test = $e->getMessage();
-                        }
+                        $this->test($file, UnexpectedValueException::class, 'id22');
 
-                        expect($test)->toContain('id2');
-                        expect($test)->toContain(__DIR__ . '/.test/config/invalid_tags_not_string.php');
+                    });
+
+                });
+
+            });
+
+            context('when the \'tags\' key of an array is sharing an identifier with another array', function () {
+
+                describe('->providers()', function () {
+
+                    it('should throw an LogicException containing the id of the tag and the name of the other array', function () {
+
+                        $file = __DIR__ . '/.test/config/invalid/isect/tags/parameters.php';
+
+                        $this->test($file, LogicException::class, 'tag', 'id', 'parameters');
+
+                        $file = __DIR__ . '/.test/config/invalid/isect/tags/aliases.php';
+
+                        $this->test($file, LogicException::class, 'alias', 'id', 'tags');
+
+                        $file = __DIR__ . '/.test/config/invalid/isect/tags/factories.php';
+
+                        $this->test($file, LogicException::class, 'tag', 'id', 'factories');
+
+                        $file = __DIR__ . '/.test/config/invalid/isect/tags/extensions.php';
+
+                        $this->test($file, LogicException::class, 'tag', 'id', 'extensions');
 
                     });
 
