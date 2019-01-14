@@ -12,9 +12,34 @@ use Quanta\Container\Factories\Parameter;
 use Quanta\Container\Factories\Extension;
 
 use Quanta\Container\Values\Value;
+use Quanta\Container\Values\ValueFactory;
+use Quanta\Container\Values\EnvVarParser;
+use Quanta\Container\Values\InstanceParser;
 use Quanta\Container\Values\ValueFactoryInterface;
+use Quanta\Container\Values\InterpolatedStringParser;
 
 require_once __DIR__ . '/.test/classes.php';
+
+describe('PhpFileConfiguration::withDefaultValueParsers()', function () {
+
+    it('should return a php file configuration using the default value parsers', function () {
+
+        $patterns = ['pattern1', 'pattern2', 'pattern3'];
+
+        $test = PhpFileConfiguration::withDefaultValueParsers(...$patterns);
+
+        expect($test)->toEqual(new PhpFileConfiguration(
+            new ValueFactory(...[
+                new EnvVarParser,
+                new InstanceParser,
+                new InterpolatedStringParser,
+            ]),
+            ...$patterns
+        ));
+
+    });
+
+});
 
 describe('PhpFileConfiguration', function () {
 

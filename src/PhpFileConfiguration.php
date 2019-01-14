@@ -6,7 +6,11 @@ use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
 use Quanta\Container\Factories\Parameter;
 
+use Quanta\Container\Values\ValueFactory;
+use Quanta\Container\Values\EnvVarParser;
+use Quanta\Container\Values\InstanceParser;
 use Quanta\Container\Values\ValueFactoryInterface;
+use Quanta\Container\Values\InterpolatedStringParser;
 
 use function Quanta\Exceptions\areAllTypedAs;
 use Quanta\Exceptions\InvalidKey;
@@ -43,6 +47,23 @@ final class PhpFileConfiguration implements ConfigurationInterface
      * @var string[]
      */
     private $patterns;
+
+    /**
+     * Return a new php file configuration with a default value factory.
+     *
+     * @param string ...$patterns
+     * @return \Quanta\Container\PhpFileConfiguration
+     */
+    public static function withDefaultValueParsers(string ...$patterns): PhpFileConfiguration
+    {
+        $factory = new ValueFactory(...[
+            new EnvVarParser,
+            new InstanceParser,
+            new InterpolatedStringParser,
+        ]);
+
+        return new PhpFileConfiguration($factory, ...$patterns);
+    }
 
     /**
      * Constructor.
