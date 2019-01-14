@@ -6,7 +6,7 @@ use Interop\Container\ServiceProviderInterface;
 
 use Quanta\Container\FactoryMap;
 use Quanta\Container\ExternalServiceProvider;
-use Quanta\Container\TaggedServiceProviderInterface;
+use Quanta\Container\ConfigurationEntryInterface;
 
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
@@ -23,9 +23,9 @@ describe('ExternalServiceProvider', function () {
 
     });
 
-    it('should implement TaggedServiceProviderInterface', function () {
+    it('should implement ConfigurationEntryInterface', function () {
 
-        expect($this->provider)->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+        expect($this->provider)->toBeAnInstanceOf(ConfigurationEntryInterface::class);
 
     });
 

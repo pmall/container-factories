@@ -8,7 +8,7 @@ use Quanta\Container\FactoryMap;
 use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\ConfigurationInterface;
 use Quanta\Container\ConfigurationFactoryMap;
-use Quanta\Container\TaggedServiceProviderInterface;
+use Quanta\Container\ConfigurationEntryInterface;
 
 use Quanta\Container\Factories\Extension;
 
@@ -34,11 +34,11 @@ describe('ConfigurationFactoryMap', function () {
 
         describe('->factories()', function () {
 
-            context('when no tagged service provider is provided by the configuration', function () {
+            context('when no configuration entry is provided by the configuration', function () {
 
                 it('should return an empty array', function () {
 
-                    $this->configuration->providers->returns([]);
+                    $this->configuration->entries->returns([]);
 
                     $test = $this->map->factories();
 
@@ -48,33 +48,33 @@ describe('ConfigurationFactoryMap', function () {
 
             });
 
-            context('when at least one tagged service provider is provided by the configuration', function () {
+            context('when at least one configuration entry is provided by the configuration', function () {
 
                 beforeEach(function () {
 
-                    $this->provider1 = mock(TaggedServiceProviderInterface::class);
-                    $this->provider2 = mock(TaggedServiceProviderInterface::class);
-                    $this->provider3 = mock(TaggedServiceProviderInterface::class);
+                    $this->entry1 = mock(ConfigurationEntryInterface::class);
+                    $this->entry2 = mock(ConfigurationEntryInterface::class);
+                    $this->entry3 = mock(ConfigurationEntryInterface::class);
 
-                    $this->configuration->providers->returns([
-                        $this->provider1->get(),
-                        $this->provider2->get(),
-                        $this->provider3->get(),
+                    $this->configuration->entries->returns([
+                        $this->entry1->get(),
+                        $this->entry2->get(),
+                        $this->entry3->get(),
                     ]);
 
-                    $this->provider1->factories->returns(new FactoryMap([
+                    $this->entry1->factories->returns(new FactoryMap([
                         'id1' => new TestFactory('f11'),
                         'id2' => new TestFactory('f12'),
                         'id3' => new TestFactory('f13'),
                     ]));
 
-                    $this->provider2->factories->returns(new FactoryMap([
+                    $this->entry2->factories->returns(new FactoryMap([
                         'id2' => new TestFactory('f22'),
                         'id3' => new TestFactory('f23'),
                         'id4' => new TestFactory('f24'),
                     ]));
 
-                    $this->provider3->factories->returns(new FactoryMap([
+                    $this->entry3->factories->returns(new FactoryMap([
                         'id3' => new TestFactory('f33'),
                         'id4' => new TestFactory('f34'),
                         'id5' => new TestFactory('f35'),
@@ -82,7 +82,7 @@ describe('ConfigurationFactoryMap', function () {
 
                 });
 
-                it('should merge the factories provided by the service providers', function () {
+                it('should merge the factories provided by the configuration entries', function () {
 
                     $test = $this->map->factories();
 
@@ -96,19 +96,19 @@ describe('ConfigurationFactoryMap', function () {
 
                 });
 
-                it('should extend the factories with the extensions provided by the service providers', function () {
+                it('should extend the factories with the extensions provided by the configuration entries', function () {
 
-                    $this->provider1->extensions->returns(new FactoryMap([
+                    $this->entry1->extensions->returns(new FactoryMap([
                         'id2' => new TestFactory('e12'),
                         'id3' => new TestFactory('e13'),
                     ]));
 
-                    $this->provider2->extensions->returns(new FactoryMap([
+                    $this->entry2->extensions->returns(new FactoryMap([
                         'id1' => new TestFactory('e21'),
                         'id3' => new TestFactory('e23'),
                     ]));
 
-                    $this->provider3->extensions->returns(new FactoryMap([
+                    $this->entry3->extensions->returns(new FactoryMap([
                         'id1' => new TestFactory('e31'),
                         'id2' => new TestFactory('e32'),
                     ]));
@@ -131,15 +131,15 @@ describe('ConfigurationFactoryMap', function () {
 
                 it('should return extensions with no corresponding factory', function () {
 
-                    $this->provider1->extensions->returns(new FactoryMap([
+                    $this->entry1->extensions->returns(new FactoryMap([
                         'id6' => new TestFactory('e16'),
                     ]));
 
-                    $this->provider2->extensions->returns(new FactoryMap([
+                    $this->entry2->extensions->returns(new FactoryMap([
                         'id6' => new TestFactory('e26'),
                     ]));
 
-                    $this->provider3->extensions->returns(new FactoryMap([
+                    $this->entry3->extensions->returns(new FactoryMap([
                         'id6' => new TestFactory('e36'),
                     ]));
 

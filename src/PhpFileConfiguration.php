@@ -2,8 +2,6 @@
 
 namespace Quanta\Container;
 
-use Interop\Container\ServiceProviderInterface;
-
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
 use Quanta\Container\Factories\Parameter;
@@ -61,7 +59,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
     /**
      * @inheritdoc
      */
-    public function providers(): array
+    public function entries(): array
     {
         foreach ($this->patterns as $pattern) {
             foreach (glob($pattern) as $path) {
@@ -110,7 +108,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
                 // ensure an tags are uniques.
 
                 // add an anonymous tagged service provider.
-                $providers[] = $this->provider(...[
+                $providers[] = new ConfigurationEntry(...[
                     new MergedFactoryMap($parameters, $aliases, $factories),
                     new MergedFactoryMap($extensions, $tags),
                     array_merge(...[
@@ -364,47 +362,6 @@ final class PhpFileConfiguration implements ConfigurationInterface
         if (count($isect) > 0) {
             throw new \LogicException(sprintf($tpl, key($isect), 'an extension', $path));
         }
-    }
-
-    /**
-     * Return a tagged service provider with the given factory map, extension
-     * map and tags.
-     *
-     * @param \Quanta\Container\FactoryMapInterface $factories
-     * @param \Quanta\Container\FactoryMapInterface $extensions
-     * @param array[]                               $tags
-     * @return \Quanta\Container\TaggedServiceProviderInterface
-     */
-    private function provider(FactoryMapInterface $factories, FactoryMapInterface $extensions, array $tags): TaggedServiceProviderInterface
-    {
-        return new class ($factories, $extensions, $tags) implements TaggedServiceProviderInterface
-        {
-            private $factories;
-            private $extensions;
-            private $tags;
-
-            public function __construct($factories, $extensions, $tags)
-            {
-                $this->factories = $factories;
-                $this->extensions = $extensions;
-                $this->tags = $tags;
-            }
-
-            public function factories(): FactoryMapInterface
-            {
-                return $this->factories;
-            }
-
-            public function extensions(): FactoryMapInterface
-            {
-                return $this->extensions;
-            }
-
-            public function tags(): array
-            {
-                return $this->tags;
-            }
-        };
     }
 
     /**

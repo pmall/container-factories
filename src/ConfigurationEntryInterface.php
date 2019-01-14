@@ -2,26 +2,25 @@
 
 namespace Quanta\Container;
 
-use Interop\Container\ServiceProviderInterface;
-
-interface TaggedServiceProviderInterface
+interface ConfigurationEntryInterface
 {
     /**
-     * Return the factory map of the provided factories.
+     * Return the factories provided by the configuration entry.
      *
      * @return \Quanta\Container\FactoryMapInterface
      */
     public function factories(): FactoryMapInterface;
 
     /**
-     * Return the factory map of the provided extensions.
+     * Return the extensions provided by the configuration entry.
      *
      * @return \Quanta\Container\FactoryMapInterface
      */
     public function extensions(): FactoryMapInterface;
 
     /**
-     * Return an array of tags describing the provided container entries.
+     * Return the tags describing the factories provided by the configuration
+     * entry.
      *
      * @return array[]
      */

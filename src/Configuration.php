@@ -2,43 +2,30 @@
 
 namespace Quanta\Container;
 
-use Interop\Container\ServiceProviderInterface;
-
 final class Configuration implements ConfigurationInterface
 {
     /**
-     * The service providers to return.
+     * The configuration entries to return.
      *
-     * @var \Interop\Container\ServiceProviderInterface[]
+     * @var \Quanta\Container\ConfigurationEntryInterface[]
      */
-    private $providers;
+    private $entries;
 
     /**
      * Constructor.
      *
-     * @param \Interop\Container\ServiceProviderInterface ...$providers
+     * @param \Quanta\Container\ConfigurationEntryInterface ...$entries
      */
-    public function __construct(ServiceProviderInterface ...$providers)
+    public function __construct(ConfigurationEntryInterface ...$entries)
     {
-        $this->providers = $providers;
+        $this->entries = $entries;
     }
 
     /**
      * @inheritdoc
      */
-    public function providers(): array
+    public function entries(): array
     {
-        return array_map([$this, 'provider'], $this->providers);
-    }
-
-    /**
-     * Return a tagged service provider from the given service provider.
-     *
-     * @param \Interop\Container\ServiceProviderInterface $provider
-     * @return \Quanta\Container\ExternalServiceProvider
-     */
-    private function provider(ServiceProviderInterface $provider): ExternalServiceProvider
-    {
-        return new ExternalServiceProvider($provider);
+        return $this->entries;
     }
 }

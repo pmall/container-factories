@@ -2,11 +2,11 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\ExternalServiceProvider;
-use Quanta\Container\ConfigurationInterface;
-use Quanta\Container\ClassNameCollectionConfiguration;
-
 use Quanta\Utils\ClassNameCollectionInterface;
+
+use Quanta\Container\ConfigurationInterface;
+use Quanta\Container\ExternalServiceProvider;
+use Quanta\Container\ClassNameCollectionConfiguration;
 
 require_once __DIR__ . '/.test/namespace1.php';
 require_once __DIR__ . '/.test/namespace2.php';
@@ -27,7 +27,7 @@ describe('ClassNameCollectionConfiguration', function () {
 
     });
 
-    describe('->providers()', function () {
+    describe('->entries()', function () {
 
         it('should return an array of ExternalServiceProvider instances from the ServiceProviderInterface implementation class names returned by the collection ->classes() method', function () {
 
@@ -44,7 +44,7 @@ describe('ClassNameCollectionConfiguration', function () {
                 Test2\ServiceProvider3::class,
             ]);
 
-            $test = $this->configuration->providers();
+            $test = $this->configuration->entries();
 
             expect($test)->toEqual([
                 new ExternalServiceProvider(new Test1\ServiceProvider1),
@@ -69,7 +69,7 @@ describe('ClassNameCollectionConfiguration', function () {
                 Interop\Container\ServiceProviderInterface::class,
             ]);
 
-            expect([$this->configuration, 'providers'])->not->toThrow();
+            expect([$this->configuration, 'entries'])->not->toThrow();
 
         });
 

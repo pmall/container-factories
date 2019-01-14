@@ -2,24 +2,22 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Interop\Container\ServiceProviderInterface;
-
 use Quanta\Container\Configuration;
 use Quanta\Container\ConfigurationInterface;
-use Quanta\Container\ExternalServiceProvider;
+use Quanta\Container\ConfigurationEntryInterface;
 
 describe('Configuration', function () {
 
     beforeEach(function () {
 
-        $this->provider1 = mock(ServiceProviderInterface::class);
-        $this->provider2 = mock(ServiceProviderInterface::class);
-        $this->provider3 = mock(ServiceProviderInterface::class);
+        $this->entry1 = mock(ConfigurationEntryInterface::class);
+        $this->entry2 = mock(ConfigurationEntryInterface::class);
+        $this->entry3 = mock(ConfigurationEntryInterface::class);
 
         $this->configuration = new Configuration(...[
-            $this->provider1->get(),
-            $this->provider2->get(),
-            $this->provider3->get(),
+            $this->entry1->get(),
+            $this->entry2->get(),
+            $this->entry3->get(),
         ]);
 
     });
@@ -30,17 +28,17 @@ describe('Configuration', function () {
 
     });
 
-    describe('->providers()', function () {
+    describe('->entries()', function () {
 
-        it('should return an array of ExternalServiceProvider instances from the service providers', function () {
+        it('should return the entries', function () {
 
-            $test = $this->configuration->providers();
+            $test = $this->configuration->entries();
 
             expect($test)->toBeAn('array');
             expect($test)->toHaveLength(3);
-            expect($test[0])->toEqual(new ExternalServiceProvider($this->provider1->get()));
-            expect($test[1])->toEqual(new ExternalServiceProvider($this->provider2->get()));
-            expect($test[2])->toEqual(new ExternalServiceProvider($this->provider3->get()));
+            expect($test[0])->toBe($this->entry1->get());
+            expect($test[1])->toBe($this->entry2->get());
+            expect($test[2])->toBe($this->entry3->get());
 
         });
 

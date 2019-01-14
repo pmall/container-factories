@@ -28,24 +28,24 @@ final class ClassNameCollectionConfiguration implements ConfigurationInterface
     /**
      * @inheritdoc
      */
-    public function providers(): array
+    public function entries(): array
     {
         $classes = $this->collection->classes();
         $classes = array_filter($classes, [$this, 'filter']);
 
-        $providers = array_map([$this, 'provider'], $classes);
+        $providers = array_map([$this, 'configuration'], $classes);
 
         return array_values($providers);
     }
 
     /**
-     * Return a tagged service provider from the given service provider class
+     * Return an external service provider from the given service provider class
      * name.
      *
      * @param string $class
      * @return \Quanta\Container\ExternalServiceProvider
      */
-    private function provider(string $class): ExternalServiceProvider
+    private function configuration(string $class): ExternalServiceProvider
     {
         return new ExternalServiceProvider(new $class);
     }

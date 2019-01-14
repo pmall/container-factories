@@ -5,7 +5,7 @@ namespace Quanta\Container;
 final class MergedConfiguration implements ConfigurationInterface
 {
     /**
-     * The configuration to treat as a single one.
+     * The array of configurations to merge.
      *
      * @var \Quanta\Container\ConfigurationInterface[]
      */
@@ -24,22 +24,22 @@ final class MergedConfiguration implements ConfigurationInterface
     /**
      * @inheritdoc
      */
-    public function providers(): array
+    public function entries(): array
     {
-        $providers = array_map([$this, 'mapped'], $this->configurations);
+        $entries = array_map([$this, 'mapped'], $this->configurations);
 
-        return array_merge([], ...$providers);
+        return array_merge([], ...$entries);
     }
 
     /**
-     * Return the array of tagged service providers provided by the given
+     * Return the array of configuration entries provided by the given
      * configuration.
      *
      * @param \Quanta\Container\ConfigurationInterface $configuration
-     * @return \Quanta\Container\TaggedServiceProviderInterface[]
+     * @return \Quanta\Container\ConfigurationEntryInterface[]
      */
     public function mapped(ConfigurationInterface $configuration): array
     {
-        return $configuration->providers();
+        return $configuration->entries();
     }
 }

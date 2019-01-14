@@ -2,9 +2,9 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\ConfigurationInterface;
 use Quanta\Container\MergedConfiguration;
-use Quanta\Container\TaggedServiceProviderInterface;
+use Quanta\Container\ConfigurationInterface;
+use Quanta\Container\ConfigurationEntryInterface;
 
 describe('MergedConfiguration', function () {
 
@@ -22,11 +22,11 @@ describe('MergedConfiguration', function () {
 
         });
 
-        describe('->providers()', function () {
+        describe('->entries()', function () {
 
             it('should return an empty array', function () {
 
-                $test = $this->configuration->providers();
+                $test = $this->configuration->entries();
 
                 expect($test)->toEqual([]);
 
@@ -58,50 +58,50 @@ describe('MergedConfiguration', function () {
 
         });
 
-        describe('->providers()', function () {
+        describe('->entries()', function () {
 
-            it('should return all the tagged service providers returned by all the configurations ->provide() methods', function () {
+            it('should return all the configuration entries returned by all the configurations ->entries() methods', function () {
 
-                $provider11 = mock(TaggedServiceProviderInterface::class);
-                $provider12 = mock(TaggedServiceProviderInterface::class);
-                $provider13 = mock(TaggedServiceProviderInterface::class);
-                $provider21 = mock(TaggedServiceProviderInterface::class);
-                $provider22 = mock(TaggedServiceProviderInterface::class);
-                $provider23 = mock(TaggedServiceProviderInterface::class);
-                $provider31 = mock(TaggedServiceProviderInterface::class);
-                $provider32 = mock(TaggedServiceProviderInterface::class);
-                $provider33 = mock(TaggedServiceProviderInterface::class);
+                $entry11 = mock(ConfigurationEntryInterface::class);
+                $entry12 = mock(ConfigurationEntryInterface::class);
+                $entry13 = mock(ConfigurationEntryInterface::class);
+                $entry21 = mock(ConfigurationEntryInterface::class);
+                $entry22 = mock(ConfigurationEntryInterface::class);
+                $entry23 = mock(ConfigurationEntryInterface::class);
+                $entry31 = mock(ConfigurationEntryInterface::class);
+                $entry32 = mock(ConfigurationEntryInterface::class);
+                $entry33 = mock(ConfigurationEntryInterface::class);
 
-                $this->delegate1->providers->returns([
-                    $provider11->get(),
-                    $provider12->get(),
-                    $provider13->get(),
+                $this->delegate1->entries->returns([
+                    $entry11->get(),
+                    $entry12->get(),
+                    $entry13->get(),
                 ]);
 
-                $this->delegate2->providers->returns([
-                    $provider21->get(),
-                    $provider22->get(),
-                    $provider23->get(),
+                $this->delegate2->entries->returns([
+                    $entry21->get(),
+                    $entry22->get(),
+                    $entry23->get(),
                 ]);
 
-                $this->delegate3->providers->returns([
-                    $provider31->get(),
-                    $provider32->get(),
-                    $provider33->get(),
+                $this->delegate3->entries->returns([
+                    $entry31->get(),
+                    $entry32->get(),
+                    $entry33->get(),
                 ]);
 
-                $test = $this->configuration->providers();
+                $test = $this->configuration->entries();
 
                 expect($test)->toEqual([
-                    $provider11->get(),
-                    $provider12->get(),
-                    $provider13->get(),
-                    $provider21->get(),
-                    $provider22->get(),
-                    $provider23->get(),
-                    $provider31->get(),
-                    $provider32->get(),
-                    $provider33->get(),
+                    $entry11->get(),
+                    $entry12->get(),
+                    $entry13->get(),
+                    $entry21->get(),
+                    $entry22->get(),
+                    $entry23->get(),
+                    $entry31->get(),
+                    $entry32->get(),
+                    $entry33->get(),
                 ]);
 
             });

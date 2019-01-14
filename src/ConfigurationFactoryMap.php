@@ -2,9 +2,6 @@
 
 namespace Quanta\Container;
 
-use Quanta\Exceptions\ReturnTypeErrorMessage;
-use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
-
 final class ConfigurationFactoryMap implements FactoryMapInterface
 {
     /**
@@ -29,13 +26,13 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        $providers = $this->configuration->providers();
+        $entries = $this->configuration->entries();
 
         $map = new ExtendedFactoryMap(
             new MergedFactoryMap(
-                ...array_map([$this, 'factoryMap'], $providers)
+                ...array_map([$this, 'factoryMap'], $entries)
             ),
-            ...array_map([$this, 'extensionMap'], $providers)
+            ...array_map([$this, 'extensionMap'], $entries)
         );
 
         return $map->factories();
@@ -44,33 +41,33 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     /**
      * Return the factory map provided by the given service provider.
      *
-     * @param \Quanta\Container\TaggedServiceProviderInterface $provider
+     * @param \Quanta\Container\ConfigurationEntryInterface $entry
      * @return \Quanta\Container\FactoryMapInterface
      */
-    private function factoryMap(TaggedServiceProviderInterface $provider): FactoryMapInterface
+    private function factoryMap(ConfigurationEntryInterface $entry): FactoryMapInterface
     {
-        return $provider->factories();
+        return $entry->factories();
     }
 
     /**
      * Return the extension map provided by the given service provider.
      *
-     * @param \Quanta\Container\TaggedServiceProviderInterface $provider
+     * @param \Quanta\Container\ConfigurationEntryInterface $entry
      * @return \Quanta\Container\FactoryMapInterface
      */
-    private function extensionMap(TaggedServiceProviderInterface $provider): FactoryMapInterface
+    private function extensionMap(ConfigurationEntryInterface $entry): FactoryMapInterface
     {
-        return $provider->extensions();
+        return $entry->extensions();
     }
 
     /**
      * Return the extension map provided by the given service provider.
      *
-     * @param \Quanta\Container\TaggedServiceProviderInterface $provider
+     * @param \Quanta\Container\ConfigurationEntryInterface $entry
      * @return array[]
      */
-    private function tags(TaggedServiceProviderInterface $provider): array
+    private function tags(ConfigurationEntryInterface $entry): array
     {
-        return $provider->tags();
+        return $entry->tags();
     }
 }

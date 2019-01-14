@@ -4,7 +4,7 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\PhpFileConfiguration;
 use Quanta\Container\ConfigurationInterface;
-use Quanta\Container\TaggedServiceProviderInterface;
+use Quanta\Container\ConfigurationEntryInterface;
 
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
@@ -40,7 +40,7 @@ describe('PhpFileConfiguration', function () {
 
         });
 
-        describe('->providers()', function () {
+        describe('->entries()', function () {
 
             it('should return one service provider per php file', function () {
 
@@ -48,13 +48,13 @@ describe('PhpFileConfiguration', function () {
                     return new Value($value);
                 });
 
-                $test = $this->configuration->providers();
+                $test = $this->configuration->entries();
 
                 expect($test)->toBeAn('array');
                 expect($test)->toHaveLength(7);
 
                 // 0 is valid_full1.php
-                expect($test[0])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[0])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
                 expect($test[0]->factories()->factories())->toEqual([
                     'id1' => new Parameter(new Value('parameter11')),
                     'alias1' => new Alias('id11'),
@@ -76,7 +76,7 @@ describe('PhpFileConfiguration', function () {
                 ]);
 
                 // 1 is valid_full2.php
-                expect($test[1])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[1])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
                 expect($test[1]->factories()->factories())->toEqual([
                     'id1' => new Parameter(new Value('parameter21')),
                     'alias1' => new Alias('id21'),
@@ -98,7 +98,7 @@ describe('PhpFileConfiguration', function () {
                 ]);
 
                 // 2 is valid_only_aliases.php
-                expect($test[2])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[2])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
                 expect($test[2]->factories()->factories())->toEqual([
                     'alias1' => new Alias('id31'),
                     'alias2' => new Alias('id32'),
@@ -110,7 +110,7 @@ describe('PhpFileConfiguration', function () {
                 ]);
 
                 // 3 is valid_only_extensions.php
-                expect($test[3])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[3])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
                 expect($test[3]->factories()->factories())->toEqual([]);
                 expect($test[3]->extensions()->factories())->toEqual([
                     'id1' => new Test\TestFactory('extension31'),
@@ -119,7 +119,7 @@ describe('PhpFileConfiguration', function () {
                 expect($test[3]->tags())->toEqual([]);
 
                 // 4 is valid_only_factories.php
-                expect($test[4])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[4])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
                 expect($test[4]->factories()->factories())->toEqual([
                     'id1' => new Test\TestFactory('factory31'),
                     'id2' => new Test\TestFactory('factory32'),
@@ -128,7 +128,7 @@ describe('PhpFileConfiguration', function () {
                 expect($test[4]->tags())->toEqual([]);
 
                 // 5 is valid_only_parameters.php
-                expect($test[5])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[5])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
                 expect($test[5]->factories()->factories())->toEqual([
                     'id1' => new Parameter(new Value('parameter31')),
                     'id2' => new Parameter(new Value('parameter32')),
@@ -137,7 +137,7 @@ describe('PhpFileConfiguration', function () {
                 expect($test[5]->tags())->toEqual([]);
 
                 // 6 is valid_only_tags.php
-                expect($test[6])->toBeAnInstanceOf(TaggedServiceProviderInterface::class);
+                expect($test[6])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
                 expect($test[6]->factories()->factories())->toEqual([]);
                 expect($test[6]->extensions()->factories())->toEqual([
                     'tag1' => new Tag('id311', 'id312'),
@@ -166,7 +166,7 @@ describe('PhpFileConfiguration', function () {
                     __DIR__ . '/.test/config/valid/full2.php',
                 ]);
 
-                try { $configuration->providers(); }
+                try { $configuration->entries(); }
 
                 catch (Throwable $e) {
                     $test = $e;
@@ -184,7 +184,7 @@ describe('PhpFileConfiguration', function () {
 
         context('when a value returned by a file is not an array', function () {
 
-            describe('->providers()', function () {
+            describe('->entries()', function () {
 
                 it('should throw an UnexpectedValueException containing the file path', function () {
 
@@ -202,7 +202,7 @@ describe('PhpFileConfiguration', function () {
 
             context('when the parameters key of an array returned by a file is not an array', function () {
 
-                describe('->providers()', function () {
+                describe('->entries()', function () {
 
                     it('should throw an UnexpectedValueException containing parameters', function () {
 
@@ -218,7 +218,7 @@ describe('PhpFileConfiguration', function () {
 
             context('when the aliases key of an array returned by a file is not an array', function () {
 
-                describe('->providers()', function () {
+                describe('->entries()', function () {
 
                     it('should throw an UnexpectedValueException containing aliases', function () {
 
@@ -234,7 +234,7 @@ describe('PhpFileConfiguration', function () {
 
             context('when the \'aliases\' key of an array returned by a file does not contain only strings', function () {
 
-                describe('->providers()', function () {
+                describe('->entries()', function () {
 
                     it('should throw an UnexpectedValueException containing aliases', function () {
 
@@ -250,7 +250,7 @@ describe('PhpFileConfiguration', function () {
 
             context('when the \'aliases\' key of an array is sharing an identifier with another array', function () {
 
-                describe('->providers()', function () {
+                describe('->entries()', function () {
 
                     it('should throw an LogicException containing the id of the alias and the name of the other array', function () {
 
@@ -278,7 +278,7 @@ describe('PhpFileConfiguration', function () {
 
             context('when the factories key of an array returned by a file is not an array', function () {
 
-                describe('->providers()', function () {
+                describe('->entries()', function () {
 
                     it('should throw an UnexpectedValueException containing factories', function () {
 
@@ -294,7 +294,7 @@ describe('PhpFileConfiguration', function () {
 
             context('when the \'factories\' key of an array returned by a file does not contain only callables', function () {
 
-                describe('->providers()', function () {
+                describe('->entries()', function () {
 
                     it('should throw an UnexpectedValueException containing factories', function () {
 
@@ -310,7 +310,7 @@ describe('PhpFileConfiguration', function () {
 
             context('when the extensions key of an array returned by a file is not an array', function () {
 
-                describe('->providers()', function () {
+                describe('->entries()', function () {
 
                     it('should throw an UnexpectedValueException containing extensions', function () {
 
@@ -326,7 +326,7 @@ describe('PhpFileConfiguration', function () {
 
             context('when the \'extensions\' key of an array returned by a file does not contain only callables', function () {
 
-                describe('->providers()', function () {
+                describe('->entries()', function () {
 
                     it('should throw an UnexpectedValueException containing extensions', function () {
 
@@ -342,7 +342,7 @@ describe('PhpFileConfiguration', function () {
 
             context('when the tags key of an array returned by a file is not an array', function () {
 
-                describe('->providers()', function () {
+                describe('->entries()', function () {
 
                     it('should throw an UnexpectedValueException containing tags', function () {
 
@@ -358,7 +358,7 @@ describe('PhpFileConfiguration', function () {
 
             context('when the \'tags\' key of an array returned by a file does not contain only arrays', function () {
 
-                describe('->providers()', function () {
+                describe('->entries()', function () {
 
                     it('should throw an UnexpectedValueException containing tags', function () {
 
@@ -374,7 +374,7 @@ describe('PhpFileConfiguration', function () {
 
             context('when a tag attribute is not an array', function () {
 
-                describe('->providers()', function () {
+                describe('->entries()', function () {
 
                     it('should throw an UnexpectedValueException containing the tag name', function () {
 
@@ -390,7 +390,7 @@ describe('PhpFileConfiguration', function () {
 
             context('when the \'tags\' key of an array is sharing an identifier with another array', function () {
 
-                describe('->providers()', function () {
+                describe('->entries()', function () {
 
                     it('should throw an LogicException containing the id of the tag and the name of the other array', function () {
 
