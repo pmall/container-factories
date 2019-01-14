@@ -161,11 +161,11 @@ describe('ServiceProviderConfigurationEntry', function () {
 
     });
 
-    describe('->tags()', function () {
+    describe('->metadata()', function () {
 
         it('should return an empty array', function () {
 
-            $test = $this->configuration->tags();
+            $test = $this->configuration->metadata();
 
             expect($test)->toEqual([]);
 

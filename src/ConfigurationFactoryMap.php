@@ -39,7 +39,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     }
 
     /**
-     * Return the factory map provided by the given service provider.
+     * Return the factory map provided by the given configuration entry.
      *
      * @param \Quanta\Container\ConfigurationEntryInterface $entry
      * @return \Quanta\Container\FactoryMapInterface
@@ -50,7 +50,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     }
 
     /**
-     * Return the extension map provided by the given service provider.
+     * Return the extension map provided by the given configuration entry.
      *
      * @param \Quanta\Container\ConfigurationEntryInterface $entry
      * @return \Quanta\Container\FactoryMapInterface
@@ -61,13 +61,13 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     }
 
     /**
-     * Return the extension map provided by the given service provider.
+     * Return the metadata provided by the given configuration entry.
      *
      * @param \Quanta\Container\ConfigurationEntryInterface $entry
      * @return array[]
      */
-    private function tags(ConfigurationEntryInterface $entry): array
+    private function metadata(ConfigurationEntryInterface $entry): array
     {
-        return $entry->tags();
+        return $entry->metadata();
     }
 }

@@ -19,27 +19,27 @@ final class ConfigurationEntry implements ConfigurationEntryInterface
     private $extensions;
 
     /**
-     * The tags describing the factories provided by the configuration entry.
+     * The metadata associated to the factories.
      *
      * @var array[]
      */
-    private $tags;
+    private $metadata;
 
     /**
      * Constructor.
      *
      * @param \Quanta\Container\FactoryMapInterface $factories
      * @param \Quanta\Container\FactoryMapInterface $extensions
-     * @param array[]                               $tags
+     * @param array[]                               $metadata
      */
     public function __construct(
         FactoryMapInterface $factories,
         FactoryMapInterface $extensions,
-        array $tags
+        array $metadata = []
     ) {
         $this->factories = $factories;
         $this->extensions = $extensions;
-        $this->tags = $tags;
+        $this->metadata = $metadata;
     }
 
     /**
@@ -61,8 +61,8 @@ final class ConfigurationEntry implements ConfigurationEntryInterface
     /**
      * @inheritdoc
      */
-    public function tags(): array
+    public function metadata(): array
     {
-        return $this->tags;
+        return $this->metadata;
     }
 }

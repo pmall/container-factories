@@ -3,7 +3,8 @@
 return [
     'parameters' => [],
     'aliases' => [],
-    'factories' => 1,
+    'factories' => [],
     'extensions' => [],
     'tags' => [],
+    'metadata' => 1,
 ];

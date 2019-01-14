@@ -85,7 +85,7 @@ final class ServiceProviderConfigurationEntry implements ConfigurationEntryInter
     /**
      * @inheritdoc
      */
-    public function tags(): array
+    public function metadata(): array
     {
         return [];
     }

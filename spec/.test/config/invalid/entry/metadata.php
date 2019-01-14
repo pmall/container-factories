@@ -5,6 +5,10 @@ return [
     'aliases' => [],
     'factories' => [],
     'extensions' => [],
-    'tags' => 1,
-    'metadata' => [],
+    'tags' => [],
+    'metadata' => [
+        'id1' => [],
+        'id2' => 1,
+        'id3' => [],
+    ],
 ];

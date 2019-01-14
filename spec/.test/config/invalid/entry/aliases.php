@@ -2,7 +2,11 @@
 
 return [
     'parameters' => [],
-    'aliases' => 1,
+    'aliases' => [
+        'alias1' => 'id1',
+        'alias2' => [],
+        'alias3' => 'id3',
+    ],
     'factories' => [],
     'extensions' => [],
     'tags' => [],

@@ -6,4 +6,5 @@ return [
     'factories' => [],
     'extensions' => [],
     'tags' => [],
+    'metadata' => [],
 ];

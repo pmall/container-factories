@@ -19,10 +19,9 @@ interface ConfigurationEntryInterface
     public function extensions(): FactoryMapInterface;
 
     /**
-     * Return the tags describing the factories provided by the configuration
-     * entry.
+     * Return the metadata associated to the factories.
      *
      * @return array[]
      */
-    public function tags(): array;
+    public function metadata(): array;
 }

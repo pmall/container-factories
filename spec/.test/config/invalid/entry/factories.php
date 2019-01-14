@@ -3,7 +3,11 @@
 return [
     'parameters' => [],
     'aliases' => [],
-    'factories' => 1,
+    'factories' => [
+        'id1' => function () {},
+        'id2' => 1,
+        'id3' => function () {},
+    ],
     'extensions' => [],
     'tags' => [],
     'metadata' => [],
