@@ -82,7 +82,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      */
     public function entries(): array
     {
-        foreach ($this->patterns as $pattern) {
+        foreach (array_unique($this->patterns) as $pattern) {
             foreach (glob($pattern) as $path) {
 
                 // get the file content and ensure it is an array.
