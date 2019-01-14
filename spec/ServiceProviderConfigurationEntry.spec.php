@@ -5,27 +5,27 @@ use function Eloquent\Phony\Kahlan\mock;
 use Interop\Container\ServiceProviderInterface;
 
 use Quanta\Container\FactoryMap;
-use Quanta\Container\ExternalServiceProvider;
 use Quanta\Container\ConfigurationEntryInterface;
+use Quanta\Container\ServiceProviderConfigurationEntry;
 
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
 
 require_once __DIR__ . '/.test/classes.php';
 
-describe('ExternalServiceProvider', function () {
+describe('ServiceProviderConfigurationEntry', function () {
 
     beforeEach(function () {
 
         $this->delegate = mock(ServiceProviderInterface::class);
 
-        $this->provider = new ExternalServiceProvider($this->delegate->get());
+        $this->configuration = new ServiceProviderConfigurationEntry($this->delegate->get());
 
     });
 
     it('should implement ConfigurationEntryInterface', function () {
 
-        expect($this->provider)->toBeAnInstanceOf(ConfigurationEntryInterface::class);
+        expect($this->configuration)->toBeAnInstanceOf(ConfigurationEntryInterface::class);
 
     });
 
@@ -37,7 +37,7 @@ describe('ExternalServiceProvider', function () {
 
                 $this->delegate->getFactories->returns(1);
 
-                expect([$this->provider, 'factories'])->toThrow(new UnexpectedValueException(
+                expect([$this->configuration, 'factories'])->toThrow(new UnexpectedValueException(
                     (string) new ReturnTypeErrorMessage(
                         sprintf('%s::getFactories()', get_class($this->delegate->get())), 'array', 1
                     )
@@ -61,7 +61,7 @@ describe('ExternalServiceProvider', function () {
 
                     $this->delegate->getFactories->returns($factories);
 
-                    $test = $this->provider->factories();
+                    $test = $this->configuration->factories();
 
                     expect($test)->toEqual(new FactoryMap($factories));
 
@@ -81,7 +81,7 @@ describe('ExternalServiceProvider', function () {
 
                     $this->delegate->getFactories->returns($factories);
 
-                    expect([$this->provider, 'factories'])->toThrow(new UnexpectedValueException(
+                    expect([$this->configuration, 'factories'])->toThrow(new UnexpectedValueException(
                         (string) new ArrayReturnTypeErrorMessage(
                             sprintf('%s::getFactories()', get_class($this->delegate->get())), 'callable', $factories
                         )
@@ -103,7 +103,7 @@ describe('ExternalServiceProvider', function () {
 
                 $this->delegate->getExtensions->returns(1);
 
-                expect([$this->provider, 'extensions'])->toThrow(new UnexpectedValueException(
+                expect([$this->configuration, 'extensions'])->toThrow(new UnexpectedValueException(
                     (string) new ReturnTypeErrorMessage(
                         sprintf('%s::getExtensions()', get_class($this->delegate->get())), 'array', 1
                     )
@@ -127,7 +127,7 @@ describe('ExternalServiceProvider', function () {
 
                     $this->delegate->getExtensions->returns($extensions);
 
-                    $test = $this->provider->extensions();
+                    $test = $this->configuration->extensions();
 
                     expect($test)->toEqual(new FactoryMap($extensions));
 
@@ -147,7 +147,7 @@ describe('ExternalServiceProvider', function () {
 
                     $this->delegate->getExtensions->returns($extensions);
 
-                    expect([$this->provider, 'extensions'])->toThrow(new UnexpectedValueException(
+                    expect([$this->configuration, 'extensions'])->toThrow(new UnexpectedValueException(
                         (string) new ArrayReturnTypeErrorMessage(
                             sprintf('%s::getExtensions()', get_class($this->delegate->get())), 'callable', $extensions
                         )
@@ -165,7 +165,7 @@ describe('ExternalServiceProvider', function () {
 
         it('should return an empty array', function () {
 
-            $test = $this->provider->tags();
+            $test = $this->configuration->tags();
 
             expect($test)->toEqual([]);
 

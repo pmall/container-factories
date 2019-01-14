@@ -7,10 +7,10 @@ use Interop\Container\ServiceProviderInterface;
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
 
-final class ExternalServiceProvider implements ConfigurationEntryInterface
+final class ServiceProviderConfigurationEntry implements ConfigurationEntryInterface
 {
     /**
-     * The original service provider providing the factories and the extensions.
+     * The service provider providing the factories and the extensions.
      *
      * @var \Interop\Container\ServiceProviderInterface
      */

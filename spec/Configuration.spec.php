@@ -30,7 +30,7 @@ describe('Configuration', function () {
 
     describe('->entries()', function () {
 
-        it('should return the entries', function () {
+        it('should return the configuration entries', function () {
 
             $test = $this->configuration->entries();
 
