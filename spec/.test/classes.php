@@ -28,3 +28,13 @@ final class TestFactory
         //
     }
 }
+
+interface SomeInterface1 {}
+
+interface SomeInterface2 {}
+
+final class SomeClass1 implements SomeInterface1 {}
+final class SomeClass2 implements SomeInterface1 {}
+final class SomeClass3 implements SomeInterface1, SomeInterface2 {}
+final class SomeClass4 implements SomeInterface1, SomeInterface2 {}
+final class SomeClass5 implements SomeInterface2 {}

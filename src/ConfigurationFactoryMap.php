@@ -2,6 +2,8 @@
 
 namespace Quanta\Container;
 
+use Quanta\Container\Passes\ConfigurationPassInterface;
+
 final class ConfigurationFactoryMap implements FactoryMapInterface
 {
     /**
@@ -12,13 +14,22 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     private $configuration;
 
     /**
+     * The configuration passes to apply.
+     *
+     * @var \Quanta\Container\Passes\ConfigurationPassInterface[]
+     */
+    private $passes;
+
+    /**
      * Constructor.
      *
-     * @param \Quanta\Container\ConfigurationInterface $configuration
+     * @param \Quanta\Container\ConfigurationInterface              $configuration
+     * @param \Quanta\Container\Passes\ConfigurationPassInterface   ...$passes
      */
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(ConfigurationInterface $configuration, ConfigurationPassInterface ...$passes)
     {
         $this->configuration = $configuration;
+        $this->passes = $passes;
     }
 
     /**
@@ -28,14 +39,22 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     {
         $entries = $this->configuration->entries();
 
+        $factories = array_map([$this, 'factoryMap'], $entries);
+        $extensions = array_map([$this, 'extensionMap'], $entries);
+        $metadata = array_map([$this, 'metadata'], $entries);
+
         $map = new ExtendedFactoryMap(
-            new MergedFactoryMap(
-                ...array_map([$this, 'factoryMap'], $entries)
-            ),
-            ...array_map([$this, 'extensionMap'], $entries)
+            new MergedFactoryMap(...$factories), ...$extensions
         );
 
-        return $map->factories();
+        $factories = $map->factories();
+        $metadata = new Metadata(...$metadata);
+
+        foreach ($this->passes as $pass) {
+            $processed[] = $pass->factories($factories, $metadata);
+        }
+
+        return array_merge($factories, ...($processed ?? []));
     }
 
     /**
