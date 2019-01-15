@@ -6,10 +6,6 @@ return [
     'factories' => [],
     'extensions' => [],
     'tags' => [],
-    'metadata' => [
-        'id1' => [],
-        'id2' => 1,
-        'id3' => [],
-    ],
-    'passes' => [],
+    'metadata' => [],
+    'passes' => 1,
 ];

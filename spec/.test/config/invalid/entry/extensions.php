@@ -11,4 +11,5 @@ return [
     ],
     'tags' => [],
     'metadata' => [],
+    'passes' => [],
 ];

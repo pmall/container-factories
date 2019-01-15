@@ -12,6 +12,8 @@ use Quanta\Container\Values\InstanceParser;
 use Quanta\Container\Values\ValueFactoryInterface;
 use Quanta\Container\Values\InterpolatedStringParser;
 
+use Quanta\Container\Passes\ConfigurationPassInterface;
+
 use function Quanta\Exceptions\areAllTypedAs;
 use Quanta\Exceptions\InvalidKey;
 use Quanta\Exceptions\InvalidType;
@@ -32,6 +34,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
         'extensions' => 'extensions',
         'tags' => 'tags',
         'metadata' => 'metadata',
+        'passes' => 'passes',
     ];
 
     /**
@@ -104,6 +107,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
                     'extensions' => $config[self::KEYS['extensions']] ?? [],
                     'tags' => $config[self::KEYS['tags']] ?? [],
                     'metadata' => $config[self::KEYS['metadata']] ?? [],
+                    'passes' => $config[self::KEYS['passes']] ?? [],
                 ];
 
                 if (! areAllTypedAs('array', $config)) {
@@ -121,17 +125,19 @@ final class PhpFileConfiguration implements ConfigurationInterface
                 $extensions = $this->extensions($path, $config['extensions']);
                 $tags = $this->tags($path, $config['tags']);
                 $metadata = $this->metadata($path, $config['metadata']);
+                $passes = $this->passes($path, $config['passes']);
 
                 // add an anonymous tagged service provider.
-                $providers[] = new ConfigurationEntry(...[
+                $entries[] = new ConfigurationEntry(
                     new MergedFactoryMap($parameters, $aliases, $factories),
                     new MergedFactoryMap($extensions, $tags),
                     $metadata,
-                ]);
+                    ...$passes
+                );
             }
         }
 
-        return $providers ?? [];
+        return $entries ?? [];
     }
 
     /**
@@ -300,6 +306,31 @@ final class PhpFileConfiguration implements ConfigurationInterface
         }
 
         return $metadata;
+    }
+
+    /**
+     * Return an array of configuration passes from the given array of passes.
+     *
+     * The file path is given in order to throw a descriptive exception.
+     *
+     * @param string $path
+     * @param array $passes
+     * @return \Quanta\Container\Passes\ConfigurationPassInterface[]
+     * @throws \UnexpectedValueException
+     */
+    private function passes(string $path, array $passes): array
+    {
+        if (! areAllTypedAs(ConfigurationPassInterface::class, $passes)) {
+            throw new \UnexpectedValueException(
+                (string) new ArrayReturnTypeErrorMessage(
+                    sprintf('the file located at %s', $path),
+                    ConfigurationPassInterface::class,
+                    $passes
+                )
+            );
+        }
+
+        return array_values($passes);
     }
 
     /**

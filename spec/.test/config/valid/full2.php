@@ -25,5 +25,9 @@ return [
         'id1' => ['k211' => 'm211', 'k212' => 'm212'],
         'id2' => ['k221' => 'm211', 'k222' => 'm222'],
     ],
+    'passes' => [
+        'key' => new Test\TestConfigurationPass('pass21'),
+        new Test\TestConfigurationPass('pass22'),
+    ],
     'key' => 'only here to ensure extra keys are ignored without errors',
 ];

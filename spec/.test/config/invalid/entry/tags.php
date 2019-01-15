@@ -11,4 +11,5 @@ return [
         'id3' => [],
     ],
     'metadata' => [],
+    'passes' => [],
 ];

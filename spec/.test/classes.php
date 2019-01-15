@@ -4,6 +4,19 @@ namespace Test;
 
 use Psr\Container\ContainerInterface;
 
+use Quanta\Container\Metadata;
+use Quanta\Container\Passes\ConfigurationPassInterface;
+
+interface SomeInterface1 {}
+
+interface SomeInterface2 {}
+
+final class SomeClass1 implements SomeInterface1 {}
+final class SomeClass2 implements SomeInterface1 {}
+final class SomeClass3 implements SomeInterface1, SomeInterface2 {}
+final class SomeClass4 implements SomeInterface1, SomeInterface2 {}
+final class SomeClass5 implements SomeInterface2 {}
+
 final class TestFactory
 {
     private $name;
@@ -29,12 +42,17 @@ final class TestFactory
     }
 }
 
-interface SomeInterface1 {}
+final class TestConfigurationPass implements ConfigurationPassInterface
+{
+    private $name;
 
-interface SomeInterface2 {}
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
 
-final class SomeClass1 implements SomeInterface1 {}
-final class SomeClass2 implements SomeInterface1 {}
-final class SomeClass3 implements SomeInterface1, SomeInterface2 {}
-final class SomeClass4 implements SomeInterface1, SomeInterface2 {}
-final class SomeClass5 implements SomeInterface2 {}
+    public function factories(array $factories, Metadata $metadata): array
+    {
+        //
+    }
+}

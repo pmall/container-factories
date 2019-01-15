@@ -11,4 +11,5 @@ return [
         'id3' => ['id31', 'id32','id33'],
     ],
     'metadata' => [],
+    'passes' => [],
 ];

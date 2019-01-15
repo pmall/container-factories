@@ -18,6 +18,8 @@ use Quanta\Container\Values\InstanceParser;
 use Quanta\Container\Values\ValueFactoryInterface;
 use Quanta\Container\Values\InterpolatedStringParser;
 
+use Quanta\Container\Passes\ConfigurationPassInterface;
+
 require_once __DIR__ . '/.test/classes.php';
 
 describe('PhpFileConfiguration::withDefaultValueParsers()', function () {
@@ -61,6 +63,7 @@ describe('PhpFileConfiguration', function () {
                 __DIR__ . '/.test/config/valid/only/extensions.php',
                 __DIR__ . '/.test/config/valid/only/tags.php',
                 __DIR__ . '/.test/config/valid/only/metadata.php',
+                __DIR__ . '/.test/config/valid/only/passes.php',
             ]);
 
         });
@@ -82,7 +85,7 @@ describe('PhpFileConfiguration', function () {
                 $test = $this->configuration->entries();
 
                 expect($test)->toBeAn('array');
-                expect($test)->toHaveLength(8);
+                expect($test)->toHaveLength(9);
 
                 // 0 is valid_full1.php
                 expect($test[0])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
@@ -100,6 +103,10 @@ describe('PhpFileConfiguration', function () {
                 expect($test[0]->metadata())->toEqual([
                     'id1' => ['k111' => 'm111', 'k112' => 'm112'],
                     'id2' => ['k121' => 'm111', 'k122' => 'm122'],
+                ]);
+                expect($test[0]->passes())->toEqual([
+                    new Test\TestConfigurationPass('pass11'),
+                    new Test\TestConfigurationPass('pass12'),
                 ]);
 
                 // 1 is valid_full2.php
@@ -119,6 +126,10 @@ describe('PhpFileConfiguration', function () {
                     'id1' => ['k211' => 'm211', 'k212' => 'm212'],
                     'id2' => ['k221' => 'm211', 'k222' => 'm222'],
                 ]);
+                expect($test[1]->passes())->toEqual([
+                    new Test\TestConfigurationPass('pass21'),
+                    new Test\TestConfigurationPass('pass22'),
+                ]);
 
                 // 2 is valid_only_parameters.php
                 expect($test[2])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
@@ -128,6 +139,7 @@ describe('PhpFileConfiguration', function () {
                 ]);
                 expect($test[2]->extensions()->factories())->toEqual([]);
                 expect($test[2]->metadata())->toEqual([]);
+                expect($test[2]->passes())->toEqual([]);
 
                 // 3 is valid_only_aliases.php
                 expect($test[3])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
@@ -137,6 +149,7 @@ describe('PhpFileConfiguration', function () {
                 ]);
                 expect($test[3]->extensions()->factories())->toEqual([]);
                 expect($test[3]->metadata())->toEqual([]);
+                expect($test[3]->passes())->toEqual([]);
 
                 // 4 is valid_only_factories.php
                 expect($test[4])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
@@ -146,6 +159,7 @@ describe('PhpFileConfiguration', function () {
                 ]);
                 expect($test[4]->extensions()->factories())->toEqual([]);
                 expect($test[4]->metadata())->toEqual([]);
+                expect($test[4]->passes())->toEqual([]);
 
                 // 5 is valid_only_extensions.php
                 expect($test[5])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
@@ -155,6 +169,7 @@ describe('PhpFileConfiguration', function () {
                     'id2' => new Test\TestFactory('extension32'),
                 ]);
                 expect($test[5]->metadata())->toEqual([]);
+                expect($test[5]->passes())->toEqual([]);
 
                 // 6 is valid_only_tags.php
                 expect($test[6])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
@@ -164,6 +179,7 @@ describe('PhpFileConfiguration', function () {
                     'id2' => new Tag(['tag321', 'tag322']),
                 ]);
                 expect($test[6]->metadata())->toEqual([]);
+                expect($test[6]->passes())->toEqual([]);
 
                 // 7 is valid_only_metadata.php
                 expect($test[7])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
@@ -172,6 +188,17 @@ describe('PhpFileConfiguration', function () {
                 expect($test[7]->metadata())->toEqual([
                     'id1' => ['k311' => 'm311', 'k312' => 'm312'],
                     'id2' => ['k321' => 'm311', 'k322' => 'm322'],
+                ]);
+                expect($test[7]->passes())->toEqual([]);
+
+                // 7 is valid_only_passes.php
+                expect($test[8])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
+                expect($test[8]->factories()->factories())->toEqual([]);
+                expect($test[8]->extensions()->factories())->toEqual([]);
+                expect($test[8]->metadata())->toEqual([]);
+                expect($test[8]->passes())->toEqual([
+                    new Test\TestConfigurationPass('pass31'),
+                    new Test\TestConfigurationPass('pass32'),
                 ]);
 
             });
@@ -410,6 +437,38 @@ describe('PhpFileConfiguration', function () {
                         $file = __DIR__ . '/.test/config/invalid/entry/metadata.php';
 
                         $this->test($file, UnexpectedValueException::class, 'array', 'metadata');
+
+                    });
+
+                });
+
+            });
+
+            context('when the passes key of an array returned by a file is not an array', function () {
+
+                describe('->entries()', function () {
+
+                    it('should throw an UnexpectedValueException containing array and passes', function () {
+
+                        $file = __DIR__ . '/.test/config/invalid/passes.php';
+
+                        $this->test($file, UnexpectedValueException::class, 'array', 'passes');
+
+                    });
+
+                });
+
+            });
+
+            context('when the passes key of an array returned by a file does not contain only configuration pass implementations', function () {
+
+                describe('->entries()', function () {
+
+                    it('should throw an UnexpectedValueException containing ConfigurationPassInterface and passes', function () {
+
+                        $file = __DIR__ . '/.test/config/invalid/entry/passes.php';
+
+                        $this->test($file, UnexpectedValueException::class, ConfigurationPassInterface::class, 'passes');
 
                     });
 

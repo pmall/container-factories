@@ -7,4 +7,5 @@ return [
     'extensions' => [],
     'tags' => [],
     'metadata' => 1,
+    'passes' => [],
 ];
