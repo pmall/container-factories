@@ -294,8 +294,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
     {
         if (! areAllTypedAs('array', $metadata)) {
             throw new \UnexpectedValueException(
-                (string) new ArrayReturnTypeErrorMessage(
-                    sprintf('the file located at %s', $path), 'array', $metadata
+                $this->invalidKeyTypeErrorMessage(
+                    $path, self::KEYS['metadata'], 'array', $metadata
                 )
             );
         }
@@ -315,10 +315,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
     {
         if (! areAllTypedAs(ConfigurationPassInterface::class, $passes)) {
             throw new \UnexpectedValueException(
-                (string) new ArrayReturnTypeErrorMessage(
-                    sprintf('the file located at %s', $path),
-                    ConfigurationPassInterface::class,
-                    $passes
+                $this->invalidKeyTypeErrorMessage(
+                    $path, self::KEYS['passes'], ConfigurationPassInterface::class, $passes
                 )
             );
         }

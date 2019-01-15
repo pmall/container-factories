@@ -268,15 +268,15 @@ describe('PhpFileConfiguration', function () {
 
         context('when all the values returned by the files are arrays', function () {
 
-            context('when the parameters key of an array returned by a file is not an array', function () {
+            context('when the parameters returned by a file is not an array', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing array and parameters', function () {
+                    it('should throw an UnexpectedValueException containing array and \'parameters\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/parameters.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'array', 'parameters');
+                        $this->test($file, UnexpectedValueException::class, 'array', '\'parameters\'');
 
                     });
 
@@ -284,15 +284,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the aliases key of an array returned by a file is not an array', function () {
+            context('when the aliases returned by a file is not an array', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing array and aliases', function () {
+                    it('should throw an UnexpectedValueException containing array and \'aliases\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/aliases.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'array', 'aliases');
+                        $this->test($file, UnexpectedValueException::class, 'array', '\'aliases\'');
 
                     });
 
@@ -300,15 +300,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the aliases key of an array returned by a file does not contain only strings', function () {
+            context('when the aliases returned by a file are not only strings', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing string and aliases', function () {
+                    it('should throw an UnexpectedValueException containing string and \'aliases\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/entry/aliases.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'string', 'aliases');
+                        $this->test($file, UnexpectedValueException::class, 'string', '\'aliases\'');
 
                     });
 
@@ -316,15 +316,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the factories key of an array returned by a file is not an array', function () {
+            context('when the factories returned by a file is not an array', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing array and factories', function () {
+                    it('should throw an UnexpectedValueException containing array and \'factories\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/factories.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'array', 'factories');
+                        $this->test($file, UnexpectedValueException::class, 'array', '\'factories\'');
 
                     });
 
@@ -332,15 +332,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the factories key of an array returned by a file does not contain only callables', function () {
+            context('when the factories returned by a file are not only callables', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing callable and factories', function () {
+                    it('should throw an UnexpectedValueException containing callable and \'factories\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/entry/factories.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'callable', 'factories');
+                        $this->test($file, UnexpectedValueException::class, 'callable', '\'factories\'');
 
                     });
 
@@ -348,15 +348,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the extensions key of an array returned by a file is not an array', function () {
+            context('when the extensions returned by a file is not an array', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing array and extensions', function () {
+                    it('should throw an UnexpectedValueException containing array and \'extensions\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/extensions.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'array', 'extensions');
+                        $this->test($file, UnexpectedValueException::class, 'array', '\'extensions\'');
 
                     });
 
@@ -364,15 +364,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the extensions key of an array returned by a file does not contain only callables', function () {
+            context('when the extensions returned by a file are not only callables', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing callable and extensions', function () {
+                    it('should throw an UnexpectedValueException containing callable and \'extensions\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/entry/extensions.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'callable', 'extensions');
+                        $this->test($file, UnexpectedValueException::class, 'callable', '\'extensions\'');
 
                     });
 
@@ -380,15 +380,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the tags key of an array returned by a file is not an array', function () {
+            context('when the tags returned by a file is not an array', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing array and tags', function () {
+                    it('should throw an UnexpectedValueException containing array and \'tags\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/tags.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'array', 'tags');
+                        $this->test($file, UnexpectedValueException::class, 'array', '\'tags\'');
 
                     });
 
@@ -396,15 +396,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the tags key of an array returned by a file does not contain only arrays', function () {
+            context('when the tags returned by a file are not only arrays', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing array and tags', function () {
+                    it('should throw an UnexpectedValueException containing array and \'tags\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/entry/tags.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'array', 'tags');
+                        $this->test($file, UnexpectedValueException::class, 'array', '\'tags\'');
 
                     });
 
@@ -412,7 +412,7 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when a value of a tag is not a string', function () {
+            context('when a taged alias returned by a file is not a string', function () {
 
                 describe('->entries()', function () {
 
@@ -420,7 +420,7 @@ describe('PhpFileConfiguration', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/entry/tags_alias.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'id2', 'string');
+                        $this->test($file, UnexpectedValueException::class, '\'id2\'', 'string');
 
                     });
 
@@ -428,15 +428,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the metadata key of an array returned by a file is not an array', function () {
+            context('when the metadata returned by a file is not an array', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing array and metadata', function () {
+                    it('should throw an UnexpectedValueException containing array and \'metadata\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/metadata.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'array', 'metadata');
+                        $this->test($file, UnexpectedValueException::class, 'array', '\'metadata\'');
 
                     });
 
@@ -444,15 +444,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the metadata key of an array returned by a file does not contain only arrays', function () {
+            context('when the metadata returned by a file are not only arrays', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing array and metadata', function () {
+                    it('should throw an UnexpectedValueException containing array and \'metadata\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/entry/metadata.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'array', 'metadata');
+                        $this->test($file, UnexpectedValueException::class, 'array', '\'metadata\'');
 
                     });
 
@@ -460,15 +460,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the passes key of an array returned by a file is not an array', function () {
+            context('when the passes returned by a file is not an array', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing array and passes', function () {
+                    it('should throw an UnexpectedValueException containing array and \'passes\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/passes.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'array', 'passes');
+                        $this->test($file, UnexpectedValueException::class, 'array', '\'passes\'');
 
                     });
 
@@ -476,15 +476,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the passes key of an array returned by a file does not contain only configuration pass implementations', function () {
+            context('when the passes returned by a file are not only configuration pass implementations', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing ConfigurationPassInterface and passes', function () {
+                    it('should throw an UnexpectedValueException containing ConfigurationPassInterface and \'passes\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/entry/passes.php';
 
-                        $this->test($file, UnexpectedValueException::class, ConfigurationPassInterface::class, 'passes');
+                        $this->test($file, UnexpectedValueException::class, ConfigurationPassInterface::class, '\'passes\'');
 
                     });
 
@@ -492,15 +492,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the mappers key of an array returned by a file is not an array', function () {
+            context('when the mappers returned by a file is not an array', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing array and mappers', function () {
+                    it('should throw an UnexpectedValueException containing array and \'mappers\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/mappers.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'array', 'mappers');
+                        $this->test($file, UnexpectedValueException::class, 'array', '\'mappers\'');
 
                     });
 
@@ -508,15 +508,15 @@ describe('PhpFileConfiguration', function () {
 
             });
 
-            context('when the mappers key of an array returned by a file does not contain only strings', function () {
+            context('when the mappers returned by a file are not only strings', function () {
 
                 describe('->entries()', function () {
 
-                    it('should throw an UnexpectedValueException containing string and mappers', function () {
+                    it('should throw an UnexpectedValueException containing string and \'mappers\'', function () {
 
                         $file = __DIR__ . '/.test/config/invalid/entry/mappers.php';
 
-                        $this->test($file, UnexpectedValueException::class, 'string', 'mappers');
+                        $this->test($file, UnexpectedValueException::class, 'string', '\'mappers\'');
 
                     });
 
