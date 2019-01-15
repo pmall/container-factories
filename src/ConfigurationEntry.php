@@ -2,6 +2,8 @@
 
 namespace Quanta\Container;
 
+use Quanta\Container\Passes\ConfigurationPassInterface;
+
 final class ConfigurationEntry implements ConfigurationEntryInterface
 {
     /**
@@ -26,20 +28,30 @@ final class ConfigurationEntry implements ConfigurationEntryInterface
     private $metadata;
 
     /**
+     * The configuration passes provided by the configuration entry.
+     *
+     * @var \Quanta\Container\Passes\ConfigurationPassInterface[]
+     */
+    private $passes;
+
+    /**
      * Constructor.
      *
-     * @param \Quanta\Container\FactoryMapInterface $factories
-     * @param \Quanta\Container\FactoryMapInterface $extensions
-     * @param array[]                               $metadata
+     * @param \Quanta\Container\FactoryMapInterface                 $factories
+     * @param \Quanta\Container\FactoryMapInterface                 $extensions
+     * @param array[]                                               $metadata
+     * @param \Quanta\Container\Passes\ConfigurationPassInterface   ...$passes
      */
     public function __construct(
         FactoryMapInterface $factories,
         FactoryMapInterface $extensions,
-        array $metadata = []
+        array $metadata = [],
+        ConfigurationPassInterface ...$passes
     ) {
         $this->factories = $factories;
         $this->extensions = $extensions;
         $this->metadata = $metadata;
+        $this->passes = $passes;
     }
 
     /**
@@ -64,5 +76,13 @@ final class ConfigurationEntry implements ConfigurationEntryInterface
     public function metadata(): array
     {
         return $this->metadata;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function passes(): array
+    {
+        return $this->passes;
     }
 }

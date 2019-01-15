@@ -85,6 +85,14 @@ final class ServiceProviderConfigurationEntry implements ConfigurationEntryInter
     /**
      * @inheritdoc
      */
+    public function passes(): array
+    {
+        return [];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function metadata(): array
     {
         return [];

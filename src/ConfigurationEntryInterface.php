@@ -24,4 +24,11 @@ interface ConfigurationEntryInterface
      * @return array[]
      */
     public function metadata(): array;
+
+    /**
+     * Return the configuration passes provided by the configuration entry.
+     *
+     * @return \Quanta\Container\Passes\ConfigurationPassInterface[]
+     */
+    public function passes(): array;
 }
