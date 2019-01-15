@@ -173,4 +173,16 @@ describe('ServiceProviderConfigurationEntry', function () {
 
     });
 
+    describe('->passes()', function () {
+
+        it('should return an empty array', function () {
+
+            $test = $this->configuration->passes();
+
+            expect($test)->toEqual([]);
+
+        });
+
+    });
+
 });
