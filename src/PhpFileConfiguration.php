@@ -12,6 +12,7 @@ use Quanta\Container\Values\InstanceParser;
 use Quanta\Container\Values\ValueFactoryInterface;
 use Quanta\Container\Values\InterpolatedStringParser;
 
+use Quanta\Container\Passes\ReverseTagging;
 use Quanta\Container\Passes\ConfigurationPassInterface;
 
 use function Quanta\Exceptions\areAllTypedAs;
@@ -35,6 +36,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
         'tags' => 'tags',
         'metadata' => 'metadata',
         'passes' => 'passes',
+        'mappers' => 'mappers',
     ];
 
     /**
@@ -108,6 +110,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
                     'tags' => $config[self::KEYS['tags']] ?? [],
                     'metadata' => $config[self::KEYS['metadata']] ?? [],
                     'passes' => $config[self::KEYS['passes']] ?? [],
+                    'mappers' => $config[self::KEYS['mappers']] ?? [],
                 ];
 
                 if (! areAllTypedAs('array', $config)) {
@@ -126,13 +129,15 @@ final class PhpFileConfiguration implements ConfigurationInterface
                 $tags = $this->tags($path, $config['tags']);
                 $metadata = $this->metadata($path, $config['metadata']);
                 $passes = $this->passes($path, $config['passes']);
+                $mappers = $this->mappers($path, $config['mappers']);
 
                 // add an anonymous tagged service provider.
                 $entries[] = new ConfigurationEntry(
                     new MergedFactoryMap($parameters, $aliases, $factories),
                     new MergedFactoryMap($extensions, $tags),
                     $metadata,
-                    ...$passes
+                    ...$passes,
+                    ...$mappers
                 );
             }
         }
@@ -177,10 +182,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
     /**
      * Return an array of aliases from the given array of container entry ids.
      *
-     * The file path is given in order to throw a descriptive exception.
-     *
-     * @param string $path
-     * @param array $aliases
+     * @param string    $path
+     * @param array     $aliases
      * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
@@ -202,10 +205,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
     /**
      * Ensure all values of the given array of factories are callable.
      *
-     * The file path is given in order to throw a descriptive exception.
-     *
-     * @param string $path
-     * @param array $factories
+     * @param string    $path
+     * @param array     $factories
      * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
@@ -227,10 +228,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
     /**
      * Ensure all values of the given array of extensions are callable.
      *
-     * The file path is given in order to throw a descriptive exception.
-     *
-     * @param string $path
-     * @param array $extensions
+     * @param string    $path
+     * @param array     $extensions
      * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
@@ -253,10 +252,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
      * Return an array of tags from the given array of container entry
      * identifier arrays.
      *
-     * The file path is given in order to throw a descriptive exception.
-     *
-     * @param string $path
-     * @param array $tags
+     * @param string    $path
+     * @param array     $tags
      * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
@@ -288,10 +285,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
     /**
      * Return an array of metadata from the given array of metadata.
      *
-     * The file path is given in order to throw a descriptive exception.
-     *
-     * @param string $path
-     * @param array $metadata
+     * @param string    $path
+     * @param array     $metadata
      * @return array[]
      * @throws \UnexpectedValueException
      */
@@ -311,10 +306,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
     /**
      * Return an array of configuration passes from the given array of passes.
      *
-     * The file path is given in order to throw a descriptive exception.
-     *
-     * @param string $path
-     * @param array $passes
+     * @param string    $path
+     * @param array     $passes
      * @return \Quanta\Container\Passes\ConfigurationPassInterface[]
      * @throws \UnexpectedValueException
      */
@@ -334,13 +327,53 @@ final class PhpFileConfiguration implements ConfigurationInterface
     }
 
     /**
+     * Return a reverse tagging instance from the given container entry id and
+     * class name.
+     *
+     * @param string $id
+     * @param string $class
+     * @return \Quanta\Container\Passes\ReverseTagging
+     */
+    private function mapper(string $id, string $class): ReverseTagging
+    {
+        return new ReverseTagging($id, $class);
+    }
+
+    /**
+     * Return an array of reverse tagging instances from the given array of
+     * mappers.
+     *
+     * @param string    $path
+     * @param array     $mappers
+     * @return \Quanta\Container\Passes\ReverseTagging[]
+     * @throws \UnexpectedValueException
+     */
+    private function mappers(string $path, array $mappers): array
+    {
+        $ids = array_values($mappers);
+        $classes = array_map('strval', array_keys($mappers));
+
+        try {
+            return array_map([$this, 'mapper'], $ids, $classes);
+        }
+
+        catch (\TypeError $e) {
+            throw new \UnexpectedValueException(
+                $this->invalidKeyTypeErrorMessage(
+                    $path, self::KEYS['mappers'], 'string', $ids
+                )
+            );
+        }
+    }
+
+    /**
      * Return the message of exceptions thrown when an array contains at least
      * one value with a wrong type.
      *
-     * @param string $path
-     * @param string $key
-     * @param string $type
-     * @param array $values
+     * @param string    $path
+     * @param string    $key
+     * @param string    $type
+     * @param array     $values
      * @return string
      */
     private function invalidKeyTypeErrorMessage(string $path, string $key, string $type, array $values): string

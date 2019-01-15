@@ -18,6 +18,7 @@ use Quanta\Container\Values\InstanceParser;
 use Quanta\Container\Values\ValueFactoryInterface;
 use Quanta\Container\Values\InterpolatedStringParser;
 
+use Quanta\Container\Passes\ReverseTagging;
 use Quanta\Container\Passes\ConfigurationPassInterface;
 
 require_once __DIR__ . '/.test/classes.php';
@@ -64,6 +65,7 @@ describe('PhpFileConfiguration', function () {
                 __DIR__ . '/.test/config/valid/only/tags.php',
                 __DIR__ . '/.test/config/valid/only/metadata.php',
                 __DIR__ . '/.test/config/valid/only/passes.php',
+                __DIR__ . '/.test/config/valid/only/mappers.php',
             ]);
 
         });
@@ -85,7 +87,7 @@ describe('PhpFileConfiguration', function () {
                 $test = $this->configuration->entries();
 
                 expect($test)->toBeAn('array');
-                expect($test)->toHaveLength(9);
+                expect($test)->toHaveLength(10);
 
                 // 0 is valid_full1.php
                 expect($test[0])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
@@ -107,6 +109,8 @@ describe('PhpFileConfiguration', function () {
                 expect($test[0]->passes())->toEqual([
                     new Test\TestConfigurationPass('pass11'),
                     new Test\TestConfigurationPass('pass12'),
+                    new ReverseTagging('mapper11', Test\SomeInterface1::class),
+                    new ReverseTagging('mapper12', Test\SomeInterface2::class),
                 ]);
 
                 // 1 is valid_full2.php
@@ -129,6 +133,8 @@ describe('PhpFileConfiguration', function () {
                 expect($test[1]->passes())->toEqual([
                     new Test\TestConfigurationPass('pass21'),
                     new Test\TestConfigurationPass('pass22'),
+                    new ReverseTagging('mapper21', Test\SomeInterface1::class),
+                    new ReverseTagging('mapper22', Test\SomeInterface2::class),
                 ]);
 
                 // 2 is valid_only_parameters.php
@@ -191,7 +197,7 @@ describe('PhpFileConfiguration', function () {
                 ]);
                 expect($test[7]->passes())->toEqual([]);
 
-                // 7 is valid_only_passes.php
+                // 8 is valid_only_passes.php
                 expect($test[8])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
                 expect($test[8]->factories()->factories())->toEqual([]);
                 expect($test[8]->extensions()->factories())->toEqual([]);
@@ -199,6 +205,16 @@ describe('PhpFileConfiguration', function () {
                 expect($test[8]->passes())->toEqual([
                     new Test\TestConfigurationPass('pass31'),
                     new Test\TestConfigurationPass('pass32'),
+                ]);
+
+                // 9 is valid_only_mappers.php
+                expect($test[9])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
+                expect($test[9]->factories()->factories())->toEqual([]);
+                expect($test[9]->extensions()->factories())->toEqual([]);
+                expect($test[9]->metadata())->toEqual([]);
+                expect($test[9]->passes())->toEqual([
+                    new ReverseTagging('mapper31', Test\SomeInterface1::class),
+                    new ReverseTagging('mapper32', Test\SomeInterface2::class),
                 ]);
 
             });
@@ -469,6 +485,38 @@ describe('PhpFileConfiguration', function () {
                         $file = __DIR__ . '/.test/config/invalid/entry/passes.php';
 
                         $this->test($file, UnexpectedValueException::class, ConfigurationPassInterface::class, 'passes');
+
+                    });
+
+                });
+
+            });
+
+            context('when the mappers key of an array returned by a file is not an array', function () {
+
+                describe('->entries()', function () {
+
+                    it('should throw an UnexpectedValueException containing array and mappers', function () {
+
+                        $file = __DIR__ . '/.test/config/invalid/mappers.php';
+
+                        $this->test($file, UnexpectedValueException::class, 'array', 'mappers');
+
+                    });
+
+                });
+
+            });
+
+            context('when the mappers key of an array returned by a file does not contain only strings', function () {
+
+                describe('->entries()', function () {
+
+                    it('should throw an UnexpectedValueException containing string and mappers', function () {
+
+                        $file = __DIR__ . '/.test/config/invalid/entry/mappers.php';
+
+                        $this->test($file, UnexpectedValueException::class, 'string', 'mappers');
 
                     });
 

@@ -12,4 +12,5 @@ return [
         1,
         new Test\TestConfigurationPass('pass3'),
     ],
+    'mappers' => [],
 ];

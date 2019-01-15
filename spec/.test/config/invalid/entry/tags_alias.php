@@ -12,4 +12,5 @@ return [
     ],
     'metadata' => [],
     'passes' => [],
+    'mappers' => [],
 ];

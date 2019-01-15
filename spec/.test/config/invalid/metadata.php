@@ -8,4 +8,5 @@ return [
     'tags' => [],
     'metadata' => 1,
     'passes' => [],
+    'mappers' => [],
 ];

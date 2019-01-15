@@ -12,4 +12,5 @@ return [
     'tags' => [],
     'metadata' => [],
     'passes' => [],
+    'mappers' => [],
 ];

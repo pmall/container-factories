@@ -29,5 +29,9 @@ return [
         'key' => new Test\TestConfigurationPass('pass11'),
         new Test\TestConfigurationPass('pass12'),
     ],
+    'mappers' => [
+        Test\SomeInterface1::class => 'mapper11',
+        Test\SomeInterface2::class => 'mapper12',
+    ],
     'key' => 'only here to ensure extra keys are ignored without errors',
 ];
