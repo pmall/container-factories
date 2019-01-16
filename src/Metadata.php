@@ -22,6 +22,22 @@ final class Metadata
     }
 
     /**
+     * Return all metadata.
+     *
+     * @return array[]
+     */
+    public function all(): array
+    {
+        $ids = array_map('array_keys', $this->maps);
+        $ids = array_merge([], ...$ids);
+        $ids = array_unique($ids);
+
+        $metadata = array_map([$this, 'for'], $ids);
+
+        return (array) array_combine($ids, $metadata);
+    }
+
+    /**
      * Return the metadata for the given id.
      *
      * @param string $id
@@ -29,7 +45,23 @@ final class Metadata
      */
     public function for($id): array
     {
-        return array_reduce($this->maps, $this->reducer($id), []);
+        $reducer = $this->reducer($id);
+
+        return array_reduce($this->maps, $reducer, []);
+    }
+
+    /**
+     * Return an array of id with metadata matching the given array.
+     *
+     * @param array $target
+     * @return array[]
+     */
+    public function matching(array $target): array
+    {
+        $all = $this->all();
+        $matcher = $this->matcher($target);
+
+        return array_filter($all, $matcher);
     }
 
     /**
@@ -42,6 +74,20 @@ final class Metadata
     {
         return function (array $carry, array $map) use ($id) {
             return array_merge($carry, $map[$id] ?? []);
+        };
+    }
+
+    /**
+     * Return a callable retruning whether an array of metatada is matching the
+     * given target array.
+     *
+     * @param array $target
+     * @return callable
+     */
+    private function matcher(array $target): callable
+    {
+        return function (array $source) use ($target): bool {
+            return array_intersect_key($source, $target) == $target;
         };
     }
 }
