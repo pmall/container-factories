@@ -7,10 +7,7 @@ use Quanta\Container\Factories\Alias;
 use Quanta\Container\Factories\Parameter;
 
 use Quanta\Container\Values\ValueFactory;
-use Quanta\Container\Values\EnvVarParser;
-use Quanta\Container\Values\InstanceParser;
 use Quanta\Container\Values\ValueFactoryInterface;
-use Quanta\Container\Values\InterpolatedStringParser;
 
 use Quanta\Container\Passes\ReverseTagging;
 use Quanta\Container\Passes\ConfigurationPassInterface;
@@ -60,15 +57,12 @@ final class PhpFileConfiguration implements ConfigurationInterface
      * @param string ...$patterns
      * @return \Quanta\Container\PhpFileConfiguration
      */
-    public static function withDefaultValueParsers(string ...$patterns): PhpFileConfiguration
+    public static function withDefaultValueParser(string ...$patterns): PhpFileConfiguration
     {
-        $factory = new ValueFactory(...[
-            new EnvVarParser,
-            new InstanceParser,
-            new InterpolatedStringParser,
-        ]);
-
-        return new PhpFileConfiguration($factory, ...$patterns);
+        return new PhpFileConfiguration(
+            ValueFactory::withDefaultValueParser(),
+            ...$patterns
+        );
     }
 
     /**

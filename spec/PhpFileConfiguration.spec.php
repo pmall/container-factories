@@ -23,20 +23,16 @@ use Quanta\Container\Passes\ConfigurationPassInterface;
 
 require_once __DIR__ . '/.test/classes.php';
 
-describe('PhpFileConfiguration::withDefaultValueParsers()', function () {
+describe('PhpFileConfiguration::withDefaultValueParser()', function () {
 
     it('should return a php file configuration using the default value parsers', function () {
 
         $patterns = ['pattern1', 'pattern2', 'pattern3'];
 
-        $test = PhpFileConfiguration::withDefaultValueParsers(...$patterns);
+        $test = PhpFileConfiguration::withDefaultValueParser(...$patterns);
 
         expect($test)->toEqual(new PhpFileConfiguration(
-            new ValueFactory(...[
-                new EnvVarParser,
-                new InstanceParser,
-                new InterpolatedStringParser,
-            ]),
+            ValueFactory::withDefaultValueParser(),
             ...$patterns
         ));
 
