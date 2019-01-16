@@ -13,10 +13,6 @@ use Quanta\Container\Factories\Extension;
 
 use Quanta\Container\Values\Value;
 use Quanta\Container\Values\ValueFactory;
-use Quanta\Container\Values\EnvVarParser;
-use Quanta\Container\Values\InstanceParser;
-use Quanta\Container\Values\ValueFactoryInterface;
-use Quanta\Container\Values\InterpolatedStringParser;
 
 use Quanta\Container\Passes\ReverseTagging;
 use Quanta\Container\Passes\ConfigurationPassInterface;
@@ -42,17 +38,11 @@ describe('PhpFileConfiguration::withDefaultValueParser()', function () {
 
 describe('PhpFileConfiguration', function () {
 
-    beforeEach(function () {
-
-        $this->factory = mock(ValueFactoryInterface::class);
-
-    });
-
     context('when all the files are valid', function () {
 
         beforeEach(function () {
 
-            $this->configuration = new PhpFileConfiguration($this->factory->get(), ...[
+            $this->configuration = new PhpFileConfiguration(new ValueFactory, ...[
                 __DIR__ . '/.test/config/valid/*.php',
                 __DIR__ . '/.test/config/valid/only/parameters.php',
                 __DIR__ . '/.test/config/valid/only/aliases.php',
@@ -75,10 +65,6 @@ describe('PhpFileConfiguration', function () {
         describe('->entries()', function () {
 
             it('should return one service provider per php file', function () {
-
-                $this->factory->__invoke->does(function (string $value) {
-                    return new Value($value);
-                });
 
                 $test = $this->configuration->entries();
 
@@ -224,7 +210,7 @@ describe('PhpFileConfiguration', function () {
         beforeEach(function () {
 
             $this->test = function (string $file, string $exception, string ...$strs) {
-                $configuration = new PhpFileConfiguration($this->factory->get(), ...[
+                $configuration = new PhpFileConfiguration(new ValueFactory, ...[
                     __DIR__ . '/.test/config/valid/full1.php',
                     $file,
                     __DIR__ . '/.test/config/valid/full2.php',

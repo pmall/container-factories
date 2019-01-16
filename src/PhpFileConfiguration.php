@@ -7,7 +7,6 @@ use Quanta\Container\Factories\Alias;
 use Quanta\Container\Factories\Parameter;
 
 use Quanta\Container\Values\ValueFactory;
-use Quanta\Container\Values\ValueFactoryInterface;
 
 use Quanta\Container\Passes\ReverseTagging;
 use Quanta\Container\Passes\ConfigurationPassInterface;
@@ -40,7 +39,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      * The value factory used to parse parameter values as ValueInterface
      * implementations.
      *
-     * @var \Quanta\Container\Values\ValueFactoryInterface
+     * @var \Quanta\Container\Values\ValueFactory
      */
     private $factory;
 
@@ -68,10 +67,10 @@ final class PhpFileConfiguration implements ConfigurationInterface
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Values\ValueFactoryInterface    $factory
-     * @param string                                            ...$patterns
+     * @param \Quanta\Container\Values\ValueFactory $factory
+     * @param string                                ...$patterns
      */
-    public function __construct(ValueFactoryInterface $factory, string ...$patterns)
+    public function __construct(ValueFactory $factory, string ...$patterns)
     {
         $this->factory = $factory;
         $this->patterns = $patterns;
