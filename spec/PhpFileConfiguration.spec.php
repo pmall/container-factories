@@ -8,7 +8,7 @@ use Quanta\Container\ConfigurationEntryInterface;
 
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
-use Quanta\Container\Factories\Parameter;
+use Quanta\Container\Factories\Factory;
 use Quanta\Container\Factories\Extension;
 
 use Quanta\Container\Values\Value;
@@ -74,7 +74,7 @@ describe('PhpFileConfiguration', function () {
                 // 0 is valid_full1.php
                 expect($test[0])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
                 expect($test[0]->factories()->factories())->toEqual([
-                    'id1' => new Parameter(new Value('parameter11')),
+                    'id1' => new Factory(new Value('parameter11')),
                     'id2' => new Alias('alias11'),
                     'id3' => new Test\TestFactory('factory11'),
                     'id4' => new Test\TestFactory('factory12'),
@@ -98,7 +98,7 @@ describe('PhpFileConfiguration', function () {
                 // 1 is valid_full2.php
                 expect($test[1])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
                 expect($test[1]->factories()->factories())->toEqual([
-                    'id1' => new Parameter(new Value('parameter21')),
+                    'id1' => new Factory(new Value('parameter21')),
                     'id2' => new Alias('alias21'),
                     'id3' => new Test\TestFactory('factory21'),
                     'id4' => new Test\TestFactory('factory22'),
@@ -122,8 +122,8 @@ describe('PhpFileConfiguration', function () {
                 // 2 is valid_only_parameters.php
                 expect($test[2])->toBeAnInstanceOf(ConfigurationEntryInterface::class);
                 expect($test[2]->factories()->factories())->toEqual([
-                    'id1' => new Parameter(new Value('parameter31')),
-                    'id2' => new Parameter(new Value('parameter32')),
+                    'id1' => new Factory(new Value('parameter31')),
+                    'id2' => new Factory(new Value('parameter32')),
                 ]);
                 expect($test[2]->extensions()->factories())->toEqual([]);
                 expect($test[2]->metadata())->toEqual([]);

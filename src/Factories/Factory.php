@@ -8,7 +8,7 @@ use Quanta\Container\Values\ValueInterface;
 
 use Quanta\Container\Compilation\Template;
 
-final class Parameter implements CompilableFactoryInterface
+final class Factory implements CompilableFactoryInterface
 {
     /**
      * The value of the parameter.

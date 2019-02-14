@@ -4,20 +4,20 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Factories\Parameter;
+use Quanta\Container\Factories\Factory;
 use Quanta\Container\Factories\CompilableFactoryInterface;
 
 use Quanta\Container\Values\ValueInterface;
 
 use Quanta\Container\Compilation\Template;
 
-describe('Parameter', function () {
+describe('Factory', function () {
 
     beforeEach(function () {
 
         $this->value = mock(ValueInterface::class);
 
-        $this->factory = new Parameter($this->value->get());
+        $this->factory = new Factory($this->value->get());
 
     });
 

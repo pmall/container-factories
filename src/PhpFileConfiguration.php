@@ -9,7 +9,7 @@ use Quanta\Container\Passes\ReverseTagging;
 use Quanta\Container\Passes\ConfigurationPassInterface;
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
-use Quanta\Container\Factories\Parameter;
+use Quanta\Container\Factories\Factory;
 
 use function Quanta\Exceptions\areAllTypedAs;
 use Quanta\Exceptions\InvalidKey;
@@ -139,15 +139,15 @@ final class PhpFileConfiguration implements ConfigurationInterface
     }
 
     /**
-     * Return a parameter from the given value using the factory to parse it as
-     * a ValueInterface implementation.
+     * Return a container factory from the given value by parsing it as a
+     * ValueInterface implementation.
      *
      * @param mixed $value
-     * @return \Quanta\Container\Factories\Parameter
+     * @return \Quanta\Container\Factories\Factory
      */
-    private function parameter($value): Parameter
+    private function parameter($value): Factory
     {
-        return new Parameter(($this->factory)($value));
+        return new Factory(($this->factory)($value));
     }
 
     /**
