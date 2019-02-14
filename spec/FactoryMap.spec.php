@@ -1,7 +1,7 @@
 <?php
 
-use Quanta\Container\Maps\FactoryMap;
-use Quanta\Container\Maps\FactoryMapInterface;
+use Quanta\Container\FactoryMap;
+use Quanta\Container\FactoryMapInterface;
 
 use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
 

@@ -4,12 +4,11 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Test\TestFactory;
 
-use Quanta\Container\Maps\ExtendedFactoryMap;
-use Quanta\Container\Maps\FactoryMapInterface;
-
+use Quanta\Container\ExtendedFactoryMap;
+use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\Factories\Extension;
 
-require_once __DIR__ . '/../.test/classes.php';
+require_once __DIR__ . '/.test/classes.php';
 
 describe('ExtendedFactoryMap', function () {
 

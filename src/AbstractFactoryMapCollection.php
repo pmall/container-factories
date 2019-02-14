@@ -1,20 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Maps;
+namespace Quanta\Container;
 
 abstract class AbstractFactoryMapCollection implements FactoryMapInterface
 {
     /**
      * The factory maps.
      *
-     * @var \Quanta\Container\Maps\FactoryMapInterface[]
+     * @var \Quanta\Container\FactoryMapInterface[]
      */
     private $maps;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Maps\FactoryMapInterface ...$maps
+     * @param \Quanta\Container\FactoryMapInterface ...$maps
      */
     public function __construct(FactoryMapInterface ...$maps)
     {
@@ -47,7 +47,7 @@ abstract class AbstractFactoryMapCollection implements FactoryMapInterface
      * Return an array of nested factories from the array of factories provided
      * by the given factory map.
      *
-     * @param \Quanta\Container\Maps\FactoryMapInterface $map
+     * @param \Quanta\Container\FactoryMapInterface $map
      * @return array
      */
     private function nestedFactories(FactoryMapInterface $map): array

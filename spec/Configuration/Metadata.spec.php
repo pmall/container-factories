@@ -1,6 +1,6 @@
 <?php
 
-use Quanta\Container\Metadata;
+use Quanta\Container\Configuration\Metadata;
 
 describe('Metadata', function () {
 

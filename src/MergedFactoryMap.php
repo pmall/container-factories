@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Maps;
+namespace Quanta\Container;
 
 final class MergedFactoryMap extends AbstractFactoryMapCollection
 {
@@ -8,7 +8,7 @@ final class MergedFactoryMap extends AbstractFactoryMapCollection
      * Constructor.
      *
      *
-     * @param \Quanta\Container\Maps\FactoryMapInterface ...$maps
+     * @param \Quanta\Container\FactoryMapInterface ...$maps
      */
     public function __construct(FactoryMapInterface ...$maps)
     {

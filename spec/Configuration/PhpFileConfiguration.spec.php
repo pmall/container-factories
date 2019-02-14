@@ -2,22 +2,19 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\PhpFileConfiguration;
-use Quanta\Container\ConfigurationInterface;
-use Quanta\Container\ConfigurationEntryInterface;
-
+use Quanta\Container\Values\Value;
+use Quanta\Container\Values\ValueFactory;
+use Quanta\Container\Passes\ReverseTagging;
+use Quanta\Container\Passes\ConfigurationPassInterface;
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
 use Quanta\Container\Factories\Factory;
 use Quanta\Container\Factories\Extension;
+use Quanta\Container\Configuration\PhpFileConfiguration;
+use Quanta\Container\Configuration\ConfigurationInterface;
+use Quanta\Container\Configuration\ConfigurationEntryInterface;
 
-use Quanta\Container\Values\Value;
-use Quanta\Container\Values\ValueFactory;
-
-use Quanta\Container\Passes\ReverseTagging;
-use Quanta\Container\Passes\ConfigurationPassInterface;
-
-require_once __DIR__ . '/.test/classes.php';
+require_once __DIR__ . '/../.test/classes.php';
 
 describe('PhpFileConfiguration::withDefaultValueParser()', function () {
 
@@ -43,15 +40,15 @@ describe('PhpFileConfiguration', function () {
         beforeEach(function () {
 
             $this->configuration = new PhpFileConfiguration(new ValueFactory, ...[
-                __DIR__ . '/.test/config/valid/*.php',
-                __DIR__ . '/.test/config/valid/only/parameters.php',
-                __DIR__ . '/.test/config/valid/only/aliases.php',
-                __DIR__ . '/.test/config/valid/only/factories.php',
-                __DIR__ . '/.test/config/valid/only/extensions.php',
-                __DIR__ . '/.test/config/valid/only/tags.php',
-                __DIR__ . '/.test/config/valid/only/metadata.php',
-                __DIR__ . '/.test/config/valid/only/passes.php',
-                __DIR__ . '/.test/config/valid/only/mappers.php',
+                __DIR__ . '/../.test/config/valid/*.php',
+                __DIR__ . '/../.test/config/valid/only/parameters.php',
+                __DIR__ . '/../.test/config/valid/only/aliases.php',
+                __DIR__ . '/../.test/config/valid/only/factories.php',
+                __DIR__ . '/../.test/config/valid/only/extensions.php',
+                __DIR__ . '/../.test/config/valid/only/tags.php',
+                __DIR__ . '/../.test/config/valid/only/metadata.php',
+                __DIR__ . '/../.test/config/valid/only/passes.php',
+                __DIR__ . '/../.test/config/valid/only/mappers.php',
             ]);
 
         });
@@ -211,9 +208,9 @@ describe('PhpFileConfiguration', function () {
 
             $this->test = function (string $file, string $exception, string ...$strs) {
                 $configuration = new PhpFileConfiguration(new ValueFactory, ...[
-                    __DIR__ . '/.test/config/valid/full1.php',
+                    __DIR__ . '/../.test/config/valid/full1.php',
                     $file,
-                    __DIR__ . '/.test/config/valid/full2.php',
+                    __DIR__ . '/../.test/config/valid/full2.php',
                 ]);
 
                 try { $configuration->entries(); }
@@ -238,7 +235,7 @@ describe('PhpFileConfiguration', function () {
 
                 it('should throw an UnexpectedValueException containing array', function () {
 
-                    $file = __DIR__ . '/.test/config/invalid/not_array.php';
+                    $file = __DIR__ . '/../.test/config/invalid/not_array.php';
 
                     $this->test($file, UnexpectedValueException::class, 'array');
 
@@ -256,7 +253,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing array and \'parameters\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/parameters.php';
+                        $file = __DIR__ . '/../.test/config/invalid/parameters.php';
 
                         $this->test($file, UnexpectedValueException::class, 'array', '\'parameters\'');
 
@@ -272,7 +269,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing array and \'aliases\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/aliases.php';
+                        $file = __DIR__ . '/../.test/config/invalid/aliases.php';
 
                         $this->test($file, UnexpectedValueException::class, 'array', '\'aliases\'');
 
@@ -288,7 +285,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing string and \'aliases\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/entry/aliases.php';
+                        $file = __DIR__ . '/../.test/config/invalid/entry/aliases.php';
 
                         $this->test($file, UnexpectedValueException::class, 'string', '\'aliases\'');
 
@@ -304,7 +301,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing array and \'factories\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/factories.php';
+                        $file = __DIR__ . '/../.test/config/invalid/factories.php';
 
                         $this->test($file, UnexpectedValueException::class, 'array', '\'factories\'');
 
@@ -320,7 +317,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing callable and \'factories\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/entry/factories.php';
+                        $file = __DIR__ . '/../.test/config/invalid/entry/factories.php';
 
                         $this->test($file, UnexpectedValueException::class, 'callable', '\'factories\'');
 
@@ -336,7 +333,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing array and \'extensions\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/extensions.php';
+                        $file = __DIR__ . '/../.test/config/invalid/extensions.php';
 
                         $this->test($file, UnexpectedValueException::class, 'array', '\'extensions\'');
 
@@ -352,7 +349,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing callable and \'extensions\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/entry/extensions.php';
+                        $file = __DIR__ . '/../.test/config/invalid/entry/extensions.php';
 
                         $this->test($file, UnexpectedValueException::class, 'callable', '\'extensions\'');
 
@@ -368,7 +365,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing array and \'tags\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/tags.php';
+                        $file = __DIR__ . '/../.test/config/invalid/tags.php';
 
                         $this->test($file, UnexpectedValueException::class, 'array', '\'tags\'');
 
@@ -384,7 +381,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing array and \'tags\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/entry/tags.php';
+                        $file = __DIR__ . '/../.test/config/invalid/entry/tags.php';
 
                         $this->test($file, UnexpectedValueException::class, 'array', '\'tags\'');
 
@@ -400,7 +397,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing the tag name and string', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/entry/tags_alias.php';
+                        $file = __DIR__ . '/../.test/config/invalid/entry/tags_alias.php';
 
                         $this->test($file, UnexpectedValueException::class, '\'id2\'', 'string');
 
@@ -416,7 +413,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing array and \'metadata\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/metadata.php';
+                        $file = __DIR__ . '/../.test/config/invalid/metadata.php';
 
                         $this->test($file, UnexpectedValueException::class, 'array', '\'metadata\'');
 
@@ -432,7 +429,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing array and \'metadata\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/entry/metadata.php';
+                        $file = __DIR__ . '/../.test/config/invalid/entry/metadata.php';
 
                         $this->test($file, UnexpectedValueException::class, 'array', '\'metadata\'');
 
@@ -448,7 +445,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing array and \'passes\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/passes.php';
+                        $file = __DIR__ . '/../.test/config/invalid/passes.php';
 
                         $this->test($file, UnexpectedValueException::class, 'array', '\'passes\'');
 
@@ -464,7 +461,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing ConfigurationPassInterface and \'passes\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/entry/passes.php';
+                        $file = __DIR__ . '/../.test/config/invalid/entry/passes.php';
 
                         $this->test($file, UnexpectedValueException::class, ConfigurationPassInterface::class, '\'passes\'');
 
@@ -480,7 +477,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing array and \'mappers\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/mappers.php';
+                        $file = __DIR__ . '/../.test/config/invalid/mappers.php';
 
                         $this->test($file, UnexpectedValueException::class, 'array', '\'mappers\'');
 
@@ -496,7 +493,7 @@ describe('PhpFileConfiguration', function () {
 
                     it('should throw an UnexpectedValueException containing string and \'mappers\'', function () {
 
-                        $file = __DIR__ . '/.test/config/invalid/entry/mappers.php';
+                        $file = __DIR__ . '/../.test/config/invalid/entry/mappers.php';
 
                         $this->test($file, UnexpectedValueException::class, 'string', '\'mappers\'');
 

@@ -4,17 +4,17 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Test\TestFactory;
 
-use Quanta\Container\Metadata;
-use Quanta\Container\ConfigurationInterface;
-use Quanta\Container\ConfigurationEntryInterface;
-use Quanta\Container\Maps\FactoryMap;
-use Quanta\Container\Maps\FactoryMapInterface;
-use Quanta\Container\Maps\ConfigurationFactoryMap;
+use Quanta\Container\FactoryMap;
+use Quanta\Container\FactoryMapInterface;
+use Quanta\Container\ConfigurationFactoryMap;
 use Quanta\Container\Passes\ConfigurationPassInterface;
+use Quanta\Container\Configuration\Metadata;
+use Quanta\Container\Configuration\ConfigurationInterface;
+use Quanta\Container\Configuration\ConfigurationEntryInterface;
 
 use Quanta\Container\Factories\Extension;
 
-require_once __DIR__ . '/../.test/classes.php';
+require_once __DIR__ . '/.test/classes.php';
 
 describe('ConfigurationFactoryMap', function () {
 

@@ -1,25 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Maps;
+namespace Quanta\Container;
 
-use Quanta\Container\Metadata;
-use Quanta\Container\ConfigurationInterface;
-use Quanta\Container\ConfigurationEntryInterface;
-use Quanta\Container\Passes\ConfigurationPassInterface;
+use Quanta\Container\Configuration\Metadata;
+use Quanta\Container\Configuration\ConfigurationInterface;
+use Quanta\Container\Configuration\ConfigurationEntryInterface;
 
 final class ConfigurationFactoryMap implements FactoryMapInterface
 {
     /**
      * The configuration.
      *
-     * @var \Quanta\Container\ConfigurationInterface[]
+     * @var \Quanta\Container\Configuration\ConfigurationInterface[]
      */
     private $configurations;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\ConfigurationInterface ...$configurations
+     * @param \Quanta\Container\Configuration\ConfigurationInterface ...$configurations
      */
     public function __construct(ConfigurationInterface ...$configurations)
     {
@@ -57,7 +56,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     /**
      * Return the configuration entries provided by the given configuration.
      *
-     * @param \Quanta\Container\ConfigurationInterface $configuration
+     * @param \Quanta\Container\Configuration\ConfigurationInterface $configuration
      */
     private function mapped(ConfigurationInterface $configuration): array
     {
@@ -67,8 +66,8 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     /**
      * Return the factory map provided by the given configuration entry.
      *
-     * @param \Quanta\Container\ConfigurationEntryInterface $entry
-     * @return \Quanta\Container\Maps\FactoryMapInterface
+     * @param \Quanta\Container\Configuration\ConfigurationEntryInterface $entry
+     * @return \Quanta\Container\FactoryMapInterface
      */
     private function factoryMap(ConfigurationEntryInterface $entry): FactoryMapInterface
     {
@@ -78,8 +77,8 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     /**
      * Return the extension map provided by the given configuration entry.
      *
-     * @param \Quanta\Container\ConfigurationEntryInterface $entry
-     * @return \Quanta\Container\Maps\FactoryMapInterface
+     * @param \Quanta\Container\Configuration\ConfigurationEntryInterface $entry
+     * @return \Quanta\Container\FactoryMapInterface
      */
     private function extensionMap(ConfigurationEntryInterface $entry): FactoryMapInterface
     {
@@ -89,7 +88,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
     /**
      * Return the metadata provided by the given configuration entry.
      *
-     * @param \Quanta\Container\ConfigurationEntryInterface $entry
+     * @param \Quanta\Container\Configuration\ConfigurationEntryInterface $entry
      * @return array[]
      */
     private function metadata(ConfigurationEntryInterface $entry): array
@@ -101,7 +100,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
      * Return the configuration passes provided by the given configuration
      * entry.
      *
-     * @param \Quanta\Container\ConfigurationEntryInterface $entry
+     * @param \Quanta\Container\Configuration\ConfigurationEntryInterface $entry
      * @return array
      */
     private function passes(ConfigurationEntryInterface $entry): array

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container;
+namespace Quanta\Container\Configuration;
 
 use Interop\Container\ServiceProviderInterface;
 
@@ -25,7 +25,7 @@ final class ServiceProviderClassNameCollection implements ConfigurationInterface
      * names.
      *
      * @param string ...$classes
-     * @return \Quanta\Container\ServiceProviderClassNameCollection
+     * @return \Quanta\Container\Configuration\ServiceProviderClassNameCollection
      */
     public static function fromClassNames(string ...$classes): ServiceProviderClassNameCollection
     {
@@ -40,7 +40,7 @@ final class ServiceProviderClassNameCollection implements ConfigurationInterface
      *
      * @param string $namespace
      * @param string $directory
-     * @return \Quanta\Container\ServiceProviderClassNameCollection
+     * @return \Quanta\Container\Configuration\ServiceProviderClassNameCollection
      */
     public static function fromPsr4Namespace(string $namespace, string $directory): ServiceProviderClassNameCollection
     {
@@ -54,7 +54,7 @@ final class ServiceProviderClassNameCollection implements ConfigurationInterface
      * located at the given path.
      *
      * @param string $path
-     * @return \Quanta\Container\ServiceProviderClassNameCollection
+     * @return \Quanta\Container\Configuration\ServiceProviderClassNameCollection
      */
     public static function fromVendorDirectory(string $path): ServiceProviderClassNameCollection
     {
@@ -78,7 +78,7 @@ final class ServiceProviderClassNameCollection implements ConfigurationInterface
      * with the given whitelist patterns.
      *
      * @param string ...$patterns
-     * @return \Quanta\Container\ServiceProviderClassNameCollection
+     * @return \Quanta\Container\Configuration\ServiceProviderClassNameCollection
      */
     public function withWhitelist(string ...$patterns): ServiceProviderClassNameCollection
     {
@@ -92,7 +92,7 @@ final class ServiceProviderClassNameCollection implements ConfigurationInterface
      * with the given blacklist patterns.
      *
      * @param string ...$patterns
-     * @return \Quanta\Container\ServiceProviderClassNameCollection
+     * @return \Quanta\Container\Configuration\ServiceProviderClassNameCollection
      */
     public function withBlacklist(string ...$patterns): ServiceProviderClassNameCollection
     {
@@ -119,7 +119,7 @@ final class ServiceProviderClassNameCollection implements ConfigurationInterface
      * provider class name.
      *
      * @param string $class
-     * @return \Quanta\Container\ServiceProviderConfigurationEntry
+     * @return \Quanta\Container\Configuration\ServiceProviderConfigurationEntry
      */
     private function entry(string $class): ServiceProviderConfigurationEntry
     {

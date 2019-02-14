@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container;
+namespace Quanta\Container\Configuration;
 
 use Interop\Container\ServiceProviderInterface;
 
@@ -36,7 +36,7 @@ final class ServiceProviderCollection implements ConfigurationInterface
      * provider.
      *
      * @param \Interop\Container\ServiceProviderInterface $provider
-     * @return \Quanta\Container\ServiceProviderConfigurationEntry
+     * @return \Quanta\Container\Configuration\ServiceProviderConfigurationEntry
      */
     private function entry(ServiceProviderInterface $provider): ServiceProviderConfigurationEntry
     {

@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container;
+namespace Quanta\Container\Configuration;
 
 use Interop\Container\ServiceProviderInterface;
 
-use Quanta\Container\Maps\FactoryMap;
-use Quanta\Container\Maps\FactoryMapInterface;
+use Quanta\Container\FactoryMap;
+use Quanta\Container\FactoryMapInterface;
 
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;

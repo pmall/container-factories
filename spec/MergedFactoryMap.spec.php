@@ -2,8 +2,8 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\Maps\MergedFactoryMap;
-use Quanta\Container\Maps\FactoryMapInterface;
+use Quanta\Container\MergedFactoryMap;
+use Quanta\Container\FactoryMapInterface;
 
 describe('MergedFactoryMap', function () {
 

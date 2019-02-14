@@ -8,13 +8,12 @@ use Quanta\Utils\ClassNameCollection;
 use Quanta\Utils\ClassNameCollectionInterface;
 use Quanta\Utils\WhitelistedClassNameCollection;
 use Quanta\Utils\BlacklistedClassNameCollection;
+use Quanta\Container\Configuration\ConfigurationInterface;
+use Quanta\Container\Configuration\ServiceProviderConfigurationEntry;
+use Quanta\Container\Configuration\ServiceProviderClassNameCollection;
 
-use Quanta\Container\ConfigurationInterface;
-use Quanta\Container\ServiceProviderConfigurationEntry;
-use Quanta\Container\ServiceProviderClassNameCollection;
-
-require_once __DIR__ . '/.test/namespace1.php';
-require_once __DIR__ . '/.test/namespace2.php';
+require_once __DIR__ . '/../.test/namespace1.php';
+require_once __DIR__ . '/../.test/namespace2.php';
 
 describe('ServiceProviderClassNameCollection::fromClassNames()', function () {
 

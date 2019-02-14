@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container;
+namespace Quanta\Container\Configuration;
 
-use Quanta\Container\Maps\FactoryMap;
-use Quanta\Container\Maps\MergedFactoryMap;
+use Quanta\Container\FactoryMap;
+use Quanta\Container\MergedFactoryMap;
 use Quanta\Container\Values\ValueFactory;
 use Quanta\Container\Passes\ReverseTagging;
 use Quanta\Container\Passes\ConfigurationPassInterface;
@@ -54,7 +54,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      * Return a new php file configuration with a default value factory.
      *
      * @param string ...$patterns
-     * @return \Quanta\Container\PhpFileConfiguration
+     * @return \Quanta\Container\Configuration\PhpFileConfiguration
      */
     public static function withDefaultValueParser(string ...$patterns): PhpFileConfiguration
     {
@@ -154,7 +154,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      * Return an array of parameters from the given array.
      *
      * @param array $values
-     * @return \Quanta\Container\Maps\FactoryMap
+     * @return \Quanta\Container\FactoryMap
      */
     private function parameters(array $values): FactoryMap
     {
@@ -177,7 +177,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string    $path
      * @param array     $aliases
-     * @return \Quanta\Container\Maps\FactoryMap
+     * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
     private function aliases(string $path, array $aliases): FactoryMap
@@ -200,7 +200,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string    $path
      * @param array     $factories
-     * @return \Quanta\Container\Maps\FactoryMap
+     * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
     private function factories(string $path, array $factories): FactoryMap
@@ -223,7 +223,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string    $path
      * @param array     $extensions
-     * @return \Quanta\Container\Maps\FactoryMap
+     * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
     private function extensions(string $path, array $extensions): FactoryMap
@@ -247,7 +247,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string    $path
      * @param array     $tags
-     * @return \Quanta\Container\Maps\FactoryMap
+     * @return \Quanta\Container\FactoryMap
      * @throws \UnexpectedValueException
      */
     private function tags(string $path, array $tags): FactoryMap

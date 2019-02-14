@@ -1,20 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container;
+namespace Quanta\Container\Configuration;
 
 final class Configuration implements ConfigurationInterface
 {
     /**
      * The configuration entries to return.
      *
-     * @var \Quanta\Container\ConfigurationEntryInterface[]
+     * @var \Quanta\Container\Configuration\ConfigurationEntryInterface[]
      */
     private $entries;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\ConfigurationEntryInterface ...$entries
+     * @param \Quanta\Container\Configuration\ConfigurationEntryInterface ...$entries
      */
     public function __construct(ConfigurationEntryInterface ...$entries)
     {

@@ -2,8 +2,8 @@
 
 namespace Quanta\Container\Passes;
 
-use Quanta\Container\Metadata;
 use Quanta\Container\Factories\Tag;
+use Quanta\Container\Configuration\Metadata;
 
 final class ReverseTagging implements ConfigurationPassInterface
 {

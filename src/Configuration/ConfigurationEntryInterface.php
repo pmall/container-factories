@@ -1,22 +1,22 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container;
+namespace Quanta\Container\Configuration;
 
-use Quanta\Container\Maps\FactoryMapInterface;
+use Quanta\Container\FactoryMapInterface;
 
 interface ConfigurationEntryInterface
 {
     /**
      * Return the factories provided by the configuration entry.
      *
-     * @return \Quanta\Container\Maps\FactoryMapInterface
+     * @return \Quanta\Container\FactoryMapInterface
      */
     public function factories(): FactoryMapInterface;
 
     /**
      * Return the extensions provided by the configuration entry.
      *
-     * @return \Quanta\Container\Maps\FactoryMapInterface
+     * @return \Quanta\Container\FactoryMapInterface
      */
     public function extensions(): FactoryMapInterface;
 

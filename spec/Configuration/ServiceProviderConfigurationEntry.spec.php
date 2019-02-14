@@ -4,14 +4,14 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Interop\Container\ServiceProviderInterface;
 
-use Quanta\Container\ConfigurationEntryInterface;
-use Quanta\Container\ServiceProviderConfigurationEntry;
-use Quanta\Container\Maps\FactoryMap;
+use Quanta\Container\FactoryMap;
+use Quanta\Container\Configuration\ConfigurationEntryInterface;
+use Quanta\Container\Configuration\ServiceProviderConfigurationEntry;
 
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
 
-require_once __DIR__ . '/.test/classes.php';
+require_once __DIR__ . '/../.test/classes.php';
 
 describe('ServiceProviderConfigurationEntry', function () {
 
