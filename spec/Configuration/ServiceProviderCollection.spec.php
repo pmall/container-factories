@@ -5,8 +5,8 @@ use function Eloquent\Phony\Kahlan\mock;
 use Interop\Container\ServiceProviderInterface;
 
 use Quanta\Container\Configuration\ConfigurationInterface;
+use Quanta\Container\Configuration\ServiceProviderAdapter;
 use Quanta\Container\Configuration\ServiceProviderCollection;
-use Quanta\Container\Configuration\ServiceProviderConfigurationEntry;
 
 describe('ServiceProviderCollection', function () {
 
@@ -38,9 +38,9 @@ describe('ServiceProviderCollection', function () {
 
             expect($test)->toBeAn('array');
             expect($test)->toHaveLength(3);
-            expect($test[0])->toEqual(new ServiceProviderConfigurationEntry($this->provider1->get()));
-            expect($test[1])->toEqual(new ServiceProviderConfigurationEntry($this->provider2->get()));
-            expect($test[2])->toEqual(new ServiceProviderConfigurationEntry($this->provider3->get()));
+            expect($test[0])->toEqual(new ServiceProviderAdapter($this->provider1->get()));
+            expect($test[1])->toEqual(new ServiceProviderAdapter($this->provider2->get()));
+            expect($test[2])->toEqual(new ServiceProviderAdapter($this->provider3->get()));
 
         });
 

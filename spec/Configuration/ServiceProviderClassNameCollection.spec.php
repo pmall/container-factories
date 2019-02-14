@@ -9,7 +9,7 @@ use Quanta\Utils\ClassNameCollectionInterface;
 use Quanta\Utils\WhitelistedClassNameCollection;
 use Quanta\Utils\BlacklistedClassNameCollection;
 use Quanta\Container\Configuration\ConfigurationInterface;
-use Quanta\Container\Configuration\ServiceProviderConfigurationEntry;
+use Quanta\Container\Configuration\ServiceProviderAdapter;
 use Quanta\Container\Configuration\ServiceProviderClassNameCollection;
 
 require_once __DIR__ . '/../.test/namespace1.php';
@@ -138,12 +138,12 @@ describe('ServiceProviderClassNameCollection', function () {
             $test = $this->configuration->entries();
 
             expect($test)->toEqual([
-                new ServiceProviderConfigurationEntry(new Test1\ServiceProvider1),
-                new ServiceProviderConfigurationEntry(new Test1\ServiceProvider2),
-                new ServiceProviderConfigurationEntry(new Test1\ServiceProvider3),
-                new ServiceProviderConfigurationEntry(new Test2\ServiceProvider1),
-                new ServiceProviderConfigurationEntry(new Test2\ServiceProvider2),
-                new ServiceProviderConfigurationEntry(new Test2\ServiceProvider3),
+                new ServiceProviderAdapter(new Test1\ServiceProvider1),
+                new ServiceProviderAdapter(new Test1\ServiceProvider2),
+                new ServiceProviderAdapter(new Test1\ServiceProvider3),
+                new ServiceProviderAdapter(new Test2\ServiceProvider1),
+                new ServiceProviderAdapter(new Test2\ServiceProvider2),
+                new ServiceProviderAdapter(new Test2\ServiceProvider3),
             ]);
 
         });

@@ -10,7 +10,7 @@ use Quanta\Container\FactoryMapInterface;
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
 
-final class ServiceProviderConfigurationEntry implements ConfigurationEntryInterface
+final class ServiceProviderAdapter implements ConfigurationEntryInterface
 {
     /**
      * The service provider providing the factories and the extensions.

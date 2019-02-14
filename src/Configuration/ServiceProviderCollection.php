@@ -36,10 +36,10 @@ final class ServiceProviderCollection implements ConfigurationInterface
      * provider.
      *
      * @param \Interop\Container\ServiceProviderInterface $provider
-     * @return \Quanta\Container\Configuration\ServiceProviderConfigurationEntry
+     * @return \Quanta\Container\Configuration\ServiceProviderAdapter
      */
-    private function entry(ServiceProviderInterface $provider): ServiceProviderConfigurationEntry
+    private function entry(ServiceProviderInterface $provider): ServiceProviderAdapter
     {
-        return new ServiceProviderConfigurationEntry($provider);
+        return new ServiceProviderAdapter($provider);
     }
 }

@@ -5,21 +5,21 @@ use function Eloquent\Phony\Kahlan\mock;
 use Interop\Container\ServiceProviderInterface;
 
 use Quanta\Container\FactoryMap;
+use Quanta\Container\Configuration\ServiceProviderAdapter;
 use Quanta\Container\Configuration\ConfigurationEntryInterface;
-use Quanta\Container\Configuration\ServiceProviderConfigurationEntry;
 
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
 
 require_once __DIR__ . '/../.test/classes.php';
 
-describe('ServiceProviderConfigurationEntry', function () {
+describe('ServiceProviderAdapter', function () {
 
     beforeEach(function () {
 
         $this->delegate = mock(ServiceProviderInterface::class);
 
-        $this->configuration = new ServiceProviderConfigurationEntry($this->delegate->get());
+        $this->configuration = new ServiceProviderAdapter($this->delegate->get());
 
     });
 

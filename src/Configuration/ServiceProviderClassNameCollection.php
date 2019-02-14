@@ -119,11 +119,11 @@ final class ServiceProviderClassNameCollection implements ConfigurationInterface
      * provider class name.
      *
      * @param string $class
-     * @return \Quanta\Container\Configuration\ServiceProviderConfigurationEntry
+     * @return \Quanta\Container\Configuration\ServiceProviderAdapter
      */
-    private function entry(string $class): ServiceProviderConfigurationEntry
+    private function entry(string $class): ServiceProviderAdapter
     {
-        return new ServiceProviderConfigurationEntry(new $class);
+        return new ServiceProviderAdapter(new $class);
     }
 
     /**
