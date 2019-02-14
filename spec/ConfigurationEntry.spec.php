@@ -3,8 +3,8 @@
 use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\ConfigurationEntry;
-use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\ConfigurationEntryInterface;
+use Quanta\Container\Maps\FactoryMapInterface;
 use Quanta\Container\Passes\ConfigurationPassInterface;
 
 describe('ConfigurationEntry', function () {

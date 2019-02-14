@@ -17,6 +17,16 @@ final class SomeClass3 implements SomeInterface1, SomeInterface2 {}
 final class SomeClass4 implements SomeInterface1, SomeInterface2 {}
 final class SomeClass5 implements SomeInterface2 {}
 
+final class TestInstance
+{
+    private $xs;
+
+    public function __construct(...$xs)
+    {
+        $this->xs = $xs;
+    }
+}
+
 final class TestFactory
 {
     private $name;

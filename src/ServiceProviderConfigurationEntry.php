@@ -4,6 +4,9 @@ namespace Quanta\Container;
 
 use Interop\Container\ServiceProviderInterface;
 
+use Quanta\Container\Maps\FactoryMap;
+use Quanta\Container\Maps\FactoryMapInterface;
+
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;
 

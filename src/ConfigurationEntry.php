@@ -2,6 +2,7 @@
 
 namespace Quanta\Container;
 
+use Quanta\Container\Maps\FactoryMapInterface;
 use Quanta\Container\Passes\ConfigurationPassInterface;
 
 final class ConfigurationEntry implements ConfigurationEntryInterface
@@ -9,14 +10,14 @@ final class ConfigurationEntry implements ConfigurationEntryInterface
     /**
      * The factories provided by the configuration entry.
      *
-     * @var \Quanta\Container\FactoryMapInterface
+     * @var \Quanta\Container\Maps\FactoryMapInterface
      */
     private $factories;
 
     /**
      * The extensions provided by the configuration entry.
      *
-     * @var \Quanta\Container\FactoryMapInterface
+     * @var \Quanta\Container\Maps\FactoryMapInterface
      */
     private $extensions;
 
@@ -37,8 +38,8 @@ final class ConfigurationEntry implements ConfigurationEntryInterface
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\FactoryMapInterface                 $factories
-     * @param \Quanta\Container\FactoryMapInterface                 $extensions
+     * @param \Quanta\Container\Maps\FactoryMapInterface            $factories
+     * @param \Quanta\Container\Maps\FactoryMapInterface            $extensions
      * @param array[]                                               $metadata
      * @param \Quanta\Container\Passes\ConfigurationPassInterface   ...$passes
      */

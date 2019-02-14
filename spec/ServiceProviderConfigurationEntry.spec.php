@@ -4,9 +4,9 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Interop\Container\ServiceProviderInterface;
 
-use Quanta\Container\FactoryMap;
 use Quanta\Container\ConfigurationEntryInterface;
 use Quanta\Container\ServiceProviderConfigurationEntry;
+use Quanta\Container\Maps\FactoryMap;
 
 use Quanta\Exceptions\ReturnTypeErrorMessage;
 use Quanta\Exceptions\ArrayReturnTypeErrorMessage;

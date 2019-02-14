@@ -27,7 +27,6 @@
         "php": ">=7.0",
         "container-interop/service-provider": "^0.4.0",
         "quanta/class-names": "^0.2.0",
-        "quanta/container-factories": "^0.7.0",
         "quanta/exceptions": "^0.4.0"
     },
     "require-dev": {

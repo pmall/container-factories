@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container;
+namespace Quanta\Container\Maps;
 
+use Quanta\Container\Metadata;
+use Quanta\Container\ConfigurationInterface;
+use Quanta\Container\ConfigurationEntryInterface;
 use Quanta\Container\Passes\ConfigurationPassInterface;
 
 final class ConfigurationFactoryMap implements FactoryMapInterface
@@ -65,7 +68,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
      * Return the factory map provided by the given configuration entry.
      *
      * @param \Quanta\Container\ConfigurationEntryInterface $entry
-     * @return \Quanta\Container\FactoryMapInterface
+     * @return \Quanta\Container\Maps\FactoryMapInterface
      */
     private function factoryMap(ConfigurationEntryInterface $entry): FactoryMapInterface
     {
@@ -76,7 +79,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
      * Return the extension map provided by the given configuration entry.
      *
      * @param \Quanta\Container\ConfigurationEntryInterface $entry
-     * @return \Quanta\Container\FactoryMapInterface
+     * @return \Quanta\Container\Maps\FactoryMapInterface
      */
     private function extensionMap(ConfigurationEntryInterface $entry): FactoryMapInterface
     {

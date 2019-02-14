@@ -2,19 +2,21 @@
 
 namespace Quanta\Container;
 
+use Quanta\Container\Maps\FactoryMapInterface;
+
 interface ConfigurationEntryInterface
 {
     /**
      * Return the factories provided by the configuration entry.
      *
-     * @return \Quanta\Container\FactoryMapInterface
+     * @return \Quanta\Container\Maps\FactoryMapInterface
      */
     public function factories(): FactoryMapInterface;
 
     /**
      * Return the extensions provided by the configuration entry.
      *
-     * @return \Quanta\Container\FactoryMapInterface
+     * @return \Quanta\Container\Maps\FactoryMapInterface
      */
     public function extensions(): FactoryMapInterface;
 
