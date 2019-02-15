@@ -4,14 +4,14 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\Values\Value;
 use Quanta\Container\Values\ValueFactory;
-use Quanta\Container\Passes\ReverseTagging;
-use Quanta\Container\Passes\ConfigurationPassInterface;
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
 use Quanta\Container\Factories\Factory;
 use Quanta\Container\Factories\Extension;
+use Quanta\Container\Configuration\ReverseTagging;
 use Quanta\Container\Configuration\PhpFileConfiguration;
 use Quanta\Container\Configuration\ConfigurationInterface;
+use Quanta\Container\Configuration\ConfigurationPassInterface;
 use Quanta\Container\Configuration\ConfigurationEntryInterface;
 
 require_once __DIR__ . '/../.test/classes.php';

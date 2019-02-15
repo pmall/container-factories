@@ -3,7 +3,6 @@
 namespace Quanta\Container\Configuration;
 
 use Quanta\Container\FactoryMapInterface;
-use Quanta\Container\Passes\ConfigurationPassInterface;
 
 final class ConfigurationEntry implements ConfigurationEntryInterface
 {
@@ -31,17 +30,17 @@ final class ConfigurationEntry implements ConfigurationEntryInterface
     /**
      * The configuration passes provided by the configuration entry.
      *
-     * @var \Quanta\Container\Passes\ConfigurationPassInterface[]
+     * @var \Quanta\Container\Configuration\ConfigurationPassInterface[]
      */
     private $passes;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\FactoryMapInterface                 $factories
-     * @param \Quanta\Container\FactoryMapInterface                 $extensions
-     * @param array[]                                               $metadata
-     * @param \Quanta\Container\Passes\ConfigurationPassInterface   ...$passes
+     * @param \Quanta\Container\FactoryMapInterface                         $factories
+     * @param \Quanta\Container\FactoryMapInterface                         $extensions
+     * @param array[]                                                       $metadata
+     * @param \Quanta\Container\Configuration\ConfigurationPassInterface    ...$passes
      */
     public function __construct(
         FactoryMapInterface $factories,

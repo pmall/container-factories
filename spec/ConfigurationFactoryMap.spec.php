@@ -7,9 +7,9 @@ use Test\TestFactory;
 use Quanta\Container\FactoryMap;
 use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\ConfigurationFactoryMap;
-use Quanta\Container\Passes\ConfigurationPassInterface;
 use Quanta\Container\Configuration\Metadata;
 use Quanta\Container\Configuration\ConfigurationInterface;
+use Quanta\Container\Configuration\ConfigurationPassInterface;
 use Quanta\Container\Configuration\ConfigurationEntryInterface;
 
 use Quanta\Container\Factories\Extension;

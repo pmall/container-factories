@@ -101,7 +101,7 @@ final class ConfigurationFactoryMap implements FactoryMapInterface
      * entry.
      *
      * @param \Quanta\Container\Configuration\ConfigurationEntryInterface $entry
-     * @return array
+     * @return \Quanta\Container\Configuration\ConfigurationPassInterface[]
      */
     private function passes(ConfigurationEntryInterface $entry): array
     {

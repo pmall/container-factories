@@ -5,11 +5,11 @@ namespace Quanta\Container\Configuration;
 use Quanta\Container\FactoryMap;
 use Quanta\Container\MergedFactoryMap;
 use Quanta\Container\Values\ValueFactory;
-use Quanta\Container\Passes\ReverseTagging;
-use Quanta\Container\Passes\ConfigurationPassInterface;
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
 use Quanta\Container\Factories\Factory;
+use Quanta\Container\Configuration\ReverseTagging;
+use Quanta\Container\Configuration\ConfigurationPassInterface;
 
 use function Quanta\Exceptions\areAllTypedAs;
 use Quanta\Exceptions\InvalidKey;
@@ -301,7 +301,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string    $path
      * @param array     $passes
-     * @return \Quanta\Container\Passes\ConfigurationPassInterface[]
+     * @return \Quanta\Container\Configuration\ConfigurationPassInterface[]
      * @throws \UnexpectedValueException
      */
     private function passes(string $path, array $passes): array
@@ -323,7 +323,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string $id
      * @param string $class
-     * @return \Quanta\Container\Passes\ReverseTagging
+     * @return \Quanta\Container\Configuration\ReverseTagging
      */
     private function mapper(string $id, string $class): ReverseTagging
     {
@@ -336,7 +336,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string    $path
      * @param array     $mappers
-     * @return \Quanta\Container\Passes\ReverseTagging[]
+     * @return \Quanta\Container\Configuration\ReverseTagging[]
      * @throws \UnexpectedValueException
      */
     private function mappers(string $path, array $mappers): array

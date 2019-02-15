@@ -1,9 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Passes;
+namespace Quanta\Container\Configuration;
 
 use Quanta\Container\Factories\Tag;
-use Quanta\Container\Configuration\Metadata;
 
 final class ReverseTagging implements ConfigurationPassInterface
 {

@@ -4,8 +4,8 @@ namespace Test;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Passes\ConfigurationPassInterface;
 use Quanta\Container\Configuration\Metadata;
+use Quanta\Container\Configuration\ConfigurationPassInterface;
 
 interface SomeInterface1 {}
 

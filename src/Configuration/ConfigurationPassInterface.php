@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Passes;
-
-use Quanta\Container\Configuration\Metadata;
+namespace Quanta\Container\Configuration;
 
 interface ConfigurationPassInterface
 {

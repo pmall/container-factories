@@ -2,9 +2,9 @@
 
 use Quanta\Container\Factories\Tag;
 
-use Quanta\Container\Passes\ReverseTagging;
-use Quanta\Container\Passes\ConfigurationPassInterface;
 use Quanta\Container\Configuration\Metadata;
+use Quanta\Container\Configuration\ReverseTagging;
+use Quanta\Container\Configuration\ConfigurationPassInterface;
 
 require_once __DIR__ . '/../.test/classes.php';
 

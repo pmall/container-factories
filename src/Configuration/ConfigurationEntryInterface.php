@@ -30,7 +30,7 @@ interface ConfigurationEntryInterface
     /**
      * Return the configuration passes provided by the configuration entry.
      *
-     * @return \Quanta\Container\Passes\ConfigurationPassInterface[]
+     * @return \Quanta\Container\Configuration\ConfigurationPassInterface[]
      */
     public function passes(): array;
 }
