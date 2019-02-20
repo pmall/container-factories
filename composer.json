@@ -9,10 +9,10 @@
         "service-provider"
     ],
     "license": "MIT",
-    "homepage": "https://github.com/quanta/container-configuration",
+    "homepage": "https://github.com/quantaphp/container-configuration",
     "support": {
-        "issues": "https://github.com/quanta/container-configuration/issues",
-        "source": "https://github.com/quanta/container-configuration"
+        "issues": "https://github.com/quantaphp/container-configuration/issues",
+        "source": "https://github.com/quantaphp/container-configuration"
     },
     "authors": [
         {
