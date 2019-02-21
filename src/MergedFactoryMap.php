@@ -2,24 +2,42 @@
 
 namespace Quanta\Container;
 
-final class MergedFactoryMap extends AbstractFactoryMapCollection
+final class MergedFactoryMap implements FactoryMapInterface
 {
     /**
-     * Constructor.
+     * The factory maps.
      *
+     * @var \Quanta\Container\FactoryMapInterface[]
+     */
+    private $maps;
+
+    /**
+     * Constructor.
      *
      * @param \Quanta\Container\FactoryMapInterface ...$maps
      */
     public function __construct(FactoryMapInterface ...$maps)
     {
-        parent::__construct(...$maps);
+        $this->maps = $maps;
     }
 
     /**
      * @inheritdoc
      */
-    protected function factory(array $factories): callable
+    public function factories(): array
     {
-        return array_pop($factories);
+        return array_merge([], ...array_map([$this, 'plucked'], $this->maps));
+    }
+
+    /**
+     * Return the associative array of factories provided by the given factory
+     * map.
+     *
+     * @param \Quanta\Container\FactoryMapInterface $map
+     * @return callable[]
+     */
+    private function plucked(FactoryMapInterface $map): array
+    {
+        return $map->factories();
     }
 }

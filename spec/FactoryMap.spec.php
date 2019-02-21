@@ -7,7 +7,7 @@ use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
 
 describe('FactoryMap', function () {
 
-    context('when all the values of the array of factories are callable', function () {
+    context('when all the values of the associative array of factories are callable', function () {
 
         beforeEach(function () {
 
@@ -39,7 +39,7 @@ describe('FactoryMap', function () {
 
     });
 
-    context('when a value of the array of factories is not a callable', function () {
+    context('when a value of the associative array of factories is not a callable', function () {
 
         it('should throw an InvalidArgumentException', function () {
 
