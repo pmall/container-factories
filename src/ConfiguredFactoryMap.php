@@ -5,20 +5,20 @@ namespace Quanta\Container;
 final class ConfiguredFactoryMap implements FactoryMapInterface
 {
     /**
-     * The configuration.
+     * The configuration source.
      *
-     * @var \Quanta\Container\ConfigurationInterface
+     * @var \Quanta\Container\ConfigurationSourceInterface
      */
-    private $configuration;
+    private $source;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\ConfigurationInterface $configuration
+     * @param \Quanta\Container\ConfigurationSourceInterface $source
      */
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(ConfigurationSourceInterface $source)
     {
-        $this->configuration = $configuration;
+        $this->source = $source;
     }
 
     /**
@@ -26,10 +26,12 @@ final class ConfiguredFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
+        $configuration = $this->source->configuration();
+
         return array_reduce(
-            $this->configuration->passes(),
+            $configuration->passes(),
             [$this, 'reduced'],
-            $this->configuration->map()->factories()
+            $configuration->map()->factories()
         );
     }
 

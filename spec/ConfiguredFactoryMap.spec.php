@@ -6,6 +6,7 @@ use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\ConfiguredFactoryMap;
 use Quanta\Container\ConfigurationInterface;
 use Quanta\Container\ConfigurationPassInterface;
+use Quanta\Container\ConfigurationSourceInterface;
 
 require_once __DIR__ . '/.test/classes.php';
 
@@ -13,9 +14,9 @@ describe('ConfiguredFactoryMap', function () {
 
     beforeEach(function () {
 
-        $this->configuration = mock(Configurationinterface::class);
+        $this->source = mock(ConfigurationSourceInterface::class);
 
-        $this->map = new ConfiguredFactoryMap($this->configuration->get());
+        $this->map = new ConfiguredFactoryMap($this->source->get());
 
     });
 
@@ -29,15 +30,17 @@ describe('ConfiguredFactoryMap', function () {
 
         beforeEach(function () {
 
+            $this->configuration = mock(ConfigurationInterface::class);
             $this->delegate = mock(FactoryMapInterface::class);
 
-            $this->configuration->map->returns($this->delegate->get());
+            $this->source->configuration->returns($this->configuration);
+            $this->configuration->map->returns($this->delegate);
 
         });
 
-        context('when the configuration does not provide configuration passes', function () {
+        context('when the configuration does not provide any configuration pass', function () {
 
-            it('should return the associative array of factory provided by the factory map provided by the configuration', function () {
+            it('should return the associative array of factory provided by the configured factory map', function () {
 
                 $this->delegate->factories->returns([
                     'id1' => $factory1 = function () {},
@@ -59,17 +62,13 @@ describe('ConfiguredFactoryMap', function () {
 
         context('when the configuration provides at least one configuation pass', function () {
 
-            it('should process the associative array of factories with the configuration passes provided by the configuration', function () {
+            it('should process the associative array of factories with the configured configuration passes', function () {
 
                 $pass1 = mock(ConfigurationPassInterface::class);
                 $pass2 = mock(ConfigurationPassInterface::class);
                 $pass3 = mock(ConfigurationPassInterface::class);
 
-                $this->configuration->passes->returns([
-                    $pass1->get(),
-                    $pass2->get(),
-                    $pass3->get(),
-                ]);
+                $this->configuration->passes->returns([$pass1->get(), $pass2->get(), $pass3->get()]);
 
                 $this->delegate->factories->returns([
                     'id1' => $f11 = new Test\TestFactory('f11'),
