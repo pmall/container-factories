@@ -7,9 +7,6 @@ use Psr\Container\ContainerInterface;
 use Quanta\Container\Compilation\ArrayStr;
 use Quanta\Container\Compilation\Template;
 
-use function Quanta\Exceptions\areAllTypedAs;
-use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
-
 final class Tag implements CompilableFactoryInterface
 {
     /**
@@ -22,17 +19,10 @@ final class Tag implements CompilableFactoryInterface
     /**
      * Constructor.
      *
-     * @param string[] $ids
-     * @throws \InvalidArgumentException
+     * @param string ...$ids
      */
-    public function __construct(array $ids = [])
+    public function __construct(string ...$ids)
     {
-        if (! areAllTypedAs('string', $ids)) {
-            throw new \InvalidArgumentException(
-                (string) new ArrayArgumentTypeErrorMessage(1, 'string', $ids)
-            );
-        }
-
         $this->ids = $ids;
     }
 
@@ -41,9 +31,7 @@ final class Tag implements CompilableFactoryInterface
      */
     public function __invoke(ContainerInterface $container, array $tagged = []): array
     {
-        $entries = array_map([$container, 'get'], $this->ids);
-
-        return array_merge($tagged, $entries);
+        return array_merge($tagged, array_map([$container, 'get'], $this->ids));
     }
 
     /**
@@ -53,11 +41,10 @@ final class Tag implements CompilableFactoryInterface
     {
         return $template
             ->withPrevious('array $tagged = []')
-            ->withBodyf('$entries = array_map([$%s, \'get\'], %s);', ...[
+            ->strWithReturnf('array_merge($tagged, array_map([$%s, \'get\'], %s))', ...[
                 $template->containerVariableName(),
                 new ArrayStr(array_map([$this, 'quoted'], $this->ids)),
-            ])
-            ->strWithReturn('array_merge($tagged, $entries)');
+            ]);
     }
 
     /**

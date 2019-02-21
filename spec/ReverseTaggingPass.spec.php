@@ -59,11 +59,11 @@ describe('ReverseTaggingPass', function () {
                 ]);
 
                 expect($test['id1'])->toBe($factory1);
-                expect($test['id2'])->toEqual(new Tag(['id1', 'id3', 'id5']));
+                expect($test['id2'])->toEqual(new Tag('id1', 'id3', 'id5'));
                 expect($test['id3'])->toBe($factory3);
-                expect($test['id4'])->toEqual(new Tag(['id3', 'id5']));
+                expect($test['id4'])->toEqual(new Tag('id3', 'id5'));
                 expect($test['id5'])->toBe($factory5);
-                expect($test['id6'])->toEqual(new Tag(['id3', 'id5', 'id7']));
+                expect($test['id6'])->toEqual(new Tag('id3', 'id5', 'id7'));
                 expect($test['id7'])->toBe($factory7);
 
             });

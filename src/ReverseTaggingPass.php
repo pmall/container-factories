@@ -40,7 +40,7 @@ final class ReverseTaggingPass implements ConfigurationPassInterface
         $ids = array_keys($factories);
 
         foreach ($this->tags as $id => $predicate) {
-            $factories[$id] = new Tag(array_values(array_filter($ids, $predicate)));
+            $factories[$id] = new Tag(...array_filter($ids, $predicate));
         }
 
         return $factories;
