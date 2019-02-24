@@ -38,3 +38,23 @@ final class TestFactory
         //
     }
 }
+
+final class TestInvokable
+{
+    private static $container;
+
+    private static $value;
+
+    public static function setup(ContainerInterface $container, $value)
+    {
+        self::$container = $container;
+        self::$value = $value;
+    }
+
+    public function __invoke(ContainerInterface $container)
+    {
+        if (self::$container === $container) {
+            return self::$value;
+        };
+    }
+}
