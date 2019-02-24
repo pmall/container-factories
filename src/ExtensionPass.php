@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Configuration;
+namespace Quanta\Container;
 
 use Quanta\Container\Factories\Extension;
 
 use function Quanta\Exceptions\areAllTypedAs;
 use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
 
-final class ExtensionPass implements ConfigurationPassInterface
+final class ExtensionPass implements ProcessingPassInterface
 {
     /**
      * The associative array of extensions used to extend the factories.

@@ -2,13 +2,14 @@
 
 namespace Quanta\Container\Configuration;
 
+use Quanta\Container\ProcessedFactoryMap;
+
 interface ConfigurationInterface
 {
     /**
-     * Return a new configuration step from the given one.
+     * Return the processed factory map provided by the configuration.
      *
-     * @param \Quanta\Container\Configuration\ConfigurationStepInterface $step
-     * @return \Quanta\Container\Configuration\ConfigurationStepInterface
+     * @return \Quanta\Container\ProcessedFactoryMap
      */
-    public function step(ConfigurationStepInterface $step): ConfigurationStepInterface;
+    public function map(): ProcessedFactoryMap;
 }

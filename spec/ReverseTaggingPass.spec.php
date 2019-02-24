@@ -2,9 +2,9 @@
 
 use function Eloquent\Phony\Kahlan\stub;
 
+use Quanta\Container\ReverseTaggingPass;
+use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Factories\Tag;
-use Quanta\Container\Configuration\ReverseTaggingPass;
-use Quanta\Container\Configuration\ConfigurationPassInterface;
 
 use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
 
@@ -22,9 +22,9 @@ describe('ReverseTaggingPass', function () {
 
         });
 
-        it('should implement ConfigurationPassInterface', function () {
+        it('should implement ProcessingPassInterface', function () {
 
-            expect($this->pass)->toBeAnInstanceOf(ConfigurationPassInterface::class);
+            expect($this->pass)->toBeAnInstanceOf(ProcessingPassInterface::class);
 
         });
 

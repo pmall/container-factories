@@ -3,91 +3,35 @@
 use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\FactoryMapInterface;
+use Quanta\Container\ProcessedFactoryMap;
 use Quanta\Container\Configuration\Configuration;
-use Quanta\Container\Configuration\OverridingStep;
-use Quanta\Container\Configuration\ProcessingStep;
 use Quanta\Container\Configuration\ConfigurationInterface;
-use Quanta\Container\Configuration\ConfigurationStepInterface;
-use Quanta\Container\Configuration\ConfigurationPassInterface;
 
 describe('Configuration', function () {
 
     beforeEach(function () {
 
-        $this->map = mock(FactoryMapInterface::class);
+        $this->map = new ProcessedFactoryMap(
+            mock(FactoryMapInterface::class)->get()
+        );
+
+        $this->configuration = new Configuration($this->map);
 
     });
 
-    context('when there is no configuration pass', function () {
+    it('should implement ConfigurationInterface', function () {
 
-        beforeEach(function () {
-
-            $this->configuration = new Configuration($this->map->get());
-
-        });
-
-        it('should implement ConfigurationInterface', function () {
-
-            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
-
-        });
-
-        describe('->step()', function () {
-
-            it('should return an overriding step with no configuration pass', function () {
-
-                $step = mock(ConfigurationStepInterface::class);
-
-                $test = $this->configuration->step($step->get());
-
-                expect($test)->toEqual(new ProcessingStep(
-                    new OverridingStep($step->get(), $this->map->get())
-                ));
-
-            });
-
-        });
+        expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
     });
 
-    context('when there is configuration passes', function () {
+    describe('->map()', function () {
 
-        beforeEach(function () {
+        it('should return the processed factory map', function () {
 
-            $this->pass1 = mock(ConfigurationPassInterface::class);
-            $this->pass2 = mock(ConfigurationPassInterface::class);
-            $this->pass3 = mock(ConfigurationPassInterface::class);
+            $test = $this->configuration->map();
 
-            $this->configuration = new Configuration($this->map->get(), ...[
-                $this->pass1->get(),
-                $this->pass2->get(),
-                $this->pass3->get(),
-            ]);
-
-        });
-
-        it('should implement ConfigurationInterface', function () {
-
-            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
-
-        });
-
-        describe('->step()', function () {
-
-            it('should return an overriding step with the configuration passes', function () {
-
-                $step = mock(ConfigurationStepInterface::class);
-
-                $test = $this->configuration->step($step->get());
-
-                expect($test)->toEqual(new ProcessingStep(
-                    new OverridingStep($step->get(), $this->map->get()),
-                    $this->pass1->get(),
-                    $this->pass2->get(),
-                    $this->pass3->get()
-                ));
-
-            });
+            expect($test)->toBe($this->map);
 
         });
 

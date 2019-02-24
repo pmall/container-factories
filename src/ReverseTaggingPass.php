@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Configuration;
+namespace Quanta\Container;
 
 use Quanta\Container\Factories\Tag;
 
 use function Quanta\Exceptions\areAllTypedAs;
 use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
 
-final class ReverseTaggingPass implements ConfigurationPassInterface
+final class ReverseTaggingPass implements ProcessingPassInterface
 {
     /**
      * The associative array of predicates used to add tags to the factories.

@@ -4,7 +4,7 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\ProcessedFactoryMap;
-use Quanta\Container\Configuration\ConfigurationPassInterface;
+use Quanta\Container\ProcessingPassInterface;
 
 require_once __DIR__ . '/.test/classes.php';
 
@@ -27,6 +27,30 @@ describe('ProcessedFactoryMap', function () {
         it('should implement FactoryMapInterface', function () {
 
             expect($this->map)->toBeAnInstanceOf(FactoryMapInterface::class);
+
+        });
+
+        describe('->map()', function () {
+
+            it('should return the factory map', function () {
+
+                $test = $this->map->map();
+
+                expect($test)->toBe($this->delegate->get());
+
+            });
+
+        });
+
+        describe('->passes()', function () {
+
+            it('should return an empty array', function () {
+
+                $test = $this->map->passes();
+
+                expect($test)->toEqual([]);
+
+            });
 
         });
 
@@ -58,9 +82,9 @@ describe('ProcessedFactoryMap', function () {
 
         beforeEach(function () {
 
-            $this->pass1 = mock(ConfigurationPassInterface::class);
-            $this->pass2 = mock(ConfigurationPassInterface::class);
-            $this->pass3 = mock(ConfigurationPassInterface::class);
+            $this->pass1 = mock(ProcessingPassInterface::class);
+            $this->pass2 = mock(ProcessingPassInterface::class);
+            $this->pass3 = mock(ProcessingPassInterface::class);
 
             $this->map = new ProcessedFactoryMap($this->delegate->get(), ...[
                 $this->pass1->get(),
@@ -73,6 +97,34 @@ describe('ProcessedFactoryMap', function () {
         it('should implement FactoryMapInterface', function () {
 
             expect($this->map)->toBeAnInstanceOf(FactoryMapInterface::class);
+
+        });
+
+        describe('->map()', function () {
+
+            it('should return the factory map', function () {
+
+                $test = $this->map->map();
+
+                expect($test)->toBe($this->delegate->get());
+
+            });
+
+        });
+
+        describe('->passes()', function () {
+
+            it('should return the processing passes', function () {
+
+                $test = $this->map->passes();
+
+                expect($test)->toBeAn('array');
+                expect($test)->toHaveLength(3);
+                expect($test[0])->toBe($this->pass1->get());
+                expect($test[1])->toBe($this->pass2->get());
+                expect($test[2])->toBe($this->pass3->get());
+
+            });
 
         });
 

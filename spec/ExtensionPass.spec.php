@@ -1,8 +1,8 @@
 <?php
 
+use Quanta\Container\ExtensionPass;
+use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Factories\Extension;
-use Quanta\Container\Configuration\ExtensionPass;
-use Quanta\Container\Configuration\ConfigurationPassInterface;
 
 use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
 
@@ -20,9 +20,9 @@ describe('ExtensionPass', function () {
 
         });
 
-        it('should implement ConfigurationPassInterface', function () {
+        it('should implement ProcessingPassInterface', function () {
 
-            expect($this->pass)->toBeAnInstanceOf(ConfigurationPassInterface::class);
+            expect($this->pass)->toBeAnInstanceOf(ProcessingPassInterface::class);
 
         });
 

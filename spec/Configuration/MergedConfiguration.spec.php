@@ -2,9 +2,12 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
+use Quanta\Container\MergedFactoryMap;
+use Quanta\Container\ProcessedFactoryMap;
+use Quanta\Container\FactoryMapInterface;
+use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Configuration\MergedConfiguration;
 use Quanta\Container\Configuration\ConfigurationInterface;
-use Quanta\Container\Configuration\ConfigurationStepInterface;
 
 describe('MergedConfiguration', function () {
 
@@ -22,15 +25,15 @@ describe('MergedConfiguration', function () {
 
         });
 
-        describe('->step()', function () {
+        describe('->map()', function () {
 
-            it('should return the given configuration step', function () {
+            it('should return an empty processed factory map', function () {
 
-                $step = mock(ConfigurationStepInterface::class);
+                $test = $this->configuration->map();
 
-                $test = $this->configuration->step($step->get());
-
-                expect($test)->toBe($step->get());
+                expect($test)->toEqual(new ProcessedFactoryMap(
+                    new MergedFactoryMap
+                ));
 
             });
 
@@ -60,22 +63,57 @@ describe('MergedConfiguration', function () {
 
         });
 
-        describe('->step()', function () {
+        describe('->map()', function () {
 
-            it('should reduce the given configuration step with all the configurations', function () {
+            it('should merge the processed factory maps provided by the configurations', function () {
 
-                $step1 = mock(ConfigurationStepInterface::class);
-                $step2 = mock(ConfigurationStepInterface::class);
-                $step3 = mock(ConfigurationStepInterface::class);
-                $step4 = mock(ConfigurationStepInterface::class);
+                $map1 = mock(FactoryMapInterface::class);
+                $map2 = mock(FactoryMapInterface::class);
+                $map3 = mock(FactoryMapInterface::class);
 
-                $this->configuration1->step->with($step1)->returns($step2);
-                $this->configuration2->step->with($step2)->returns($step3);
-                $this->configuration3->step->with($step3)->returns($step4);
+                $pass11 = mock(ProcessingPassInterface::class);
+                $pass12 = mock(ProcessingPassInterface::class);
+                $pass13 = mock(ProcessingPassInterface::class);
+                $pass21 = mock(ProcessingPassInterface::class);
+                $pass22 = mock(ProcessingPassInterface::class);
+                $pass23 = mock(ProcessingPassInterface::class);
+                $pass31 = mock(ProcessingPassInterface::class);
+                $pass32 = mock(ProcessingPassInterface::class);
+                $pass33 = mock(ProcessingPassInterface::class);
 
-                $test = $this->configuration->step($step1->get());
+                $this->configuration1->map->returns(new ProcessedFactoryMap($map1->get(), ...[
+                    $pass11->get(),
+                    $pass12->get(),
+                    $pass13->get(),
+                ]));
 
-                expect($test)->toBe($step4->get());
+                $this->configuration2->map->returns(new ProcessedFactoryMap($map2->get(), ...[
+                    $pass21->get(),
+                    $pass22->get(),
+                    $pass23->get(),
+                ]));
+
+                $this->configuration3->map->returns(new ProcessedFactoryMap($map3->get(), ...[
+                    $pass31->get(),
+                    $pass32->get(),
+                    $pass33->get(),
+                ]));
+
+
+                $test = $this->configuration->map();
+
+                expect($test)->toEqual(new ProcessedFactoryMap(
+                    new MergedFactoryMap($map1->get(), $map2->get(), $map3->get()),
+                    $pass11->get(),
+                    $pass12->get(),
+                    $pass13->get(),
+                    $pass21->get(),
+                    $pass22->get(),
+                    $pass23->get(),
+                    $pass31->get(),
+                    $pass32->get(),
+                    $pass33->get()
+                ));
 
             });
 

@@ -2,8 +2,6 @@
 
 namespace Quanta\Container;
 
-use Quanta\Container\Configuration\ConfigurationPassInterface;
-
 final class ProcessedFactoryMap implements FactoryMapInterface
 {
     /**
@@ -14,22 +12,42 @@ final class ProcessedFactoryMap implements FactoryMapInterface
     private $map;
 
     /**
-     * The configuration passes used to process the factories.
+     * The processing passes used to process the factories.
      *
-     * @var \Quanta\Container\Configuration\ConfigurationPassInterface[]
+     * @var \Quanta\Container\ProcessingPassInterface[]
      */
     private $passes;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\FactoryMapInterface                         $map
-     * @param \Quanta\Container\Configuration\ConfigurationPassInterface    ...$passes
+     * @param \Quanta\Container\FactoryMapInterface     $map
+     * @param \Quanta\Container\ProcessingPassInterface ...$passes
      */
-    public function __construct(FactoryMapInterface $map, ConfigurationPassInterface ...$passes)
+    public function __construct(FactoryMapInterface $map, ProcessingPassInterface ...$passes)
     {
         $this->map = $map;
         $this->passes = $passes;
+    }
+
+    /**
+     * Return the factory map.
+     *
+     * @return \Quanta\Container\FactoryMapInterface
+     */
+    public function map(): FactoryMapInterface
+    {
+        return $this->map;
+    }
+
+    /**
+     * Return the processing passes.
+     *
+     * @return \Quanta\Container\ProcessingPassInterface[]
+     */
+    public function passes(): array
+    {
+        return $this->passes;
     }
 
     /**
@@ -41,14 +59,14 @@ final class ProcessedFactoryMap implements FactoryMapInterface
     }
 
     /**
-     * Return the associative array of factories provided by the given
+     * Return the associative array of factories processed by the given
      * configuration pass.
      *
-     * @param callable[]                                                    $factories
-     * @param \Quanta\Container\Configuration\ConfigurationPassInterface    $pass
+     * @param callable[]                                $factories
+     * @param \Quanta\Container\ProcessingPassInterface $pass
      * @return callable[]
      */
-    private function reduced(array $factories, ConfigurationPassInterface $pass): array
+    private function reduced(array $factories, ProcessingPassInterface $pass): array
     {
         return $pass->processed($factories);
     }

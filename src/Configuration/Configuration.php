@@ -2,45 +2,32 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\FactoryMapInterface;
+use Quanta\Container\ProcessedFactoryMap;
 
 final class Configuration implements ConfigurationInterface
 {
     /**
-     * The factory map.
+     * The processed factory map to provide.
      *
-     * @var \Quanta\Container\FactoryMapInterface
+     * @var \Quanta\Container\ProcessedFactoryMap
      */
     private $map;
 
     /**
-     * The array of configuration passes used to process the associative array
-     * of factories.
-     *
-     * @var \Quanta\Container\Configuration\ConfigurationPassInterface[]
-     */
-    private $passes;
-
-    /**
      * Constructor.
      *
-     * @param \Quanta\Container\FactoryMapInterface                         $map
-     * @param \Quanta\Container\Configuration\ConfigurationPassInterface    ...$passes
+     * @param \Quanta\Container\ProcessedFactoryMap $map
      */
-    public function __construct(FactoryMapInterface $map, ConfigurationPassInterface ...$passes)
+    public function __construct(ProcessedFactoryMap $map)
     {
         $this->map = $map;
-        $this->passes = $passes;
     }
 
     /**
      * @inheritdoc
      */
-    public function step(ConfigurationStepInterface $step): ConfigurationStepInterface
+    public function map(): ProcessedFactoryMap
     {
-        return new ProcessingStep(
-            new OverridingStep($step, $this->map),
-            ...$this->passes
-        );
+        return $this->map;
     }
 }

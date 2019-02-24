@@ -2,6 +2,10 @@
 
 namespace Quanta\Container\Configuration;
 
+use Quanta\Container\MergedFactoryMap;
+use Quanta\Container\ProcessedFactoryMap;
+use Quanta\Container\FactoryMapInterface;
+
 final class MergedConfiguration implements ConfigurationInterface
 {
     /**
@@ -24,21 +28,47 @@ final class MergedConfiguration implements ConfigurationInterface
     /**
      * @inheritdoc
      */
-    public function step(ConfigurationStepInterface $step): ConfigurationStepInterface
+    public function map(): ProcessedFactoryMap
     {
-        return array_reduce($this->configurations, [$this, 'reduced'], $step);
+        $maps = array_map([$this, 'plucked'], $this->configurations);
+
+        return new ProcessedFactoryMap(
+            new MergedFactoryMap(...array_map([$this, 'pluckedMap'], $maps)),
+            ...array_merge([], ...array_map([$this, 'pluckedPasses'], $maps))
+        );
     }
 
     /**
-     * Return the configuration step provided by the given configuration.
+     * Return the processed factory map provided by the given configuration.
      *
-     * @param \Quanta\Container\Configuration\ConfigurationStepInterface    $step
-     * @param \Quanta\Container\Configuration\ConfigurationInterface        $configuration
+     * @param \Quanta\Container\Configuration\ConfigurationInterface $configuration
+     * @return \Quanta\Container\ProcessedFactoryMap
      */
-    private function reduced(
-        ConfigurationStepInterface $step,
-        ConfigurationInterface $configuration
-    ): ConfigurationStepInterface {
-        return $configuration->step($step);
+    private function plucked(ConfigurationInterface $configuration): ProcessedFactoryMap
+    {
+        return $configuration->map();
+    }
+
+    /**
+     * Return the factory map provided by the given processed factory map.
+     *
+     * @param \Quanta\Container\ProcessedFactoryMap $map
+     * @return \Quanta\Container\FactoryMapInterface
+     */
+    private function pluckedMap(ProcessedFactoryMap $map): FactoryMapInterface
+    {
+        return $map->map();
+    }
+
+    /**
+     * Return the array of processing passes provided by the given processed
+     * factory map.
+     *
+     * @param \Quanta\Container\ProcessedFactoryMap $map
+     * @return \Quanta\Container\ProcessingPassInterface[]
+     */
+    private function pluckedPasses(ProcessedFactoryMap $map): array
+    {
+        return $map->passes();
     }
 }

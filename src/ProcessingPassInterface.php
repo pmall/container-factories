@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Configuration;
+namespace Quanta\Container;
 
-interface ConfigurationPassInterface
+interface ProcessingPassInterface
 {
     /**
      * Return a new associative array of factories from the given one.
