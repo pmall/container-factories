@@ -4,25 +4,23 @@ namespace Quanta\Container\Factories;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\ArrayStr;
-
 final class Tag implements CompilableFactoryInterface
 {
     /**
-     * The ids of the tagged container entries.
+     * The id of the tagged container entry.
      *
-     * @var string[]
+     * @var string
      */
-    private $ids;
+    private $id;
 
     /**
      * Constructor.
      *
-     * @param string ...$ids
+     * @param string $id
      */
-    public function __construct(string ...$ids)
+    public function __construct(string $id)
     {
-        $this->ids = $ids;
+        $this->id = $id;
     }
 
     /**
@@ -30,7 +28,7 @@ final class Tag implements CompilableFactoryInterface
      */
     public function __invoke(ContainerInterface $container, array $tagged = []): array
     {
-        return array_merge($tagged, array_map([$container, 'get'], $this->ids));
+        return array_merge($tagged, [$container->get($this->id)]);
     }
 
     /**
@@ -38,21 +36,10 @@ final class Tag implements CompilableFactoryInterface
      */
     public function compiled(Compiler $compiler): CompiledFactory
     {
-        return new CompiledFactory('container', 'array $tagged = []', ...[
-            vsprintf('return array_merge($tagged, array_map([$container, \'get\'], %s));', [
-                new ArrayStr(array_map([$this, 'quoted'], $this->ids)),
+        return new CompiledFactory('container', 'array $tagged', ...[
+            vsprintf('return array_merge($tagged, [$container->get(\'%s\')]);', [
+                $this->id,
             ])
         ]);
-    }
-
-    /**
-     * Return the given string with quotes.
-     *
-     * @param string $str
-     * @return string
-     */
-    private function quoted(string $str): string
-    {
-        return sprintf('\'%s\'', $str);
     }
 }
