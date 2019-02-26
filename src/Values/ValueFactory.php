@@ -19,9 +19,7 @@ final class ValueFactory
      */
     public static function withDummyValueParser(array $map): ValueFactory
     {
-        return new ValueFactory(
-            new DummyParser($map)
-        );
+        return new ValueFactory(new DummyParser($map));
     }
 
     /**
@@ -33,7 +31,6 @@ final class ValueFactory
     {
         return new ValueFactory(...[
             new EnvVarParser,
-            new InstanceParser,
             new ReferenceParser,
             new InterpolatedStringParser,
         ]);

@@ -29,7 +29,6 @@ describe('ValueFactory::withDefaultValueParser()', function () {
 
         expect($test)->toEqual(new ValueFactory(...[
             new Quanta\Container\Values\EnvVarParser,
-            new Quanta\Container\Values\InstanceParser,
             new Quanta\Container\Values\ReferenceParser,
             new Quanta\Container\Values\InterpolatedStringParser,
         ]));
