@@ -53,7 +53,7 @@ final class InterpolatedString implements ValueInterface
     {
         return (string) new SelfExecutingClosureStr($container, ...[
             vsprintf('return vsprintf(\'%s\', array_map([$%s, \'get\'], %s));', [
-                $this->format,
+                addslashes($this->format),
                 $container,
                 new ArrayStr(array_map([$this, 'quoted'], $this->ids)),
             ])
@@ -68,6 +68,6 @@ final class InterpolatedString implements ValueInterface
      */
     private function quoted(string $str): string
     {
-        return sprintf('\'%s\'', $str);
+        return sprintf('\'%s\'', addslashes($str));
     }
 }
