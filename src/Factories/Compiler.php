@@ -2,6 +2,8 @@
 
 namespace Quanta\Container\Factories;
 
+use Quanta\Container\Compilation\StaticMethodStr;
+
 final class Compiler
 {
     /**
@@ -56,10 +58,7 @@ final class Compiler
 
         if (is_array($factory)) {
             if (is_string($factory[0])) {
-                return vsprintf('[\%s::class, \'%s\']', [
-                    ltrim($factory[0], '\\'),
-                    $factory[1]
-                ]);
+                return (string) new StaticMethodStr(...$factory);
             }
 
             throw new \LogicException(
