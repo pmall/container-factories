@@ -14,8 +14,8 @@ describe('ExtensionPass', function () {
 
             $this->pass = new ExtensionPass([
                 'id1' => $this->extension1 = function () {},
-                'id2' => $this->extension2 = function () {},
                 'id3' => $this->extension3 = function () {},
+                'id4' => $this->extension4 = function () {},
             ]);
 
         });
@@ -32,14 +32,13 @@ describe('ExtensionPass', function () {
 
                 $test = $this->pass->processed([
                     'id1' => $factory1 = function () {},
+                    'id2' => $factory2 = function () {},
                     'id3' => $factory3 = function () {},
-                    'id4' => $factory4 = function () {},
                 ]);
 
                 expect($test['id1'])->toEqual(new Extension($factory1, $this->extension1));
-                expect($test['id2'])->toEqual($this->extension2);
+                expect($test['id2'])->toEqual($factory2);
                 expect($test['id3'])->toEqual(new Extension($factory3, $this->extension3));
-                expect($test['id4'])->toEqual($factory4);
 
             });
 

@@ -39,9 +39,9 @@ final class ExtensionPass implements ProcessingPassInterface
     public function processed(array $factories): array
     {
         foreach ($this->extensions as $id => $extension) {
-            $factories[$id] = key_exists($id, $factories)
-                 ? new Extension($factories[$id], $extension)
-                 : $extension;
+            if (key_exists($id, $factories)) {
+                $factories[$id] = new Extension($factories[$id], $extension);
+            }
         }
 
         return $factories;
