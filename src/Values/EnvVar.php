@@ -76,9 +76,9 @@ final class EnvVar implements ValueInterface
         ]);
 
         return (string) new SelfExecutingClosureStr($container, vsprintf($tpl, [
-            $this->name,
-            $this->default,
-            $this->type,
+            addslashes($this->name),
+            addslashes($this->default),
+            addslashes($this->type),
         ]));
     }
 }

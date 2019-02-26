@@ -84,7 +84,7 @@ final class Value implements ValueInterface
         }
 
         if (is_string($this->value)) {
-            return sprintf('\'%s\'', $this->value);
+            return sprintf('\'%s\'', addslashes($this->value));
         }
 
         if (is_array($this->value)) {

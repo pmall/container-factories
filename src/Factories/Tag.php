@@ -38,7 +38,7 @@ final class Tag implements CompilableFactoryInterface
     {
         return new CompiledFactory('container', 'array $tagged', ...[
             vsprintf('return array_merge($tagged, [$container->get(\'%s\')]);', [
-                $this->id,
+                addslashes($this->id),
             ])
         ]);
     }

@@ -67,11 +67,11 @@ final class Reference implements ValueInterface
             return (string) new SelfExecutingClosureStr($container, ...[
                 vsprintf('if ($%s->has(\'%s\')) {%s%s%s%s%s}%sreturn null;', [
                     $container,
-                    $this->id,
+                    addslashes($this->id),
                     PHP_EOL,
                     new IndentedStr(vsprintf('try { return $%s->get(\'%s\'); }', [
                         $container,
-                        $this->id,
+                        addslashes($this->id),
                     ])),
                     PHP_EOL,
                     new IndentedStr(vsprintf('catch (\%s $e) { return null; }', [
@@ -83,6 +83,6 @@ final class Reference implements ValueInterface
             ]);
         }
 
-        return sprintf('$%s->get(\'%s\')', $container, $this->id);
+        return sprintf('$%s->get(\'%s\')', $container, addslashes($this->id));
     }
 }

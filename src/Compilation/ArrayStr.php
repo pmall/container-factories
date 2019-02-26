@@ -64,7 +64,7 @@ final class ArrayStr
      */
     private function pairStr($key, string $val): string
     {
-        $key = is_int($key) ? $key : sprintf('\'%s\'', $key);
+        $key = is_int($key) ? $key : sprintf('\'%s\'', addslashes($key));
 
         return sprintf('%s => %s', $key, $val);
     }
