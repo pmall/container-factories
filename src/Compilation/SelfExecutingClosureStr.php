@@ -39,9 +39,7 @@ final class SelfExecutingClosureStr
      */
     public function __toString()
     {
-        $tpl = '(function (\%s $%s) {%s%s%s})($%s)';
-
-        return vsprintf($tpl, [
+        return vsprintf('(function (\%s $%s) {%s%s%s})($%s)', [
             ContainerInterface::class,
             $this->container,
             PHP_EOL,
