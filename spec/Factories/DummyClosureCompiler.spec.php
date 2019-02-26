@@ -1,17 +1,17 @@
 <?php
 
-use Quanta\Container\Compilation\DummyClosureCompiler;
+use Quanta\Container\Factories\DummyClosureCompiler;
 
 describe('DummyClosureCompiler', function () {
 
-    describe('->compiled()', function () {
+    describe('->__invoke()', function () {
 
         it('should throw an exception', function () {
 
             $compiler = new DummyClosureCompiler;
 
             $test = function () use ($compiler) {
-                $compiler->compiled(function () {});
+                $compiler(function () {});
             };
 
             expect($test)->toThrow();

@@ -4,39 +4,37 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Test\TestFactory;
 
+use Quanta\Container\Factories\Compiler;
+use Quanta\Container\Factories\CompiledFactory;
+use Quanta\Container\Factories\DummyClosureCompiler;
+use Quanta\Container\Factories\ClosureCompilerInterface;
 use Quanta\Container\Factories\CompilableFactoryInterface;
-
-use Quanta\Container\Compilation\Template;
-use Quanta\Container\Compilation\CallableCompiler;
-use Quanta\Container\Compilation\ClosureCompilerInterface;
 
 require_once __DIR__ . '/../.test/classes.php';
 
-describe('CallableCompiler::withDummyClosureCompiler()', function () {
+describe('Compiler::withDummyClosureCompiler()', function () {
 
     it('should return a callable compiler with a dummy closure compiler', function () {
 
-        $test = CallableCompiler::withDummyClosureCompiler();
+        $test = Compiler::withDummyClosureCompiler();
 
-        expect($test)->toEqual(new CallableCompiler(
-            new Quanta\Container\Compilation\DummyClosureCompiler
-        ));
+        expect($test)->toEqual(new Compiler(new DummyClosureCompiler));
 
     });
 
 });
 
-describe('CallableCompiler', function () {
+describe('Compiler', function () {
 
     beforeEach(function () {
 
         $this->delegate = mock(ClosureCompilerInterface::class);
 
-        $this->compiler = new CallableCompiler($this->delegate->get());
+        $this->compiler = new Compiler($this->delegate->get());
 
     });
 
-    describe('->compiled()', function () {
+    describe('->__invoke()', function () {
 
         context('when the given callable is an object', function () {
 
@@ -46,13 +44,13 @@ describe('CallableCompiler', function () {
 
                     $callable = mock(CompilableFactoryInterface::class);
 
-                    $callable->compiled
-                        ->with(new Template($this->compiler))
-                        ->returns('value');
+                    $compiled = new CompiledFactory('container', '$previous', '// body');
 
-                    $test = $this->compiler->compiled($callable->get());
+                    $callable->compiled->with($this->compiler)->returns($compiled);
 
-                    expect($test)->toEqual('value');
+                    $test = ($this->compiler)($callable->get());
+
+                    expect($test)->toEqual((string) $compiled);
 
                 });
 
@@ -64,9 +62,11 @@ describe('CallableCompiler', function () {
 
                     $closure = function () {};
 
-                    $this->delegate->compiled->with($closure)->returns('function () {}');
+                    $this->delegate->__invoke
+                        ->with(Kahlan\Arg::toBe($closure))
+                        ->returns('function () {}');
 
-                    $test = $this->compiler->compiled($closure);
+                    $test = ($this->compiler)($closure);
 
                     expect($test)->toEqual('function () {}');
 
@@ -79,7 +79,7 @@ describe('CallableCompiler', function () {
                 it('should throw a LogicException', function () {
 
                     $test = function () {
-                        $this->compiler->compiled(new TestFactory('factory'));
+                        ($this->compiler)(new TestFactory('factory'));
                     };
 
                     expect($test)->toThrow(new LogicException);
@@ -96,7 +96,7 @@ describe('CallableCompiler', function () {
 
                 it('should return a string representation of the callable', function () {
 
-                    $test = $this->compiler->compiled([TestFactory::class, 'createStatic']);
+                    $test = ($this->compiler)([TestFactory::class, 'createStatic']);
 
                     expect($test)->toEqual('[\Test\TestFactory::class, \'createStatic\']');
 
@@ -109,7 +109,7 @@ describe('CallableCompiler', function () {
                 it('should throw a LogicException', function () {
 
                     $test = function () {
-                        $this->compiler->compiled([new TestFactory('factory'), 'create']);
+                        ($this->compiler)([new TestFactory('factory'), 'create']);
                     };
 
                     expect($test)->toThrow(new LogicException);
@@ -126,7 +126,7 @@ describe('CallableCompiler', function () {
 
                 function delegate () {};
 
-                $test = $this->compiler->compiled('delegate');
+                $test = ($this->compiler)('delegate');
 
                 expect($test)->toEqual('delegate');
 

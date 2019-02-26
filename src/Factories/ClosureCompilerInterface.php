@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Compilation;
+namespace Quanta\Container\Factories;
 
 interface ClosureCompilerInterface
 {
@@ -10,5 +10,5 @@ interface ClosureCompilerInterface
      * @param \Closure $closure
      * @return string
      */
-    public function compiled(\Closure $closure): string;
+    public function __invoke(\Closure $closure): string;
 }

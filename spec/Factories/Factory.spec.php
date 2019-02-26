@@ -4,12 +4,11 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Factories\Factory;
-use Quanta\Container\Factories\CompilableFactoryInterface;
-
 use Quanta\Container\Values\ValueInterface;
 
-use Quanta\Container\Compilation\Template;
+use Quanta\Container\Factories\Factory;
+use Quanta\Container\Factories\Compiler;
+use Quanta\Container\Factories\CompilableFactoryInterface;
 
 describe('Factory', function () {
 
@@ -47,14 +46,14 @@ describe('Factory', function () {
 
         it('should return the string representation of a factory returning the return value of the ValueInterface ->str() method', function () {
 
-            $template = Template::withDummyClosureCompiler('container_var_name');
+            $compiler = Compiler::withDummyClosureCompiler();
 
-            $this->value->str->with('container_var_name')->returns('\'value\'');
+            $this->value->str->with('container')->returns('\'value\'');
 
-            $test = $this->factory->compiled($template);
+            $test = $this->factory->compiled($compiler);
 
             expect($test)->toEqual(<<<'EOT'
-function (\Psr\Container\ContainerInterface $container_var_name) {
+function (\Psr\Container\ContainerInterface $container) {
     return 'value';
 }
 EOT

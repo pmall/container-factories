@@ -4,8 +4,6 @@ namespace Quanta\Container\Factories;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\Template;
-
 final class Invokable implements CompilableFactoryInterface
 {
     /**
@@ -36,11 +34,10 @@ final class Invokable implements CompilableFactoryInterface
     /**
      * @inheritdoc
      */
-     public function compiled(Template $template): string
-     {
-        return $template->strWithReturnf(vsprintf('(new \%s)($%s)', [
-            $this->class,
-            $template->containerVariableName(),
-        ]));
+    public function compiled(Compiler $compiler): CompiledFactory
+    {
+        return new CompiledFactory('container', '', ...[
+            sprintf('return (new \%s)($container);', $this->class),
+        ]);
     }
 }

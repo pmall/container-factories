@@ -6,8 +6,6 @@ use Psr\Container\ContainerInterface;
 
 use Quanta\Container\Values\ValueInterface;
 
-use Quanta\Container\Compilation\Template;
-
 final class Factory implements CompilableFactoryInterface
 {
     /**
@@ -38,12 +36,10 @@ final class Factory implements CompilableFactoryInterface
     /**
      * @inheritdoc
      */
-    public function compiled(Template $template): string
+    public function compiled(Compiler $compiler): CompiledFactory
     {
-        $container = $template->containerVariableName();
-
-        $str = $this->value->str($container);
-
-        return $template->strWithReturn($str);
+        return new CompiledFactory('container', '', ...[
+            sprintf('return %s;', $this->value->str('container')),
+        ]);
     }
 }

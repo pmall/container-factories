@@ -4,10 +4,9 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Psr\Container\ContainerInterface;
 
+use Quanta\Container\Factories\Compiler;
 use Quanta\Container\Factories\Invokable;
 use Quanta\Container\Factories\CompilableFactoryInterface;
-
-use Quanta\Container\Compilation\Template;
 
 require_once __DIR__ . '/../.test/classes.php';
 
@@ -45,13 +44,13 @@ describe('Invokable', function () {
 
         it('should return the string representation of a factory instantiating the invokable class and proxying it', function () {
 
-            $template = Template::withDummyClosureCompiler('container_var_name');
+            $compiler = Compiler::withDummyClosureCompiler();
 
-            $test = $this->factory->compiled($template);
+            $test = $this->factory->compiled($compiler);
 
             expect($test)->toEqual(<<<'EOT'
-function (\Psr\Container\ContainerInterface $container_var_name) {
-    return (new \Test\TestInvokable)($container_var_name);
+function (\Psr\Container\ContainerInterface $container) {
+    return (new \Test\TestInvokable)($container);
 }
 EOT
             );

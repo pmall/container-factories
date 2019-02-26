@@ -4,8 +4,6 @@ namespace Quanta\Container\Factories;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\Template;
-
 final class Alias implements CompilableFactoryInterface
 {
     /**
@@ -36,13 +34,10 @@ final class Alias implements CompilableFactoryInterface
     /**
      * @inheritdoc
      */
-    public function compiled(Template $template): string
+    public function compiled(Compiler $compiler): CompiledFactory
     {
-        $container = $template->containerVariableName();
-
-        return $template->strWithReturnf('$%s->get(\'%s\')', ...[
-            $container,
-            $this->id,
+        return new CompiledFactory('container', '', ...[
+            sprintf('return $container->get(\'%s\');', $this->id)
         ]);
     }
 }

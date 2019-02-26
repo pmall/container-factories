@@ -4,8 +4,6 @@ namespace Quanta\Container\Factories;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\Template;
-
 final class Extension implements CompilableFactoryInterface
 {
     /**
@@ -47,18 +45,13 @@ final class Extension implements CompilableFactoryInterface
     /**
      * @inheritdoc
      */
-    public function compiled(Template $template): string
+    public function compiled(Compiler $compiler): CompiledFactory
     {
-        $container = $template->containerVariableName();
-
-        return $template
-            ->withCallable('factory', $this->factory)
-            ->withCallable('extension', $this->extension)
-            ->strWithReturnf('($%s)($%s, ($%s)($%s))', ...[
-                'extension',
-                $container,
-                'factory',
-                $container,
-            ]);
+        return new CompiledFactory('container', '', ...[
+            vsprintf('return (%s)($container, (%s)($container));', [
+                $compiler($this->extension),
+                $compiler($this->factory),
+            ])
+        ]);
     }
 }

@@ -4,12 +4,10 @@ namespace Quanta\Container\Factories;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\Template;
-
 interface CompilableFactoryInterface
 {
     /**
-     * The factory.
+     * Return the container entry.
      *
      * @param \Psr\Container\ContainerInterface $container
      * @return mixed
@@ -17,12 +15,12 @@ interface CompilableFactoryInterface
     public function __invoke(ContainerInterface $container);
 
     /**
-     * Return a string representation of the factory.
+     * Return a compiled factory.
      *
-     * A template is given to ease its creation.
+     * The compiler is given for recursive compilation of factories.
      *
-     * @param \Quanta\Container\Compilation\Template $template
-     * @return string
+     * @param \Quanta\Container\Factories\Compiler $compiler
+     * @return \Quanta\Container\Factories\CompiledFactory
      */
-    public function compiled(Template $template): string;
+    public function compiled(Compiler $compiler): CompiledFactory;
 }

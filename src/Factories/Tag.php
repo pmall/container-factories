@@ -5,7 +5,6 @@ namespace Quanta\Container\Factories;
 use Psr\Container\ContainerInterface;
 
 use Quanta\Container\Compilation\ArrayStr;
-use Quanta\Container\Compilation\Template;
 
 final class Tag implements CompilableFactoryInterface
 {
@@ -37,14 +36,13 @@ final class Tag implements CompilableFactoryInterface
     /**
      * @inheritdoc
      */
-    public function compiled(Template $template): string
+    public function compiled(Compiler $compiler): CompiledFactory
     {
-        return $template
-            ->withPrevious('array $tagged = []')
-            ->strWithReturnf('array_merge($tagged, array_map([$%s, \'get\'], %s))', ...[
-                $template->containerVariableName(),
+        return new CompiledFactory('container', 'array $tagged = []', ...[
+            vsprintf('return array_merge($tagged, array_map([$container, \'get\'], %s));', [
                 new ArrayStr(array_map([$this, 'quoted'], $this->ids)),
-            ]);
+            ])
+        ]);
     }
 
     /**

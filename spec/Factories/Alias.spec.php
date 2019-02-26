@@ -5,9 +5,8 @@ use function Eloquent\Phony\Kahlan\mock;
 use Psr\Container\ContainerInterface;
 
 use Quanta\Container\Factories\Alias;
+use Quanta\Container\Factories\Compiler;
 use Quanta\Container\Factories\CompilableFactoryInterface;
-
-use Quanta\Container\Compilation\Template;
 
 describe('Alias', function () {
 
@@ -43,13 +42,13 @@ describe('Alias', function () {
 
         it('should return a string representation of the alias', function () {
 
-            $template = Template::withDummyClosureCompiler('container_var_name');
+            $compiler = Compiler::withDummyClosureCompiler();
 
-            $test = $this->factory->compiled($template);
+            $test = $this->factory->compiled($compiler);
 
             expect($test)->toEqual(<<<'EOT'
-function (\Psr\Container\ContainerInterface $container_var_name) {
-    return $container_var_name->get('id');
+function (\Psr\Container\ContainerInterface $container) {
+    return $container->get('id');
 }
 EOT
             );

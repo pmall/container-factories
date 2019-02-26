@@ -4,11 +4,10 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Psr\Container\ContainerInterface;
 
+use Quanta\Container\Factories\Compiler;
 use Quanta\Container\Factories\Extension;
+use Quanta\Container\Factories\ClosureCompilerInterface;
 use Quanta\Container\Factories\CompilableFactoryInterface;
-
-use Quanta\Container\Compilation\Template;
-use Quanta\Container\Compilation\ClosureCompilerInterface;
 
 describe('Extension', function () {
 
@@ -53,28 +52,23 @@ describe('Extension', function () {
 
         it('should return a string representation of the extension', function () {
 
-            $compiler = mock(ClosureCompilerInterface::class);
+            $delegate = mock(ClosureCompilerInterface::class);
 
-            $template = Template::withClosureCompiler(...[
-                $compiler->get(),
-                'container_var_name',
-            ]);
+            $compiler = new Compiler($delegate->get());
 
-            $compiler->compiled
+            $delegate->__invoke
                 ->with(Kahlan\Arg::toBe($this->factory1))
                 ->returns('factory');
 
-            $compiler->compiled
+            $delegate->__invoke
                 ->with(Kahlan\Arg::toBe($this->factory2))
                 ->returns('extension');
 
-            $test = $this->factory->compiled($template);
+            $test = $this->factory->compiled($compiler);
 
             expect($test)->toEqual(<<<'EOT'
-function (\Psr\Container\ContainerInterface $container_var_name) {
-    $factory = factory;
-    $extension = extension;
-    return ($extension)($container_var_name, ($factory)($container_var_name));
+function (\Psr\Container\ContainerInterface $container) {
+    return (extension)($container, (factory)($container));
 }
 EOT
             );

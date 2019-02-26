@@ -5,9 +5,8 @@ use function Eloquent\Phony\Kahlan\mock;
 use Psr\Container\ContainerInterface;
 
 use Quanta\Container\Factories\Tag;
+use Quanta\Container\Factories\Compiler;
 use Quanta\Container\Factories\CompilableFactoryInterface;
-
-use Quanta\Container\Compilation\Template;
 
 describe('Tag', function () {
 
@@ -61,13 +60,13 @@ describe('Tag', function () {
 
             it('should return a string representation of a factory returning the array of previous container entries', function () {
 
-                $template = Template::withDummyClosureCompiler('container_var_name');
+                $compiler = Compiler::withDummyClosureCompiler();
 
-                $test = $this->factory->compiled($template);
+                $test = $this->factory->compiled($compiler);
 
                 expect($test)->toEqual(<<<'EOT'
-function (\Psr\Container\ContainerInterface $container_var_name, array $tagged = []) {
-    return array_merge($tagged, array_map([$container_var_name, 'get'], []));
+function (\Psr\Container\ContainerInterface $container, array $tagged = []) {
+    return array_merge($tagged, array_map([$container, 'get'], []));
 }
 EOT
                 );
@@ -136,13 +135,13 @@ EOT
 
             it('should return a string representation of a factory merging the container entries with the given array of previous container entries', function () {
 
-                $template = Template::withDummyClosureCompiler('container_var_name');
+                $compiler = Compiler::withDummyClosureCompiler();
 
-                $test = $this->factory->compiled($template);
+                $test = $this->factory->compiled($compiler);
 
                 expect($test)->toEqual(<<<'EOT'
-function (\Psr\Container\ContainerInterface $container_var_name, array $tagged = []) {
-    return array_merge($tagged, array_map([$container_var_name, 'get'], [
+function (\Psr\Container\ContainerInterface $container, array $tagged = []) {
+    return array_merge($tagged, array_map([$container, 'get'], [
         'id1',
         'id2',
         'id3',
