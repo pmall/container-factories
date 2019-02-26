@@ -44,7 +44,7 @@ describe('Alias', function () {
 
             $compiler = Compiler::withDummyClosureCompiler();
 
-            $test = $this->factory->compiled($compiler);
+            $test = (string) $this->factory->compiled($compiler);
 
             expect($test)->toEqual(<<<'EOT'
 function (\Psr\Container\ContainerInterface $container) {

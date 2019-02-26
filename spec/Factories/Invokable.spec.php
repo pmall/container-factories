@@ -42,11 +42,11 @@ describe('Invokable', function () {
 
     describe('->compiled()', function () {
 
-        it('should return the string representation of a factory instantiating the invokable class and proxying it', function () {
+        it('should return the string representation of the invokable', function () {
 
             $compiler = Compiler::withDummyClosureCompiler();
 
-            $test = $this->factory->compiled($compiler);
+            $test = (string) $this->factory->compiled($compiler);
 
             expect($test)->toEqual(<<<'EOT'
 function (\Psr\Container\ContainerInterface $container) {

@@ -64,7 +64,7 @@ describe('Extension', function () {
                 ->with(Kahlan\Arg::toBe($this->factory2))
                 ->returns('extension');
 
-            $test = $this->factory->compiled($compiler);
+            $test = (string) $this->factory->compiled($compiler);
 
             expect($test)->toEqual(<<<'EOT'
 function (\Psr\Container\ContainerInterface $container) {

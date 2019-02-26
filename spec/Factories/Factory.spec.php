@@ -44,13 +44,13 @@ describe('Factory', function () {
 
     describe('->compiled()', function () {
 
-        it('should return the string representation of a factory returning the return value of the ValueInterface ->str() method', function () {
+        it('should return the string representation of the factory', function () {
 
             $compiler = Compiler::withDummyClosureCompiler();
 
             $this->value->str->with('container')->returns('\'value\'');
 
-            $test = $this->factory->compiled($compiler);
+            $test = (string) $this->factory->compiled($compiler);
 
             expect($test)->toEqual(<<<'EOT'
 function (\Psr\Container\ContainerInterface $container) {

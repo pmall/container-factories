@@ -58,11 +58,11 @@ describe('Tag', function () {
 
         describe('->compiled()', function () {
 
-            it('should return a string representation of a factory returning the array of previous container entries', function () {
+            it('should return a string representation of the tag', function () {
 
                 $compiler = Compiler::withDummyClosureCompiler();
 
-                $test = $this->factory->compiled($compiler);
+                $test = (string) $this->factory->compiled($compiler);
 
                 expect($test)->toEqual(<<<'EOT'
 function (\Psr\Container\ContainerInterface $container, array $tagged = []) {
@@ -133,11 +133,11 @@ EOT
 
         describe('->compiled()', function () {
 
-            it('should return a string representation of a factory merging the container entries with the given array of previous container entries', function () {
+            it('should return a string representation of the tag', function () {
 
                 $compiler = Compiler::withDummyClosureCompiler();
 
-                $test = $this->factory->compiled($compiler);
+                $test = (string) $this->factory->compiled($compiler);
 
                 expect($test)->toEqual(<<<'EOT'
 function (\Psr\Container\ContainerInterface $container, array $tagged = []) {

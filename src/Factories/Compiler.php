@@ -50,7 +50,7 @@ final class Compiler
             }
 
             throw new \LogicException(
-                sprintf('Unable to compile instance of %s', get_class($factory))
+                $this->compilationErrorMessage($factory, '__invoke')
             );
         }
 
@@ -62,9 +62,36 @@ final class Compiler
                 ]);
             }
 
-            throw new \LogicException('Unable to compile a non static method call');
+            throw new \LogicException(
+                $this->compilationErrorMessage(...$factory)
+            );
         }
 
         return strval($factory);
+    }
+
+    /**
+     * Return the message of the exception thrown when a factory is not
+     * compilable.
+     *
+     * @param object $object
+     * @param string $method
+     * @return string
+     */
+    private function compilationErrorMessage($object, string $method): string
+    {
+        $tpl = implode(' ', [
+            'Unable to compile function %s::%s() - only',
+            'implementations of %s,',
+            'closures,',
+            'static method arrays',
+            'and function names can be compiled',
+        ]);
+
+        return vsprintf($tpl, [
+            get_class($object),
+            $method,
+            CompilableFactoryInterface::class,
+        ]);
     }
 }

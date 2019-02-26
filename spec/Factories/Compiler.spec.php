@@ -40,7 +40,7 @@ describe('Compiler', function () {
 
             context('when the given callable is an implementation of CompilableFactoryInterface', function () {
 
-                it('should proxy the callable ->compiled() method with a template using this callable compiler', function () {
+                it('should return the string representation of the CompiledFactory returned by the factory ->compiled() method', function () {
 
                     $callable = mock(CompilableFactoryInterface::class);
 
@@ -64,11 +64,11 @@ describe('Compiler', function () {
 
                     $this->delegate->__invoke
                         ->with(Kahlan\Arg::toBe($closure))
-                        ->returns('function () {}');
+                        ->returns('function () { // some closure }');
 
                     $test = ($this->compiler)($closure);
 
-                    expect($test)->toEqual('function () {}');
+                    expect($test)->toEqual('function () { // some closure }');
 
                 });
 
