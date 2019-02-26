@@ -16,22 +16,22 @@ final class Instance implements ValueInterface
     private $class;
 
     /**
-     * The arguments the class constructor is invoked with.
+     * The array of values used as class constructor arguments.
      *
-     * @var \Quanta\Container\Values\ArrayValue
+     * @var \Quanta\Container\Values\ValueInterface[]
      */
-    private $xs;
+    private $arguments;
 
     /**
      * Constructor.
      *
      * @param string                                    $class
-     * @param \Quanta\Container\Values\ValueInterface   ...$xs
+     * @param \Quanta\Container\Values\ValueInterface   ...$arguments
      */
-    public function __construct(string $class, ValueInterface ...$xs)
+    public function __construct(string $class, ValueInterface ...$arguments)
     {
         $this->class = $class;
-        $this->xs = new ArrayValue($xs);
+        $this->arguments = $arguments;
     }
 
     /**
@@ -39,9 +39,11 @@ final class Instance implements ValueInterface
      */
     public function value(ContainerInterface $container)
     {
-        $xs = $this->xs->value($container);
+        $arguments = array_map(function (ValueInterface $argument) use ($container) {
+            return $argument->value($container);
+        }, $this->arguments);
 
-        return new $this->class(...$xs);
+        return new $this->class(...$arguments);
     }
 
     /**
@@ -49,8 +51,10 @@ final class Instance implements ValueInterface
      */
     public function str(string $container): string
     {
-        $xs = $this->xs->strs($container);
+        $arguments = array_map(function (ValueInterface $argument) use ($container) {
+            return $argument->str($container);
+        }, $this->arguments);
 
-        return (string) new InstanceStr($this->class, ...$xs);
+        return (string) new InstanceStr($this->class, ...$arguments);
     }
 }

@@ -42,9 +42,9 @@ final class ArrayValue implements ValueInterface
      */
     public function value(ContainerInterface $container)
     {
-        $mapper = $this->arrval($container);
-
-        return array_map($mapper, $this->values);
+        return array_map(function (ValueInterface $value) use ($container) {
+            return $value->value($container);
+        }, $this->values);
     }
 
     /**
@@ -52,46 +52,10 @@ final class ArrayValue implements ValueInterface
      */
     public function str(string $container): string
     {
-        return (string) new ArrayStr($this->strs($container));
-    }
-
-    /**
-     * Return an array of string representations fo the values.
-     *
-     * @param string $container
-     * @return string[]
-     */
-    public function strs(string $container): array
-    {
-        $mapper = $this->arrstr($container);
-
-        return array_map($mapper, $this->values);
-    }
-
-    /**
-     * Return a callable returning the value of a ValueInterface implementation.
-     *
-     * @param \Psr\Container\ContainerInterface $container
-     * @return callable
-     */
-    private function arrval(ContainerInterface $container): callable
-    {
-        return function (ValueInterface $value) use ($container) {
-            return $value->value($container);
-        };
-    }
-
-    /**
-     * Return a callable returning the string representation of a ValueInterface
-     * implementation.
-     *
-     * @param string $container
-     * @return callable
-     */
-    private function arrstr(string $container): callable
-    {
-        return function (ValueInterface $value) use ($container) {
+        $strs = array_map(function (ValueInterface $value) use ($container) {
             return $value->str($container);
-        };
+        }, $this->values);
+
+        return (string) new ArrayStr($strs);
     }
 }

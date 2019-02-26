@@ -51,13 +51,13 @@ final class InterpolatedString implements ValueInterface
      */
     public function str(string $container): string
     {
-        $tpl = 'return vsprintf(%s, array_map([$%s, \'get\'], %s));';
-
-        return (string) new SelfExecutingClosureStr($container, vsprintf($tpl, [
-            $this->quoted($this->format),
-            $container,
-            new ArrayStr(array_map([$this, 'quoted'], $this->ids)),
-        ]));
+        return (string) new SelfExecutingClosureStr($container, ...[
+            vsprintf('return vsprintf(\'%s\', array_map([$%s, \'get\'], %s));', [
+                $this->format,
+                $container,
+                new ArrayStr(array_map([$this, 'quoted'], $this->ids)),
+            ])
+        ]);
     }
 
     /**

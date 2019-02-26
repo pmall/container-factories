@@ -68,15 +68,17 @@ final class EnvVar implements ValueInterface
      */
     public function str(string $container): string
     {
-        $tpl = <<<'EOT'
-$value = getenv('%s');
-if ($value === false) $value = '%s';
-settype($value, '%s');
-return $value;
-EOT;
-
-        return (string) new SelfExecutingClosureStr($container, ...[
-            sprintf($tpl, $this->name, $this->default, $this->type),
+        $tpl = implode(PHP_EOL, [
+            '$value = getenv(\'%s\');',
+            'if ($value === false) $value = \'%s\';',
+            'settype($value, \'%s\');',
+            'return $value;',
         ]);
+
+        return (string) new SelfExecutingClosureStr($container, vsprintf($tpl, [
+            $this->name,
+            $this->default,
+            $this->type,
+        ]));
     }
 }

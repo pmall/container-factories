@@ -55,18 +55,6 @@ describe('ArrayValue', function () {
 
         });
 
-        describe('->strs()', function () {
-
-            it('should return an empty array', function () {
-
-                $test = $this->value->strs('container');
-
-                expect($test)->toEqual([]);
-
-            });
-
-        });
-
     });
 
     context('when the array is not empty', function () {
@@ -138,18 +126,6 @@ EOT
 
                 });
 
-                describe('->strs()', function () {
-
-                    it('should return an array of values returned by the ValueInterface implementations ->str() methods', function () {
-
-                        $test = $this->value->strs('container');
-
-                        expect($test)->toEqual(['\'value1\'', '\'value2\'', '\'value3\'']);
-
-                    });
-
-                });
-
             });
 
             context('when the array has at least one string key', function () {
@@ -200,22 +176,6 @@ EOT
 ]
 EOT
                         );
-
-                    });
-
-                });
-
-                describe('->strs()', function () {
-
-                    it('should return an array of values returned by the ValueInterface implementations ->str() methods', function () {
-
-                        $test = $this->value->strs('container');
-
-                        expect($test)->toEqual([
-                            'k1' => '\'value1\'',
-                            '\'value2\'',
-                            'k3' => '\'value3\'',
-                        ]);
 
                     });
 
