@@ -4,7 +4,7 @@ namespace Quanta\Container\Values;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\StaticMethodStr;
+use Quanta\Container\Helpers\StaticMethodStr;
 
 final class Value implements ValueInterface
 {

@@ -1,28 +1,28 @@
 <?php
 
-use Quanta\Container\Compilation\ArrayStr;
+use Quanta\Container\Helpers\ArrayStr;
 
 use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
 
 describe('ArrayStr', function () {
 
-    context('when all the values of the array are strings', function () {
+    context('when the array is empty', function () {
 
-        context('when the array is empty', function () {
+        describe('->__toString()', function () {
 
-            describe('->__toString()', function () {
+            it('should return []', function () {
 
-                it('should return []', function () {
-
-                    expect((string) new ArrayStr([]))->toEqual('[]');
-
-                });
+                expect((string) new ArrayStr([]))->toEqual('[]');
 
             });
 
         });
 
-        context('when the array is not empty', function () {
+    });
+
+    context('when the array is not empty', function () {
+
+        context('when all the values of the array are strings', function () {
 
             context('when the array has no string key', function () {
 
@@ -68,21 +68,21 @@ EOT
 
         });
 
-    });
+        context('when a value of the array is not a string', function () {
 
-    context('when a value of the array is not a string', function () {
+            it('should throw an InvalidArgumentException', function () {
 
-        it('should throw an InvalidArgumentException', function () {
+                ArrayArgumentTypeErrorMessage::testing();
 
-            ArrayArgumentTypeErrorMessage::testing();
+                $values = ['value1', 2, 'value3'];
 
-            $values = ['value1', 2, 'value3'];
+                $test = function () use ($values) { new ArrayStr($values); };
 
-            $test = function () use ($values) { new ArrayStr($values); };
+                expect($test)->toThrow(new InvalidArgumentException(
+                    (string) new ArrayArgumentTypeErrorMessage(1, 'string', $values)
+                ));
 
-            expect($test)->toThrow(new InvalidArgumentException(
-                (string) new ArrayArgumentTypeErrorMessage(1, 'string', $values)
-            ));
+            });
 
         });
 

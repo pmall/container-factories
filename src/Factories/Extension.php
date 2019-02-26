@@ -37,9 +37,7 @@ final class Extension implements CompilableFactoryInterface
      */
     public function __invoke(ContainerInterface $container)
     {
-        $previous = ($this->factory)($container);
-
-        return ($this->extension)($container, $previous);
+        return ($this->extension)($container, ($this->factory)($container));
     }
 
     /**
@@ -51,7 +49,7 @@ final class Extension implements CompilableFactoryInterface
             vsprintf('return (%s)($container, (%s)($container));', [
                 $compiler($this->extension),
                 $compiler($this->factory),
-            ])
+            ]),
         ]);
     }
 }

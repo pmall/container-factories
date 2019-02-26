@@ -4,7 +4,8 @@ namespace Quanta\Container\Values;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\ArrayStr;
+use Quanta\Container\Helpers\Pluck;
+use Quanta\Container\Helpers\ArrayStr;
 
 use function \Quanta\Exceptions\areAllTypedAs;
 use \Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
@@ -42,9 +43,7 @@ final class ArrayValue implements ValueInterface
      */
     public function value(ContainerInterface $container)
     {
-        return array_map(function (ValueInterface $value) use ($container) {
-            return $value->value($container);
-        }, $this->values);
+        return array_map(new Pluck('value', $container), $this->values);
     }
 
     /**
@@ -52,10 +51,9 @@ final class ArrayValue implements ValueInterface
      */
     public function str(string $container): string
     {
-        $strs = array_map(function (ValueInterface $value) use ($container) {
-            return $value->str($container);
-        }, $this->values);
-
-        return (string) new ArrayStr($strs);
+        return (string) new ArrayStr(array_map(
+            new Pluck('str', $container),
+            $this->values
+        ));
     }
 }

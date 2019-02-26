@@ -1,6 +1,6 @@
 <?php
 
-use Quanta\Container\Compilation\SelfExecutingClosureStr;
+use Quanta\Container\Helpers\SelfExecutingClosureStr;
 
 describe('SelfExecutingClosureStr', function () {
 

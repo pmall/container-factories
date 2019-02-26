@@ -4,7 +4,7 @@ namespace Quanta\Container\Values;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\SelfExecutingClosureStr;
+use Quanta\Container\Helpers\SelfExecutingClosureStr;
 
 final class EnvVar implements ValueInterface
 {

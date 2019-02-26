@@ -4,8 +4,9 @@ namespace Quanta\Container\Values;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\ArrayStr;
-use Quanta\Container\Compilation\SelfExecutingClosureStr;
+use Quanta\Container\Helpers\Quote;
+use Quanta\Container\Helpers\ArrayStr;
+use Quanta\Container\Helpers\SelfExecutingClosureStr;
 
 final class InterpolatedString implements ValueInterface
 {
@@ -53,19 +54,8 @@ final class InterpolatedString implements ValueInterface
             vsprintf('return vsprintf(\'%s\', array_map([$%s, \'get\'], %s));', [
                 addslashes($this->format),
                 $container,
-                new ArrayStr(array_map([$this, 'quoted'], $this->ids)),
-            ])
+                new ArrayStr(array_map(new Quote, $this->ids)),
+            ]),
         ]);
-    }
-
-    /**
-     * Return the given string with quotes.
-     *
-     * @param string $str
-     * @return string
-     */
-    private function quoted(string $str): string
-    {
-        return sprintf('\'%s\'', addslashes($str));
     }
 }

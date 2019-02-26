@@ -37,7 +37,7 @@ final class Alias implements CompilableFactoryInterface
     public function compiled(Compiler $compiler): CompiledFactory
     {
         return new CompiledFactory('container', '', ...[
-            sprintf('return $container->get(\'%s\');', addslashes($this->id))
+            sprintf('return $container->get(\'%s\');', addslashes($this->id)),
         ]);
     }
 }

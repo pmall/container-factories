@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Compilation;
+namespace Quanta\Container\Helpers;
 
 use function Quanta\Exceptions\areAllTypedAs;
 use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
@@ -45,9 +45,9 @@ final class ArrayStr
                 ? array_map([$this, 'pairStr'], $keys, $vals)
                 : $vals;
 
-            return vsprintf('[%s%s%s]', [
+            return vsprintf('[%s%s,%s]', [
                 PHP_EOL,
-                new IndentedStr(implode(',' . PHP_EOL, $strs) . ','),
+                new IndentedStr((string) new LinesStr(...$strs)),
                 PHP_EOL,
             ]);
         }

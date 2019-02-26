@@ -2,6 +2,8 @@
 
 namespace Quanta\Container;
 
+use Quanta\Container\Helpers\Reduce;
+
 final class ProcessedFactoryMap implements FactoryMapInterface
 {
     /**
@@ -55,19 +57,9 @@ final class ProcessedFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        return array_reduce($this->passes, [$this, 'reduced'], $this->map->factories());
-    }
-
-    /**
-     * Return the associative array of factories processed by the given
-     * configuration pass.
-     *
-     * @param callable[]                                $factories
-     * @param \Quanta\Container\ProcessingPassInterface $pass
-     * @return callable[]
-     */
-    private function reduced(array $factories, ProcessingPassInterface $pass): array
-    {
-        return $pass->processed($factories);
+        return array_reduce($this->passes,
+            new Reduce('processed'),
+            $this->map->factories()
+        );
     }
 }

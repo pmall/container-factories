@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Compilation;
-
-use Psr\Container\ContainerInterface;
+namespace Quanta\Container\Helpers;
 
 final class SelfExecutingClosureStr
 {
@@ -40,7 +38,7 @@ final class SelfExecutingClosureStr
     public function __toString()
     {
         return vsprintf('(function (\%s $%s) {%s%s%s})($%s)', [
-            ContainerInterface::class,
+            \Psr\Container\ContainerInterface::class,
             $this->container,
             PHP_EOL,
             new IndentedStr($this->body),

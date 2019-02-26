@@ -2,7 +2,9 @@
 
 namespace Quanta\Container\Factories;
 
-use Quanta\Container\Compilation\IndentedStr;
+use Psr\Container\ContainerInterface;
+
+use Quanta\Container\Helpers\IndentedStr;
 
 final class CompiledFactory
 {
@@ -49,11 +51,11 @@ final class CompiledFactory
     public function __toString()
     {
         return vsprintf('function (\%s $%s) {%s%s%s}', [
-            \Psr\Container\ContainerInterface::class,
+            ContainerInterface::class,
             implode(', ', array_filter([$this->container, $this->previous])),
             PHP_EOL,
             new IndentedStr($this->body),
-            PHP_EOL
+            PHP_EOL,
         ]);
     }
 }

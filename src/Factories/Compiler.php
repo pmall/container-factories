@@ -2,7 +2,7 @@
 
 namespace Quanta\Container\Factories;
 
-use Quanta\Container\Compilation\StaticMethodStr;
+use Quanta\Container\Helpers\StaticMethodStr;
 
 final class Compiler
 {

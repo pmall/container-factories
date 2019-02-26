@@ -29,11 +29,11 @@ final class ValueFactory
      */
     public static function withDefaultValueParser(): ValueFactory
     {
-        return new ValueFactory(...[
+        return new ValueFactory(
             new EnvVarParser,
             new ReferenceParser,
-            new InterpolatedStringParser,
-        ]);
+            new InterpolatedStringParser
+        );
     }
 
     /**

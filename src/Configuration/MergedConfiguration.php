@@ -6,6 +6,8 @@ use Quanta\Container\MergedFactoryMap;
 use Quanta\Container\ProcessedFactoryMap;
 use Quanta\Container\FactoryMapInterface;
 
+use Quanta\Container\Helpers\Pluck;
+
 final class MergedConfiguration implements ConfigurationInterface
 {
     /**
@@ -30,45 +32,11 @@ final class MergedConfiguration implements ConfigurationInterface
      */
     public function map(): ProcessedFactoryMap
     {
-        $maps = array_map([$this, 'plucked'], $this->configurations);
+        $maps = array_map(new Pluck('map'), $this->configurations);
 
         return new ProcessedFactoryMap(
-            new MergedFactoryMap(...array_map([$this, 'pluckedMap'], $maps)),
-            ...array_merge([], ...array_map([$this, 'pluckedPasses'], $maps))
+            new MergedFactoryMap(...array_map(new Pluck('map'), $maps)),
+            ...array_merge([], ...array_map(new Pluck('passes'), $maps))
         );
-    }
-
-    /**
-     * Return the processed factory map provided by the given configuration.
-     *
-     * @param \Quanta\Container\Configuration\ConfigurationInterface $configuration
-     * @return \Quanta\Container\ProcessedFactoryMap
-     */
-    private function plucked(ConfigurationInterface $configuration): ProcessedFactoryMap
-    {
-        return $configuration->map();
-    }
-
-    /**
-     * Return the factory map provided by the given processed factory map.
-     *
-     * @param \Quanta\Container\ProcessedFactoryMap $map
-     * @return \Quanta\Container\FactoryMapInterface
-     */
-    private function pluckedMap(ProcessedFactoryMap $map): FactoryMapInterface
-    {
-        return $map->map();
-    }
-
-    /**
-     * Return the array of processing passes provided by the given processed
-     * factory map.
-     *
-     * @param \Quanta\Container\ProcessedFactoryMap $map
-     * @return \Quanta\Container\ProcessingPassInterface[]
-     */
-    private function pluckedPasses(ProcessedFactoryMap $map): array
-    {
-        return $map->passes();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use Quanta\Container\Compilation\IndentedStr;
+use Quanta\Container\Helpers\IndentedStr;
 
 describe('IndentedStr', function () {
 

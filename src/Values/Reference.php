@@ -5,8 +5,8 @@ namespace Quanta\Container\Values;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-use Quanta\Container\Compilation\IndentedStr;
-use Quanta\Container\Compilation\SelfExecutingClosureStr;
+use Quanta\Container\Helpers\IndentedStr;
+use Quanta\Container\Helpers\SelfExecutingClosureStr;
 
 final class Reference implements ValueInterface
 {
@@ -79,7 +79,7 @@ final class Reference implements ValueInterface
                     ])),
                     PHP_EOL,
                     PHP_EOL,
-                ])
+                ]),
             ]);
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-use Quanta\Container\Compilation\StaticMethodStr;
+use Quanta\Container\Helpers\StaticMethodStr;
 
 describe('StaticMethodStr', function () {
 

@@ -2,6 +2,8 @@
 
 namespace Quanta\Container;
 
+use Quanta\Container\Helpers\Pluck;
+
 final class MergedFactoryMap implements FactoryMapInterface
 {
     /**
@@ -26,18 +28,6 @@ final class MergedFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        return array_merge([], ...array_map([$this, 'plucked'], $this->maps));
-    }
-
-    /**
-     * Return the associative array of factories provided by the given factory
-     * map.
-     *
-     * @param \Quanta\Container\FactoryMapInterface $map
-     * @return callable[]
-     */
-    private function plucked(FactoryMapInterface $map): array
-    {
-        return $map->factories();
+        return array_merge([], ...array_map(new Pluck('factories'), $this->maps));
     }
 }
