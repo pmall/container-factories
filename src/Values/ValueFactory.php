@@ -59,7 +59,7 @@ final class ValueFactory
             }
         }
 
-        if (is_array($value)) {
+        if (is_array($value) && ! is_callable($value)) {
             return new ArrayValue(array_map($this, $value));
         }
 

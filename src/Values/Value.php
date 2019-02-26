@@ -32,33 +32,6 @@ final class Value implements ValueInterface
             );
         }
 
-        if (is_array($value) && ! is_string($value[0])) {
-            throw new \InvalidArgumentException(
-                vsprintf('Callable instance methods can\'t be used with %s, please use a factory instead ([object(%s), \'%s\'] given)', [
-                    Value::class,
-                    get_class($value[0]),
-                    $value[1],
-                ])
-            );
-        }
-
-        if (is_object($value)) {
-            throw new \InvalidArgumentException(
-                vsprintf('Objects can\'t be used with %s, please use a factory instead (%s given)', [
-                    Value::class,
-                    get_class($value),
-                ])
-            );
-        }
-
-        if (is_resource($value)) {
-            throw new \InvalidArgumentException(
-                vsprintf('Resources can\'t be used with %s, please use a factory instead', [
-                    Value::class,
-                ])
-            );
-        }
-
         $this->value = $value;
     }
 
@@ -88,7 +61,31 @@ final class Value implements ValueInterface
         }
 
         if (is_array($this->value)) {
-            return (string) new StaticMethodStr(...$this->value);
+            if (is_string($this->value[0])) {
+                return (string) new StaticMethodStr(...$this->value);
+            }
+
+            throw new \LogicException(
+                vsprintf('Can\'t compile [object(%s), \'%s\'], please use a factory instead', [
+                    get_class($this->value[0]), $this->value[1],
+                ])
+            );
+        }
+
+        if (is_object($this->value)) {
+            throw new \LogicException(
+                vsprintf('Object(%s) can\'t be compiled, please use a factory instead', [
+                    get_class($this->value),
+                ])
+            );
+        }
+
+        if (is_resource($this->value)) {
+            throw new \LogicException(
+                vsprintf('Resource(%s) can\'t be compiled, please use a factory instead', [
+                    $this->value,
+                ])
+            );
         }
 
         return 'null';
