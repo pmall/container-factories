@@ -7,6 +7,8 @@ use Psr\Container\ContainerInterface;
 use Quanta\Container\Values\Value;
 use Quanta\Container\Values\ValueInterface;
 
+require_once __DIR__ . '/../.test/classes.php';
+
 describe('Value', function () {
 
     beforeEach(function () {
@@ -213,11 +215,99 @@ describe('Value', function () {
 
     context('when the value is an array', function () {
 
-        it('should throw an InvalidArgumentException', function () {
+        context('when the array is not a callable', function () {
 
-            $test = function () { new Value([]); };
+            it('should throw an InvalidArgumentException', function () {
 
-            expect($test)->toThrow(new InvalidArgumentException);
+                $test = function () { new Value([]); };
+
+                expect($test)->toThrow(new InvalidArgumentException);
+
+            });
+
+        });
+
+        context('when the array is a callable', function () {
+
+            context('when the callable is a static method', function () {
+
+                beforeEach(function () {
+
+                    $this->value = new Value([Test\TestFactory::class, 'createStatic']);
+
+                });
+
+                it('should implement ValueInterface', function () {
+
+                    expect($this->value)->toBeAnInstanceOf(ValueInterface::class);
+
+                });
+
+                describe('->value()', function () {
+
+                    it('should return the callable', function () {
+
+                        $test = $this->value->value($this->container->get());
+
+                        expect($test)->toEqual([Test\TestFactory::class, 'createStatic']);
+
+                    });
+
+                });
+
+                describe('->str()', function () {
+
+                    it('should return a string representation of the callable', function () {
+
+                        $test = $this->value->str('container');
+
+                        expect($test)->toEqual('[\Test\TestFactory::class, \'createStatic\']');
+
+                    });
+
+                });
+
+            });
+
+            context('when the callable is an instance method', function () {
+
+                beforeEach(function () {
+
+                    $this->value = new Value([new Test\TestFactory('factory'), 'create']);
+
+                });
+
+                it('should implement ValueInterface', function () {
+
+                    expect($this->value)->toBeAnInstanceOf(ValueInterface::class);
+
+                });
+
+                describe('->value()', function () {
+
+                    it('should return the callable', function () {
+
+                        $test = $this->value->value($this->container->get());
+
+                        expect($test)->toEqual([new Test\TestFactory('factory'), 'create']);
+
+                    });
+
+                });
+
+                describe('->str()', function () {
+
+                    it('should throw a LogicException', function () {
+
+                        $test = function () { $this->value->str('container'); };
+
+                        expect($test)->toThrow(new LogicException);
+
+                    });
+
+                });
+
+            });
 
         });
 
