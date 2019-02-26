@@ -219,7 +219,9 @@ describe('Value', function () {
 
             it('should throw an InvalidArgumentException', function () {
 
-                $test = function () { new Value([]); };
+                $test = function () {
+                    new Value([]);
+                };
 
                 expect($test)->toThrow(new InvalidArgumentException);
 
@@ -228,6 +230,20 @@ describe('Value', function () {
         });
 
         context('when the array is a callable', function () {
+
+            context('when the callable is an instance method', function () {
+
+                it('should throw an InvalidArgumentException', function () {
+
+                    $test = function () {
+                        new Value([new Test\TestFactory('factory'), 'create']);
+                    };
+
+                    expect($test)->toThrow(new InvalidArgumentException);
+
+                });
+
+            });
 
             context('when the callable is a static method', function () {
 
@@ -269,87 +285,19 @@ describe('Value', function () {
 
             });
 
-            context('when the callable is an instance method', function () {
-
-                beforeEach(function () {
-
-                    $this->value = new Value([new Test\TestFactory('factory'), 'create']);
-
-                });
-
-                it('should implement ValueInterface', function () {
-
-                    expect($this->value)->toBeAnInstanceOf(ValueInterface::class);
-
-                });
-
-                describe('->value()', function () {
-
-                    it('should return the callable', function () {
-
-                        $test = $this->value->value($this->container->get());
-
-                        expect($test)->toEqual([new Test\TestFactory('factory'), 'create']);
-
-                    });
-
-                });
-
-                describe('->str()', function () {
-
-                    it('should throw a LogicException', function () {
-
-                        $test = function () { $this->value->str('container'); };
-
-                        expect($test)->toThrow(new LogicException);
-
-                    });
-
-                });
-
-            });
-
         });
 
     });
 
     context('when the value is an object', function () {
 
-        beforeEach(function () {
+        it('should throw an InvalidArgumentException', function () {
 
-            $this->object = new class {};
+            $test = function () {
+                new Value(new class {});
+            };
 
-            $this->value = new Value($this->object);
-
-        });
-
-        it('should implement ValueInterface', function () {
-
-            expect($this->value)->toBeAnInstanceOf(ValueInterface::class);
-
-        });
-
-        describe('->value()', function () {
-
-            it('should return the object', function () {
-
-                $test = $this->value->value($this->container->get());
-
-                expect($test)->toBe($this->object);
-
-            });
-
-        });
-
-        describe('->str()', function () {
-
-            it('should throw a LogicException', function () {
-
-                $test = function () { $this->value->str('container'); };
-
-                expect($test)->toThrow(new LogicException);
-
-            });
+            expect($test)->toThrow(new InvalidArgumentException);
 
         });
 
@@ -357,41 +305,13 @@ describe('Value', function () {
 
     context('when the value is a resource', function () {
 
-        beforeEach(function () {
+        it('should throw an InvalidArgumentException', function () {
 
-            $this->resource = tmpfile();
+            $test = function () {
+                new Value(tmpfile());
+            };
 
-            $this->value = new Value($this->resource);
-
-        });
-
-        it('should implement ValueInterface', function () {
-
-            expect($this->value)->toBeAnInstanceOf(ValueInterface::class);
-
-        });
-
-        describe('->value()', function () {
-
-            it('should return the resource', function () {
-
-                $test = $this->value->value($this->container->get());
-
-                expect($test)->toEqual($this->resource);
-
-            });
-
-        });
-
-        describe('->str()', function () {
-
-            it('should throw a LogicException', function () {
-
-                $test = function () { $this->value->str('container'); };
-
-                expect($test)->toThrow(new LogicException);
-
-            });
+            expect($test)->toThrow(new InvalidArgumentException);
 
         });
 
