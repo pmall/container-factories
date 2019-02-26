@@ -41,9 +41,7 @@ final class InterpolatedString implements ValueInterface
      */
     public function value(ContainerInterface $container)
     {
-        $xs = array_map([$container, 'get'], $this->ids);
-
-        return vsprintf($this->format, $xs);
+        return vsprintf($this->format, array_map([$container, 'get'], $this->ids));
     }
 
     /**
