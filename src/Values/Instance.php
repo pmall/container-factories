@@ -4,7 +4,7 @@ namespace Quanta\Container\Values;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\InstanceStr;
+use Quanta\Container\Compilation\IndentedStr;
 
 final class Instance implements ValueInterface
 {
@@ -51,10 +51,19 @@ final class Instance implements ValueInterface
      */
     public function str(string $container): string
     {
-        $arguments = array_map(function (ValueInterface $argument) use ($container) {
-            return $argument->str($container);
-        }, $this->arguments);
+        if (count($this->arguments) > 0) {
+            $arguments = array_map(function (ValueInterface $argument) use ($container) {
+                return $argument->str($container);
+            }, $this->arguments);
 
-        return (string) new InstanceStr($this->class, ...$arguments);
+            return vsprintf('new \%s(%s%s%s)', [
+                $this->class,
+                PHP_EOL,
+                new IndentedStr(implode(',' . PHP_EOL, $arguments)),
+                PHP_EOL,
+            ]);
+        }
+
+        return sprintf('new \%s', $this->class);
     }
 }
