@@ -5,7 +5,7 @@ namespace Quanta\Container\Values;
 use Psr\Container\ContainerInterface;
 
 use Quanta\Container\Compilation\ArrayStr;
-use Quanta\Container\Compilation\SelfExecutingClosure;
+use Quanta\Container\Compilation\SelfExecutingClosureStr;
 
 final class InterpolatedString implements ValueInterface
 {
@@ -53,7 +53,7 @@ final class InterpolatedString implements ValueInterface
     {
         $tpl = 'return vsprintf(%s, array_map([$%s, \'get\'], %s));';
 
-        return (string) new SelfExecutingClosure($container, vsprintf($tpl, [
+        return (string) new SelfExecutingClosureStr($container, vsprintf($tpl, [
             $this->quoted($this->format),
             $container,
             new ArrayStr(array_map([$this, 'quoted'], $this->ids)),

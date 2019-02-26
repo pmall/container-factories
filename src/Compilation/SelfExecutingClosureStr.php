@@ -4,7 +4,7 @@ namespace Quanta\Container\Compilation;
 
 use Psr\Container\ContainerInterface;
 
-final class SelfExecutingClosure
+final class SelfExecutingClosureStr
 {
     /**
      * The container variable name.

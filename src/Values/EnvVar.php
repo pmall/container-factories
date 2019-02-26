@@ -4,7 +4,7 @@ namespace Quanta\Container\Values;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\SelfExecutingClosure;
+use Quanta\Container\Compilation\SelfExecutingClosureStr;
 
 final class EnvVar implements ValueInterface
 {
@@ -75,7 +75,7 @@ settype($value, '%s');
 return $value;
 EOT;
 
-        return (string) new SelfExecutingClosure($container, ...[
+        return (string) new SelfExecutingClosureStr($container, ...[
             sprintf($tpl, $this->name, $this->default, $this->type),
         ]);
     }

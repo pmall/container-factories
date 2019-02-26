@@ -1,14 +1,14 @@
 <?php
 
-use Quanta\Container\Compilation\SelfExecutingClosure;
+use Quanta\Container\Compilation\SelfExecutingClosureStr;
 
-describe('SelfExecutingClosure', function () {
+describe('SelfExecutingClosureStr', function () {
 
     describe('->__toString()', function () {
 
         it('should return a string representation of the self executing closure', function () {
 
-            $test = (string) new SelfExecutingClosure('container', 'body');
+            $test = (string) new SelfExecutingClosureStr('container', 'body');
 
             expect($test)->toEqual(<<<'EOT'
 (function (\Psr\Container\ContainerInterface $container) {
