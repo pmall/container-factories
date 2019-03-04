@@ -1,12 +1,11 @@
 {
     "name": "quanta/container-configuration",
     "type": "library",
-    "description": "Library for creating quanta Psr-11 container factory maps from service providers",
+    "description": "Library for creating associative arrays of Psr-11 factories",
     "keywords": [
         "psr-11",
         "container",
-        "dependency-injection",
-        "service-provider"
+        "dependency-injection"
     ],
     "license": "MIT",
     "homepage": "https://github.com/quantaphp/container-configuration",
