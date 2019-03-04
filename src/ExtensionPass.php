@@ -4,9 +4,6 @@ namespace Quanta\Container;
 
 use Quanta\Container\Factories\Extension;
 
-use function Quanta\Exceptions\areAllTypedAs;
-use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
-
 final class ExtensionPass implements ProcessingPassInterface
 {
     /**
@@ -24,9 +21,11 @@ final class ExtensionPass implements ProcessingPassInterface
      */
     public function __construct(array $extensions)
     {
-        if (! areAllTypedAs('callable', $extensions)) {
+        $result = \Quanta\ArrayTypeCheck::result($extensions, 'callable');
+
+        if (! $result->isValid()) {
             throw new \InvalidArgumentException(
-                (string) new ArrayArgumentTypeErrorMessage(1, 'callable', $extensions)
+                $result->message()->constructor($this, 1)
             );
         }
 

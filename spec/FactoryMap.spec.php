@@ -3,8 +3,6 @@
 use Quanta\Container\FactoryMap;
 use Quanta\Container\FactoryMapInterface;
 
-use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
-
 describe('FactoryMap', function () {
 
     context('when all the values of the associative array of factories are callable', function () {
@@ -43,22 +41,15 @@ describe('FactoryMap', function () {
 
         it('should throw an InvalidArgumentException', function () {
 
-            ArrayArgumentTypeErrorMessage::testing();
-
-            $factories = [
-                'id1' => function () {},
-                'id2' => function () {},
-                'id3' => 1,
-                'id4' => function () {},
-            ];
-
-            $test = function () use ($factories) {
-                new FactoryMap($factories);
+            $test = function () {
+                new FactoryMap([
+                    'id1' => function () {},
+                    'id2' => 2,
+                    'id3' => function () {},
+                ]);
             };
 
-            expect($test)->toThrow(new InvalidArgumentException(
-                (string) new ArrayArgumentTypeErrorMessage(1, 'callable', $factories)
-            ));
+            expect($test)->toThrow(new InvalidArgumentException);
 
         });
 

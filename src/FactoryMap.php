@@ -2,9 +2,6 @@
 
 namespace Quanta\Container;
 
-use function Quanta\Exceptions\areAllTypedAs;
-use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
-
 final class FactoryMap implements FactoryMapInterface
 {
     /**
@@ -22,9 +19,11 @@ final class FactoryMap implements FactoryMapInterface
      */
     public function __construct(array $factories)
     {
-        if (! areAllTypedAs('callable', $factories)) {
+        $result = \Quanta\ArrayTypeCheck::result($factories, 'callable');
+
+        if (! $result->isValid()) {
             throw new \InvalidArgumentException(
-                (string) new ArrayArgumentTypeErrorMessage(1, 'callable', $factories)
+                $result->message()->constructor($this, 1)
             );
         }
 

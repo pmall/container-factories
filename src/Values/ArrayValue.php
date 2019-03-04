@@ -7,9 +7,6 @@ use Psr\Container\ContainerInterface;
 use Quanta\Container\Helpers\Pluck;
 use Quanta\Container\Helpers\ArrayStr;
 
-use function \Quanta\Exceptions\areAllTypedAs;
-use \Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
-
 final class ArrayValue implements ValueInterface
 {
     /**
@@ -27,11 +24,11 @@ final class ArrayValue implements ValueInterface
      */
     public function __construct(array $values)
     {
-        if (! areAllTypedAs(ValueInterface::class, $values)) {
+        $result = \Quanta\ArrayTypeCheck::result($values, ValueInterface::class);
+
+        if (! $result->isValid()) {
             throw new \InvalidArgumentException(
-                (string) new ArrayArgumentTypeErrorMessage(
-                    1, ValueInterface::class, $values
-                )
+                $result->message()->constructor($this, 1)
             );
         }
 

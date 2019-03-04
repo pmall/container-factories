@@ -4,8 +4,6 @@ use Quanta\Container\ExtensionPass;
 use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Factories\Extension;
 
-use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
-
 describe('ExtensionPass', function () {
 
     context('when all the values of the associative array of factories are callable', function () {
@@ -50,21 +48,15 @@ describe('ExtensionPass', function () {
 
         it('should throw an InvalidArgumentException', function () {
 
-            ArrayArgumentTypeErrorMessage::testing();
-
-            $extensions = [
-                'id1' => function () {},
-                'id2' => 1,
-                'id3' => function () {},
-            ];
-
-            $test = function () use ($extensions) {
-                new ExtensionPass($extensions);
+            $test = function () {
+                new ExtensionPass([
+                    'id1' => function () {},
+                    'id2' => 2,
+                    'id3' => function () {},
+                ]);
             };
 
-            expect($test)->toThrow(new InvalidArgumentException(
-                (string) new ArrayArgumentTypeErrorMessage(1, 'callable', $extensions)
-            ));
+            expect($test)->toThrow(new InvalidArgumentException);
 
         });
 

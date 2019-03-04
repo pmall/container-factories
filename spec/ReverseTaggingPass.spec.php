@@ -8,8 +8,6 @@ use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Extension;
 use Quanta\Container\Factories\EmptyArrayFactory;
 
-use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
-
 describe('ReverseTaggingPass', function () {
 
     context('when all the values of the associative array of predicates are callable', function () {
@@ -117,21 +115,15 @@ describe('ReverseTaggingPass', function () {
 
         it('should throw an InvalidArgumentException', function () {
 
-            ArrayArgumentTypeErrorMessage::testing();
-
-            $predicates = [
-                'id1' => function () {},
-                'id2' => 1,
-                'id3' => function () {},
-            ];
-
-            $test = function () use ($predicates) {
-                new ReverseTaggingPass($predicates);
+            $test = function () {
+                new ReverseTaggingPass([
+                    'id1' => function () {},
+                    'id2' => 2,
+                    'id3' => function () {},
+                ]);
             };
 
-            expect($test)->toThrow(new InvalidArgumentException(
-                (string) new ArrayArgumentTypeErrorMessage(1, 'callable', $predicates)
-            ));
+            expect($test)->toThrow(new InvalidArgumentException);
 
         });
 

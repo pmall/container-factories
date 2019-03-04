@@ -8,9 +8,6 @@ use Quanta\Container\Factories\EmptyArrayFactory;
 
 use Quanta\Container\Helpers\Instantiate;
 
-use function Quanta\Exceptions\areAllTypedAs;
-use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
-
 final class ReverseTaggingPass implements ProcessingPassInterface
 {
     /**
@@ -27,9 +24,11 @@ final class ReverseTaggingPass implements ProcessingPassInterface
      */
     public function __construct(array $predicates)
     {
-        if (! areAllTypedAs('callable', $predicates)) {
+        $result = \Quanta\ArrayTypeCheck::result($predicates, 'callable');
+
+        if (! $result->isValid()) {
             throw new \InvalidArgumentException(
-                (string) new ArrayArgumentTypeErrorMessage(1, 'callable', $predicates)
+                $result->message()->constructor($this, 1)
             );
         }
 

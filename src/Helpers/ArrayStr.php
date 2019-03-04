@@ -2,9 +2,6 @@
 
 namespace Quanta\Container\Helpers;
 
-use function Quanta\Exceptions\areAllTypedAs;
-use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
-
 final class ArrayStr
 {
     /**
@@ -21,9 +18,11 @@ final class ArrayStr
      */
     public function __construct(array $strs)
     {
-        if (! areAllTypedAs('string', $strs)) {
+        $result = \Quanta\ArrayTypeCheck::result($strs, 'string');
+
+        if (! $result->isValid()) {
             throw new \InvalidArgumentException(
-                (string) new ArrayArgumentTypeErrorMessage(1, 'string', $strs)
+                $result->message()->constructor($this, 1)
             );
         }
 

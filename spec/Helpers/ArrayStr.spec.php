@@ -2,8 +2,6 @@
 
 use Quanta\Container\Helpers\ArrayStr;
 
-use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
-
 describe('ArrayStr', function () {
 
     context('when the array is empty', function () {
@@ -72,15 +70,15 @@ EOT
 
             it('should throw an InvalidArgumentException', function () {
 
-                ArrayArgumentTypeErrorMessage::testing();
+                $test = function () {
+                    new ArrayStr([
+                        'key1' => 'value1',
+                        'key2' => 2,
+                        'key3' => 'value3',
+                    ]);
+                };
 
-                $values = ['value1', 2, 'value3'];
-
-                $test = function () use ($values) { new ArrayStr($values); };
-
-                expect($test)->toThrow(new InvalidArgumentException(
-                    (string) new ArrayArgumentTypeErrorMessage(1, 'string', $values)
-                ));
+                expect($test)->toThrow(new InvalidArgumentException);
 
             });
 

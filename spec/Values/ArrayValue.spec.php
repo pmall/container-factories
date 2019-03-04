@@ -7,8 +7,6 @@ use Psr\Container\ContainerInterface;
 use Quanta\Container\Values\ArrayValue;
 use Quanta\Container\Values\ValueInterface;
 
-use Quanta\Exceptions\ArrayArgumentTypeErrorMessage;
-
 describe('ArrayValue', function () {
 
     beforeEach(function () {
@@ -189,19 +187,15 @@ EOT
 
             it('should throw an InvalidArgumentException', function () {
 
-                ArrayArgumentTypeErrorMessage::testing();
+                $test = function () {
+                    new ArrayValue([
+                        'value1' => mock(ValueInterface::class)->get(),
+                        'value2' => 'value',
+                        'value3' => mock(ValueInterface::class)->get(),
+                    ]);
+                };
 
-                $values = [
-                    mock(ValueInterface::class)->get(),
-                    'value',
-                    mock(ValueInterface::class)->get(),
-                ];
-
-                $test = function () use ($values) { new ArrayValue($values); };
-
-                expect($test)->toThrow(new InvalidArgumentException(
-                    (string) new ArrayArgumentTypeErrorMessage(1, ValueInterface::class, $values)
-                ));
+                expect($test)->toThrow(new InvalidArgumentException);
 
             });
 
