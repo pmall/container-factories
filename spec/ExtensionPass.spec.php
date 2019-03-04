@@ -6,27 +6,23 @@ use Quanta\Container\Factories\Extension;
 
 describe('ExtensionPass', function () {
 
-    context('when all the values of the associative array of factories are callable', function () {
+    beforeEach(function () {
 
-        beforeEach(function () {
+        $this->pass = new ExtensionPass('id', $this->extension = function () {});
 
-            $this->pass = new ExtensionPass([
-                'id1' => $this->extension1 = function () {},
-                'id3' => $this->extension3 = function () {},
-                'id4' => $this->extension4 = function () {},
-            ]);
+    });
 
-        });
+    it('should implement ProcessingPassInterface', function () {
 
-        it('should implement ProcessingPassInterface', function () {
+        expect($this->pass)->toBeAnInstanceOf(ProcessingPassInterface::class);
 
-            expect($this->pass)->toBeAnInstanceOf(ProcessingPassInterface::class);
+    });
 
-        });
+    context('->processed()', function () {
 
-        context('->processed()', function () {
+        context('when the id is not present in the given associative array of factories', function () {
 
-            it('should extends the given associative array of factories', function () {
+            it('should return the given associative array of factories', function () {
 
                 $test = $this->pass->processed([
                     'id1' => $factory1 = function () {},
@@ -34,29 +30,33 @@ describe('ExtensionPass', function () {
                     'id3' => $factory3 = function () {},
                 ]);
 
-                expect($test['id1'])->toEqual(new Extension($factory1, $this->extension1));
-                expect($test['id2'])->toEqual($factory2);
-                expect($test['id3'])->toEqual(new Extension($factory3, $this->extension3));
+                expect($test)->toBeAn('array');
+                expect($test)->toHaveLength(3);
+                expect($test['id1'])->toBe($factory1);
+                expect($test['id2'])->toBe($factory2);
+                expect($test['id3'])->toBe($factory3);
 
             });
 
         });
 
-    });
+        context('when the id is present in the given associative array of factories', function () {
 
-    context('when a value of the associative array of factories is not a callable', function () {
+            it('should extend the factory associated to the id', function () {
 
-        it('should throw an InvalidArgumentException', function () {
-
-            $test = function () {
-                new ExtensionPass([
-                    'id1' => function () {},
-                    'id2' => 2,
-                    'id3' => function () {},
+                $test = $this->pass->processed([
+                    'id1' => $factory1 = function () {},
+                    'id' => $factory2 = function () {},
+                    'id3' => $factory3 = function () {},
                 ]);
-            };
 
-            expect($test)->toThrow(new InvalidArgumentException);
+                expect($test)->toBeAn('array');
+                expect($test)->toHaveLength(3);
+                expect($test['id1'])->toBe($factory1);
+                expect($test['id'])->toEqual(new Extension($factory2, $this->extension));
+                expect($test['id3'])->toBe($factory3);
+
+            });
 
         });
 

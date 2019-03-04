@@ -11,28 +11,29 @@ use Quanta\Container\Helpers\Instantiate;
 final class ReverseTaggingPass implements ProcessingPassInterface
 {
     /**
-     * The associative array of predicates used to add tags to the factories.
+     * The id of the tag.
      *
-     * @var callable[]
+     * @var string
      */
-    private $predicates;
+    private $id;
+
+    /**
+     * The predicate used to match container entry ids to tag.
+     *
+     * @var callable
+     */
+    private $predicate;
 
     /**
      * Constructor.
      *
-     * @var callable[] $predicates
+     * @param string    $id
+     * @param callable  $predicate
      */
-    public function __construct(array $predicates)
+    public function __construct(string $id, callable $predicate)
     {
-        $result = \Quanta\ArrayTypeCheck::result($predicates, 'callable');
-
-        if (! $result->isValid()) {
-            throw new \InvalidArgumentException(
-                $result->message()->constructor($this, 1)
-            );
-        }
-
-        $this->predicates = $predicates;
+        $this->id = $id;
+        $this->predicate = $predicate;
     }
 
     /**
@@ -40,18 +41,14 @@ final class ReverseTaggingPass implements ProcessingPassInterface
      */
     public function processed(array $factories): array
     {
-        $ids = array_keys($factories);
+        $ids = array_filter(array_keys($factories), $this->predicate);
 
-        foreach ($this->predicates as $id => $predicate) {
-            $tags = array_map(new Instantiate(Tag::class), ...[
-                array_filter($ids, $predicate),
-            ]);
+        $tags = array_map(new Instantiate(Tag::class), $ids);
 
-            $factories[$id] = array_reduce($tags, ...[
-                new Instantiate(Extension::class),
-                new EmptyArrayFactory,
-            ]);
-        }
+        $factories[$this->id] = array_reduce($tags, ...[
+            new Instantiate(Extension::class),
+            new EmptyArrayFactory,
+        ]);
 
         return $factories;
     }

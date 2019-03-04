@@ -7,29 +7,29 @@ use Quanta\Container\Factories\Extension;
 final class ExtensionPass implements ProcessingPassInterface
 {
     /**
-     * The associative array of extensions used to extend the factories.
+     * The id of the container entry to extend.
      *
-     * @var callable[]
+     * @var string
      */
-    private $extensions;
+    private $id;
+
+    /**
+     * The extension.
+     *
+     * @var callable
+     */
+    private $extension;
 
     /**
      * Constructor.
      *
-     * @param callable[] $extensions
-     * @throws \InvalidArgumentException
+     * @param string    $id
+     * @param callable  $extension
      */
-    public function __construct(array $extensions)
+    public function __construct(string $id, callable $extension)
     {
-        $result = \Quanta\ArrayTypeCheck::result($extensions, 'callable');
-
-        if (! $result->isValid()) {
-            throw new \InvalidArgumentException(
-                $result->message()->constructor($this, 1)
-            );
-        }
-
-        $this->extensions = $extensions;
+        $this->id = $id;
+        $this->extension = $extension;
     }
 
     /**
@@ -37,10 +37,11 @@ final class ExtensionPass implements ProcessingPassInterface
      */
     public function processed(array $factories): array
     {
-        foreach ($this->extensions as $id => $extension) {
-            if (key_exists($id, $factories)) {
-                $factories[$id] = new Extension($factories[$id], $extension);
-            }
+        if (key_exists($this->id, $factories)) {
+            $factories[$this->id] = new Extension(
+                $factories[$this->id],
+                $this->extension
+            );
         }
 
         return $factories;
