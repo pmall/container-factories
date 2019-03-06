@@ -98,7 +98,7 @@ final class Utils
      * @param string $body
      * @return string
      */
-    public static function selfExecutingClosureStr(string $container, string $body)
+    public static function selfExecutingClosureStr(string $container, string $body): string
     {
         return vsprintf('(function (\%s $%s) {%s%s%s})($%s)', [
             \Psr\Container\ContainerInterface::class,
