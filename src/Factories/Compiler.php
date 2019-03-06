@@ -2,7 +2,7 @@
 
 namespace Quanta\Container\Factories;
 
-use Quanta\Container\Helpers\StaticMethodStr;
+use Quanta\Container\Utils;
 
 final class Compiler
 {
@@ -20,7 +20,7 @@ final class Compiler
      */
     public static function withDummyClosureCompiler(): Compiler
     {
-        return new Compiler(new DummyClosureCompiler);
+        return new self(new DummyClosureCompiler);
     }
 
     /**
@@ -58,7 +58,7 @@ final class Compiler
 
         if (is_array($factory)) {
             if (is_string($factory[0])) {
-                return (string) new StaticMethodStr(...$factory);
+                return Utils::staticMethodStr(...$factory);
             }
 
             throw new \LogicException(

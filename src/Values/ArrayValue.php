@@ -4,8 +4,7 @@ namespace Quanta\Container\Values;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Helpers\Pluck;
-use Quanta\Container\Helpers\ArrayStr;
+use Quanta\Container\Utils;
 
 final class ArrayValue implements ValueInterface
 {
@@ -40,7 +39,7 @@ final class ArrayValue implements ValueInterface
      */
     public function value(ContainerInterface $container)
     {
-        return array_map(new Pluck('value', $container), $this->values);
+        return Utils::plucked($this->values, 'value', $container);
     }
 
     /**
@@ -48,9 +47,8 @@ final class ArrayValue implements ValueInterface
      */
     public function str(string $container): string
     {
-        return (string) new ArrayStr(array_map(
-            new Pluck('str', $container),
-            $this->values
-        ));
+        return Utils::arrayStr(
+            Utils::plucked($this->values, 'str', $container)
+        );
     }
 }

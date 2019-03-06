@@ -14,6 +14,17 @@ final class Tag implements CompilableFactoryInterface
     private $id;
 
     /**
+     * Return a new Tag from the given id.
+     *
+     * @param string $id
+     * @return \Quanta\Container\Factories\Tag
+     */
+    public static function instance(string $id): Tag
+    {
+        return new self($id);
+    }
+
+    /**
      * Constructor.
      *
      * @param string $id

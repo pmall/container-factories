@@ -4,9 +4,7 @@ namespace Quanta\Container\Values;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Helpers\Pluck;
-use Quanta\Container\Helpers\LinesStr;
-use Quanta\Container\Helpers\IndentedStr;
+use Quanta\Container\Utils;
 
 final class Instance implements ValueInterface
 {
@@ -41,10 +39,9 @@ final class Instance implements ValueInterface
      */
     public function value(ContainerInterface $container)
     {
-        return new $this->class(...array_map(
-            new Pluck('value', $container),
-            $this->arguments
-        ));
+        return new $this->class(
+            ...Utils::plucked($this->arguments, 'value', $container)
+        );
     }
 
     /**
@@ -56,10 +53,9 @@ final class Instance implements ValueInterface
             return vsprintf('new \%s(%s%s%s)', [
                 $this->class,
                 PHP_EOL,
-                new IndentedStr((string) new LinesStr(...array_map(
-                    new Pluck('str', $container),
-                    $this->arguments
-                ))),
+                Utils::indented(
+                    ...Utils::plucked($this->arguments, 'str', $container)
+                ),
                 PHP_EOL,
             ]);
         }

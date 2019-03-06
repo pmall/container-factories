@@ -16,6 +16,17 @@ final class Factory implements CompilableFactoryInterface
     private $value;
 
     /**
+     * Return a new Factory from the given value.
+     *
+     * @param \Quanta\Container\Values\ValueInterface $value
+     * @return \Quanta\Container\Factories\Factory
+     */
+    public static function instance(ValueInterface $value): Factory
+    {
+        return new self($value);
+    }
+
+    /**
      * Constructor.
      *
      * @param \Quanta\Container\Values\ValueInterface $value

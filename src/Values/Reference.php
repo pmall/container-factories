@@ -5,8 +5,7 @@ namespace Quanta\Container\Values;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-use Quanta\Container\Helpers\IndentedStr;
-use Quanta\Container\Helpers\SelfExecutingClosureStr;
+use Quanta\Container\Utils;
 
 final class Reference implements ValueInterface
 {
@@ -64,17 +63,17 @@ final class Reference implements ValueInterface
     public function str(string $container): string
     {
         if ($this->nullable) {
-            return (string) new SelfExecutingClosureStr($container, ...[
+            return Utils::selfExecutingClosureStr($container, ...[
                 vsprintf('if ($%s->has(\'%s\')) {%s%s%s%s%s}%sreturn null;', [
                     $container,
                     addslashes($this->id),
                     PHP_EOL,
-                    new IndentedStr(vsprintf('try { return $%s->get(\'%s\'); }', [
+                    Utils::indented(vsprintf('try { return $%s->get(\'%s\'); }', [
                         $container,
                         addslashes($this->id),
                     ])),
                     PHP_EOL,
-                    new IndentedStr(vsprintf('catch (\%s $e) { return null; }', [
+                    Utils::indented(vsprintf('catch (\%s $e) { return null; }', [
                         NotFoundExceptionInterface::class,
                     ])),
                     PHP_EOL,

@@ -4,7 +4,7 @@ namespace Quanta\Container\Values;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Helpers\SelfExecutingClosureStr;
+use Quanta\Container\Utils;
 
 final class EnvVar implements ValueInterface
 {
@@ -75,7 +75,7 @@ final class EnvVar implements ValueInterface
             'return $value;',
         ]);
 
-        return (string) new SelfExecutingClosureStr($container, vsprintf($tpl, [
+        return Utils::selfExecutingClosureStr($container, vsprintf($tpl, [
             addslashes($this->name),
             addslashes($this->default),
             addslashes($this->type),

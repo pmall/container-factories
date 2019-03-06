@@ -4,7 +4,7 @@ namespace Quanta\Container\Values;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Helpers\StaticMethodStr;
+use Quanta\Container\Utils;
 
 final class Value implements ValueInterface
 {
@@ -62,7 +62,7 @@ final class Value implements ValueInterface
 
         if (is_array($this->value)) {
             if (is_string($this->value[0])) {
-                return (string) new StaticMethodStr(...$this->value);
+                return Utils::staticMethodStr(...$this->value);
             }
 
             throw new \LogicException(

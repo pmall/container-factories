@@ -8,6 +8,18 @@ use Quanta\Container\Factories\Alias;
 use Quanta\Container\Factories\Compiler;
 use Quanta\Container\Factories\CompilableFactoryInterface;
 
+describe('Alias::instance()', function () {
+
+    it('should return a new Alias with the given id', function () {
+
+        $test = Alias::instance('id');
+
+        expect($test)->toEqual(new Alias('id'));
+
+    });
+
+});
+
 describe('Alias', function () {
 
     beforeEach(function () {

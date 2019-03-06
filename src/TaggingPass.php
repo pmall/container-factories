@@ -2,11 +2,10 @@
 
 namespace Quanta\Container;
 
+use Quanta\Container\Tagging;
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Extension;
 use Quanta\Container\Factories\EmptyArrayFactory;
-
-use Quanta\Container\Helpers\Instantiate;
 
 final class TaggingPass implements ProcessingPassInterface
 {
@@ -23,6 +22,18 @@ final class TaggingPass implements ProcessingPassInterface
      * @var callable
      */
     private $predicate;
+
+    /**
+     * Return a new TaggingPass with the given id and predicate.
+     *
+     * @param string    $id
+     * @param callable  $predicate
+     * @return \Quanta\Container\TaggingPass
+     */
+    public static function instance(string $id, callable $predicate): TaggingPass
+    {
+        return new self($id, $predicate);
+    }
 
     /**
      * Constructor.
@@ -43,10 +54,10 @@ final class TaggingPass implements ProcessingPassInterface
     {
         $ids = array_filter(array_keys($factories), [$this, 'tagged']);
 
-        $tags = array_map(new Instantiate(Tag::class), $ids);
+        $tags = array_map([Tag::class, 'instance'], $ids);
 
         $factories[$this->id] = array_reduce($tags, ...[
-            new Instantiate(Extension::class),
+            [Extension::class, 'instance'],
             $factories[$this->id] ?? new EmptyArrayFactory,
         ]);
 

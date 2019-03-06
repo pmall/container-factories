@@ -4,7 +4,7 @@ namespace Quanta\Container\Factories;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Helpers\IndentedStr;
+use Quanta\Container\Utils;
 
 final class CompiledFactory
 {
@@ -54,7 +54,7 @@ final class CompiledFactory
             ContainerInterface::class,
             implode(', ', array_filter([$this->container, $this->previous])),
             PHP_EOL,
-            new IndentedStr($this->body),
+            Utils::indented($this->body),
             PHP_EOL,
         ]);
     }

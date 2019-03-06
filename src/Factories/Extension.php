@@ -21,6 +21,18 @@ final class Extension implements CompilableFactoryInterface
     private $extension;
 
     /**
+     * Return a new Extension from the given factory and extension.
+     *
+     * @param callable $factory
+     * @param callable $extension
+     * @return \Quanta\Container\Factories\Extension
+     */
+    public static function instance(callable $factory, callable $extension): Extension
+    {
+        return new self($factory, $extension);
+    }
+
+    /**
      * Constructor.
      *
      * @param callable $factory

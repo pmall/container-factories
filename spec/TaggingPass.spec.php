@@ -8,6 +8,20 @@ use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Extension;
 use Quanta\Container\Factories\EmptyArrayFactory;
 
+describe('TaggingPass::instance()', function () {
+
+    it('should return a new TaggingPass with the given id and predicate', function () {
+
+        $predicate = function () {};
+
+        $test = TaggingPass::instance('id', $predicate);
+
+        expect($test)->toEqual(new TaggingPass('id', $predicate));
+
+    });
+
+});
+
 describe('TaggingPass', function () {
 
     beforeEach(function () {

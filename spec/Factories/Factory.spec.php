@@ -10,6 +10,20 @@ use Quanta\Container\Factories\Factory;
 use Quanta\Container\Factories\Compiler;
 use Quanta\Container\Factories\CompilableFactoryInterface;
 
+describe('Factory::instance()', function () {
+
+    it('should return a new Factory with the given id', function () {
+
+        $value = mock(ValueInterface::class);
+
+        $test = Factory::instance($value->get());
+
+        expect($test)->toEqual(new Factory($value->get()));
+
+    });
+
+});
+
 describe('Factory', function () {
 
     beforeEach(function () {

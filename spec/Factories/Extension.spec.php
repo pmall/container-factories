@@ -9,6 +9,21 @@ use Quanta\Container\Factories\Extension;
 use Quanta\Container\Factories\ClosureCompilerInterface;
 use Quanta\Container\Factories\CompilableFactoryInterface;
 
+describe('Extension::instance()', function () {
+
+    it('should return a new Extension with the given factory and extension', function () {
+
+        $factory = function () {};
+        $extension = function () {};
+
+        $test = Extension::instance($factory, $extension);
+
+        expect($test)->toEqual(new Extension($factory, $extension));
+
+    });
+
+});
+
 describe('Extension', function () {
 
     beforeEach(function () {

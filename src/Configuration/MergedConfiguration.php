@@ -2,11 +2,10 @@
 
 namespace Quanta\Container\Configuration;
 
+use Quanta\Container\Utils;
 use Quanta\Container\MergedFactoryMap;
 use Quanta\Container\ProcessedFactoryMap;
 use Quanta\Container\FactoryMapInterface;
-
-use Quanta\Container\Helpers\Pluck;
 
 final class MergedConfiguration implements ConfigurationInterface
 {
@@ -32,11 +31,13 @@ final class MergedConfiguration implements ConfigurationInterface
      */
     public function map(): ProcessedFactoryMap
     {
-        $maps = array_map(new Pluck('map'), $this->configurations);
+        $maps = Utils::plucked($this->configurations, 'map');
 
         return new ProcessedFactoryMap(
-            new MergedFactoryMap(...array_map(new Pluck('map'), $maps)),
-            ...array_merge([], ...array_map(new Pluck('passes'), $maps))
+            new MergedFactoryMap(
+                ...Utils::plucked($maps, 'map')
+            ),
+            ...array_merge([], ...Utils::plucked($maps, 'passes'))
         );
     }
 }

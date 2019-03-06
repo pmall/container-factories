@@ -10,6 +10,18 @@ use Quanta\Container\Factories\CompilableFactoryInterface;
 
 require_once __DIR__ . '/../.test/classes.php';
 
+describe('Invokable::instance()', function () {
+
+    it('should return a new Invokable with the given class name', function () {
+
+        $test = Invokable::instance(Test\TestInvokable::class);
+
+        expect($test)->toEqual(new Invokable(Test\TestInvokable::class));
+
+    });
+
+});
+
 describe('Invokable', function () {
 
     beforeEach(function () {

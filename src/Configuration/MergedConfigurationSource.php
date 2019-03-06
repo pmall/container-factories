@@ -2,7 +2,7 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\Helpers\Pluck;
+use Quanta\Container\Utils;
 
 final class MergedConfigurationSource implements ConfigurationSourceInterface
 {
@@ -29,7 +29,7 @@ final class MergedConfigurationSource implements ConfigurationSourceInterface
     public function configuration(): ConfigurationInterface
     {
         return new MergedConfiguration(
-            ...array_map(new Pluck('configuration'), $this->sources)
+            ...Utils::plucked($this->sources, 'configuration')
         );
     }
 }

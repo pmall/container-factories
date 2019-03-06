@@ -19,7 +19,7 @@ final class ValueFactory
      */
     public static function withDummyValueParser(array $map): ValueFactory
     {
-        return new ValueFactory(new DummyParser($map));
+        return new self(new DummyParser($map));
     }
 
     /**
@@ -29,7 +29,7 @@ final class ValueFactory
      */
     public static function withDefaultValueParser(): ValueFactory
     {
-        return new ValueFactory(
+        return new self(
             new EnvVarParser,
             new ReferenceParser,
             new InterpolatedStringParser

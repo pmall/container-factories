@@ -8,6 +8,18 @@ use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Compiler;
 use Quanta\Container\Factories\CompilableFactoryInterface;
 
+describe('Tag::instance()', function () {
+
+    it('should return a new Tag with the given id', function () {
+
+        $test = Tag::instance('id');
+
+        expect($test)->toEqual(new Tag('id'));
+
+    });
+
+});
+
 describe('Tag', function () {
 
     beforeEach(function () {
