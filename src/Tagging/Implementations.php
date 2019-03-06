@@ -2,10 +2,10 @@
 
 namespace Quanta\Container\Tagging;
 
-final class IsSubclassOf
+final class Implementations
 {
     /**
-     * Ids must be the name of a subclass of theis interface/class to be tagged.
+     * Ids must be the name of a subclass of this interface/class to be tagged.
      *
      * @var string
      */

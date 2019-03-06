@@ -1,12 +1,12 @@
 <?php
 
-use Quanta\Container\Tagging\IsInList;
+use Quanta\Container\Tagging\Entries;
 
-describe('IsInList', function () {
+describe('Entries', function () {
 
     beforeEach(function () {
 
-        $this->predicate = new IsInList('id1', 'id2', 'id3');
+        $this->predicate = new Entries('id1', 'id2', 'id3');
 
     });
 

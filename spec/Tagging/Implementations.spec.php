@@ -1,14 +1,14 @@
 <?php
 
-use Quanta\Container\Tagging\IsSubclassOf;
+use Quanta\Container\Tagging\Implementations;
 
 require_once __DIR__ . '/../.test/classes.php';
 
-describe('IsSubclassOf', function () {
+describe('Implementations', function () {
 
     beforeEach(function () {
 
-        $this->predicate = new IsSubclassOf(Test\TestInterface::class);
+        $this->predicate = new Implementations(Test\TestInterface::class);
 
     });
 

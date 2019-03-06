@@ -132,7 +132,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      */
     private function taggingPass(string $id, array $ids): TaggingPass
     {
-        return new TaggingPass($id, new Tagging\IsInList(...array_values($ids)));
+        return new TaggingPass($id, new Tagging\Entries(...array_values($ids)));
     }
 
     /**
@@ -145,6 +145,6 @@ final class PhpFileConfiguration implements ConfigurationInterface
      */
     private function reverseTaggingPass(string $id, string $class): TaggingPass
     {
-        return new TaggingPass($id, new Tagging\IsSubclassOf($class));
+        return new TaggingPass($id, new Tagging\Implementations($class));
     }
 }

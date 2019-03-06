@@ -2,7 +2,7 @@
 
 namespace Quanta\Container\Tagging;
 
-final class IsInList
+final class Entries
 {
     /**
      * The array of ids to tag.
