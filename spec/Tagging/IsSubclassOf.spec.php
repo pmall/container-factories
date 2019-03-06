@@ -30,7 +30,7 @@ describe('IsSubclassOf', function () {
 
             it('should return true', function () {
 
-                $test = ($this->predicate)(Test\TestInstance::class);
+                $test = ($this->predicate)(Test\TestClass::class);
 
                 expect($test)->toBeTruthy();
 

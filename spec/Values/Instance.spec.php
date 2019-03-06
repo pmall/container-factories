@@ -15,7 +15,7 @@ describe('Instance', function () {
 
         beforeEach(function () {
 
-            $this->value = new Instance(Test\TestInstance::class);
+            $this->value = new Instance(Test\TestClass::class);
 
         });
 
@@ -33,7 +33,7 @@ describe('Instance', function () {
 
                 $test = $this->value->value($container->get());
 
-                expect($test)->toEqual(new Test\TestInstance);
+                expect($test)->toEqual(new Test\TestClass);
 
             });
 
@@ -45,7 +45,7 @@ describe('Instance', function () {
 
                 $test = $this->value->str('container');
 
-                expect($test)->toEqual('new \Test\TestInstance');
+                expect($test)->toEqual('new \Test\TestClass');
 
             });
 
@@ -61,7 +61,7 @@ describe('Instance', function () {
             $this->value2 = mock(ValueInterface::class);
             $this->value3 = mock(ValueInterface::class);
 
-            $this->value = new Instance(Test\TestInstance::class, ...[
+            $this->value = new Instance(Test\TestClass::class, ...[
                 $this->value1->get(),
                 $this->value2->get(),
                 $this->value3->get(),
@@ -87,7 +87,7 @@ describe('Instance', function () {
 
                 $test = $this->value->value($container->get());
 
-                expect($test)->toEqual(new Test\TestInstance('x1', 'x2', 'x3'));
+                expect($test)->toEqual(new Test\TestClass('x1', 'x2', 'x3'));
 
             });
 
@@ -104,7 +104,7 @@ describe('Instance', function () {
                 $test = $this->value->str('container');
 
                 expect($test)->toEqual(<<<'EOT'
-new \Test\TestInstance(
+new \Test\TestClass(
     'x1',
     'x2',
     'x3'

@@ -9,7 +9,7 @@ interface TestInterface
     //
 }
 
-final class TestInstance implements TestInterface
+final class TestClass implements TestInterface
 {
     private $xs;
 

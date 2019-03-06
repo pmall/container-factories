@@ -10,11 +10,11 @@ describe('Instantiate', function () {
 
         it('should return an instance of the class using the given arguments', function () {
 
-            $helper = new Instantiate(Test\TestInstance::class);
+            $helper = new Instantiate(Test\TestClass::class);
 
             $test = $helper('value1', 'value2', 'value3');
 
-            expect($test)->toEqual(new Test\TestInstance('value1', 'value2', 'value3'));
+            expect($test)->toEqual(new Test\TestClass('value1', 'value2', 'value3'));
 
         });
 
