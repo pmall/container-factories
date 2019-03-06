@@ -4,7 +4,12 @@ namespace Test;
 
 use Psr\Container\ContainerInterface;
 
-final class TestInstance
+interface TestInterface
+{
+    //
+}
+
+final class TestInstance implements TestInterface
 {
     private $xs;
 

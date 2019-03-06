@@ -8,7 +8,7 @@ use Quanta\Container\Factories\EmptyArrayFactory;
 
 use Quanta\Container\Helpers\Instantiate;
 
-final class ReverseTaggingPass implements ProcessingPassInterface
+final class TaggingPass implements ProcessingPassInterface
 {
     /**
      * The id of the tag.
@@ -41,15 +41,26 @@ final class ReverseTaggingPass implements ProcessingPassInterface
      */
     public function processed(array $factories): array
     {
-        $ids = array_filter(array_keys($factories), $this->predicate);
+        $ids = array_filter(array_keys($factories), [$this, 'tagged']);
 
         $tags = array_map(new Instantiate(Tag::class), $ids);
 
         $factories[$this->id] = array_reduce($tags, ...[
             new Instantiate(Extension::class),
-            new EmptyArrayFactory,
+            $factories[$this->id] ?? new EmptyArrayFactory,
         ]);
 
         return $factories;
+    }
+
+    /**
+     * Ensure the tag can't tag itself.
+     *
+     * @param string $id
+     * @return bool
+     */
+    private function tagged(string $id): bool
+    {
+        return $id != $this->id && ($this->predicate)($id);
     }
 }
