@@ -81,7 +81,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/parameters/not_array.php'
+                    __DIR__ . '/../.test/config/parameters/not_array.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -95,7 +95,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/aliases/not_array.php'
+                    __DIR__ . '/../.test/config/aliases/not_array.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -109,7 +109,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/aliases/not_array_of_strings.php'
+                    __DIR__ . '/../.test/config/aliases/not_array_of_strings.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -123,7 +123,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/invokables/not_array.php'
+                    __DIR__ . '/../.test/config/invokables/not_array.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -137,7 +137,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/invokables/not_array_of_strings.php'
+                    __DIR__ . '/../.test/config/invokables/not_array_of_strings.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -151,7 +151,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/factories/not_array.php'
+                    __DIR__ . '/../.test/config/factories/not_array.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -165,7 +165,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/factories/not_array_of_callables.php'
+                    __DIR__ . '/../.test/config/factories/not_array_of_callables.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -179,7 +179,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/tags/not_array.php'
+                    __DIR__ . '/../.test/config/tags/not_array.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -193,7 +193,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/tags/not_array_of_arrays.php'
+                    __DIR__ . '/../.test/config/tags/not_array_of_arrays.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -207,7 +207,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/tags/not_array_of_arrays_of_strings.php'
+                    __DIR__ . '/../.test/config/tags/not_array_of_arrays_of_strings.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -221,7 +221,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/mappers/not_array.php'
+                    __DIR__ . '/../.test/config/mappers/not_array.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -235,7 +235,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/mappers/not_array_of_strings.php'
+                    __DIR__ . '/../.test/config/mappers/not_array_of_strings.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -249,7 +249,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/extensions/not_array.php'
+                    __DIR__ . '/../.test/config/extensions/not_array.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -263,7 +263,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/extensions/not_array_of_callables.php'
+                    __DIR__ . '/../.test/config/extensions/not_array_of_callables.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -277,7 +277,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/passes/not_array.php'
+                    __DIR__ . '/../.test/config/passes/not_array.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
@@ -291,7 +291,7 @@ describe('PhpFileConfiguration', function () {
             it('should throw an UnexpectedValueException', function () {
 
                 $configuration = new PhpFileConfiguration($this->factory, ...[
-                    __DIR__ . '/../.test/config/entries/passes/not_array_of_passes.php'
+                    __DIR__ . '/../.test/config/passes/not_array_of_passes.php'
                 ]);
 
                 expect([$configuration, 'map'])->toThrow(new UnexpectedValueException);
