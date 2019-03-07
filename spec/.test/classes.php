@@ -63,3 +63,18 @@ final class TestInvokable
         };
     }
 }
+
+final class TestProcessingPass implements \Quanta\Container\ProcessingPassInterface
+{
+    private $name;
+
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
+
+    public function processed(array $factories): array
+    {
+        //
+    }
+}

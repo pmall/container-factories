@@ -63,7 +63,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
             throw new \UnexpectedValueException(
                 vsprintf('PHP configuration file must return an array, %s returned (see %s)', [
                     gettype($contents),
-                    $this->path,
+                    realpath($this->path),
                 ])
             );
         }
@@ -82,27 +82,25 @@ final class PhpFileConfiguration implements ConfigurationInterface
 
         if (! $result->isValid()) {
             throw new \UnexpectedValueException(
-                sprintf('%s (see %s)', $result->message()->source('configuration array'), $this->path)
+                vsprintf('%s (see %s)', [
+                    $result->message()->source('configuration array'),
+                    realpath($this->path),
+                ])
             );
         }
 
         $configuration = $result->sanitized();
 
-        // Get the parameters values.
-        $parameters = array_map($this->factory, $configuration['parameters']);
+        // convert parameters into container values using the value factory.
+        $values = array_map($this->factory, $configuration['parameters']);
 
-        // Build factories.
-        $factories[] = array_map([Factory::class, 'instance'], $parameters);
+        // build factories.
+        $factories[] = array_map([Factory::class, 'instance'], $values);
         $factories[] = array_map([Alias::class, 'instance'], $configuration['aliases']);
         $factories[] = array_map([Invokable::class, 'instance'], $configuration['invokables']);
         $factories[] = $configuration['factories'];
 
-        // Build passes.
-        $passes[] = array_map([ExtensionPass::class, 'instance'], ...[
-            array_keys($configuration['extensions']),
-            $configuration['extensions'],
-        ]);
-
+        // build passes.
         $passes[] = array_map([$this, 'taggingPass'], ...[
             array_keys($configuration['tags']),
             $configuration['tags'],
@@ -113,7 +111,12 @@ final class PhpFileConfiguration implements ConfigurationInterface
             $configuration['mappers'],
         ]);
 
-        $factories[] = array_values($configuration['passes']);
+        $passes[] = array_map([ExtensionPass::class, 'instance'], ...[
+            array_keys($configuration['extensions']),
+            $configuration['extensions'],
+        ]);
+
+        $passes[] = array_values($configuration['passes']);
 
         // Return the processed factory map.
         return new ProcessedFactoryMap(
