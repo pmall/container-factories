@@ -2,7 +2,6 @@
 
 namespace Quanta\Container\Passes;
 
-use Quanta\Container\Tagging;
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Extension;
 use Quanta\Container\Factories\EmptyArrayFactory;

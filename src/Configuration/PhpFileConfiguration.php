@@ -4,12 +4,12 @@ namespace Quanta\Container\Configuration;
 
 use Quanta\Container\FactoryMap;
 use Quanta\Container\Values\ValueFactory;
+use Quanta\Container\Passes\Tagging;
 use Quanta\Container\Passes\TaggingPass;
 use Quanta\Container\Passes\ExtensionPass;
 use Quanta\Container\Passes\MergedExtensionPass;
 use Quanta\Container\Passes\MergedProcessingPass;
 use Quanta\Container\Passes\ProcessingPassInterface;
-use Quanta\Container\Tagging;
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
 use Quanta\Container\Factories\Factory;
