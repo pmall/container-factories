@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container;
+namespace Quanta\Container\Passes;
 
 use Quanta\Container\Tagging;
 use Quanta\Container\Factories\Tag;
@@ -28,7 +28,7 @@ final class TaggingPass implements ProcessingPassInterface
      *
      * @param string    $id
      * @param callable  $predicate
-     * @return \Quanta\Container\TaggingPass
+     * @return \Quanta\Container\Passes\TaggingPass
      */
     public static function instance(string $id, callable $predicate): TaggingPass
     {
@@ -50,18 +50,18 @@ final class TaggingPass implements ProcessingPassInterface
     /**
      * @inheritdoc
      */
-    public function processed(array $factories): array
+    public function processed(string ...$ids): array
     {
-        $ids = array_filter(array_keys($factories), [$this, 'tagged']);
+        $tagged = array_filter($ids, [$this, 'tagged']);
 
-        $tags = array_map([Tag::class, 'instance'], $ids);
+        $tags = array_map([Tag::class, 'instance'], $tagged);
 
-        $factories[$this->id] = array_reduce($tags, ...[
-            [Extension::class, 'instance'],
-            $factories[$this->id] ?? new EmptyArrayFactory,
-        ]);
-
-        return $factories;
+        return [
+            $this->id = array_reduce($tags, ...[
+                [Extension::class, 'instance'],
+                $factories[$this->id] ?? new EmptyArrayFactory,
+            ])
+        ];
     }
 
     /**

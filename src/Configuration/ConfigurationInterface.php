@@ -2,14 +2,12 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\ProcessedFactoryMap;
-
 interface ConfigurationInterface
 {
     /**
-     * Return the processed factory map provided by the configuration.
+     * Return the configuration entry provided by the configuration.
      *
-     * @return \Quanta\Container\ProcessedFactoryMap
+     * @return \Quanta\Container\Configuration\ConfigurationEntry
      */
-    public function map(): ProcessedFactoryMap;
+    public function entry(): ConfigurationEntry;
 }

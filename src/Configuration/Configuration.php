@@ -2,32 +2,30 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\ProcessedFactoryMap;
-
 final class Configuration implements ConfigurationInterface
 {
     /**
      * The processed factory map to provide.
      *
-     * @var \Quanta\Container\ProcessedFactoryMap
+     * @var \Quanta\Container\Configuration\ConfigurationEntry
      */
-    private $map;
+    private $entry;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\ProcessedFactoryMap $map
+     * @param \Quanta\Container\Configuration\ConfigurationEntry $entry
      */
-    public function __construct(ProcessedFactoryMap $map)
+    public function __construct(ConfigurationEntry $entry)
     {
-        $this->map = $map;
+        $this->entry = $entry;
     }
 
     /**
      * @inheritdoc
      */
-    public function map(): ProcessedFactoryMap
+    public function entry(): ConfigurationEntry
     {
-        return $this->map;
+        return $this->entry;
     }
 }

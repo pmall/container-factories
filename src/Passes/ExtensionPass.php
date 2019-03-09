@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container;
+namespace Quanta\Container\Passes;
 
 use Quanta\Container\Factories\Extension;
 
-final class ExtensionPass implements ProcessingPassInterface
+final class ExtensionPass implements ExtensionPassInterface
 {
     /**
      * The id of the container entry to extend.
@@ -25,7 +25,7 @@ final class ExtensionPass implements ProcessingPassInterface
      *
      * @param string    $id
      * @param callable  $extension
-     * @return \Quanta\Container\ExtensionPass
+     * @return \Quanta\Container\Passes\ExtensionPass
      */
     public static function instance(string $id, callable $extension): ExtensionPass
     {
@@ -47,15 +47,10 @@ final class ExtensionPass implements ProcessingPassInterface
     /**
      * @inheritdoc
      */
-    public function processed(array $factories): array
+    public function extended(string $id, callable $factory): callable
     {
-        if (key_exists($this->id, $factories)) {
-            $factories[$this->id] = new Extension(
-                $factories[$this->id],
-                $this->extension
-            );
-        }
-
-        return $factories;
+        return $id == $this->id
+            ? new Extension($factory, $this->extension)
+            : $factory;
     }
 }

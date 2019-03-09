@@ -3,11 +3,12 @@
 namespace Quanta\Container\Configuration;
 
 use Quanta\Container\FactoryMap;
-use Quanta\Container\TaggingPass;
-use Quanta\Container\ExtensionPass;
-use Quanta\Container\ProcessedFactoryMap;
-use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Values\ValueFactory;
+use Quanta\Container\Passes\TaggingPass;
+use Quanta\Container\Passes\ExtensionPass;
+use Quanta\Container\Passes\MergedExtensionPass;
+use Quanta\Container\Passes\MergedProcessingPass;
+use Quanta\Container\Passes\ProcessingPassInterface;
 use Quanta\Container\Tagging;
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
@@ -46,7 +47,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
     /**
      * @inheritdoc
      */
-    public function map(): ProcessedFactoryMap
+    public function entry(): ConfigurationEntry
     {
         // ensure the file exists.
         if (! file_exists($this->path)) {
@@ -100,7 +101,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
         $factories[] = array_map([Invokable::class, 'instance'], $configuration['invokables']);
         $factories[] = $configuration['factories'];
 
-        // build passes.
+        // build processing passes.
         $passes[] = array_map([$this, 'taggingPass'], ...[
             array_keys($configuration['tags']),
             $configuration['tags'],
@@ -111,17 +112,19 @@ final class PhpFileConfiguration implements ConfigurationInterface
             $configuration['mappers'],
         ]);
 
-        $passes[] = array_map([ExtensionPass::class, 'instance'], ...[
+        $passes[] = array_values($configuration['passes']);
+
+        // build extension passes.
+        $extensions = array_map([ExtensionPass::class, 'instance'], ...[
             array_keys($configuration['extensions']),
             $configuration['extensions'],
         ]);
 
-        $passes[] = array_values($configuration['passes']);
-
         // Return the processed factory map.
-        return new ProcessedFactoryMap(
+        return new ConfigurationEntry(
             new FactoryMap(array_merge(...$factories)),
-            ...array_merge(...$passes)
+            new MergedProcessingPass(...array_merge(...$passes)),
+            new MergedExtensionPass(...$extensions)
         );
     }
 
@@ -131,7 +134,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string    $id
      * @param string[]  $ids
-     * @return \Quanta\Container\TaggingPass
+     * @return \Quanta\Container\Passes\TaggingPass
      */
     private function taggingPass(string $id, array $ids): TaggingPass
     {
@@ -144,7 +147,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
      *
      * @param string $id
      * @param string $class
-     * @return \Quanta\Container\TaggingPass
+     * @return \Quanta\Container\Passes\TaggingPass
      */
     private function reverseTaggingPass(string $id, string $class): TaggingPass
     {
