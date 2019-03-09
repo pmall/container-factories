@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Configuration;
+namespace Quanta\Container;
 
 interface ConfigurationInterface
 {
     /**
      * Return the configuration entry provided by the configuration.
      *
-     * @return \Quanta\Container\Configuration\ConfigurationEntry
+     * @return \Quanta\Container\ConfigurationEntry
      */
     public function entry(): ConfigurationEntry;
 }

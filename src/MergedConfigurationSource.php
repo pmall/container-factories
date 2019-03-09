@@ -1,22 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Configuration;
-
-use Quanta\Container\Utils;
+namespace Quanta\Container;
 
 final class MergedConfigurationSource implements ConfigurationSourceInterface
 {
     /**
      * The array of configuration sources to merge.
      *
-     * @var \Quanta\Container\Configuration\ConfigurationSourceInterface[]
+     * @var \Quanta\Container\ConfigurationSourceInterface[]
      */
     private $sources;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Configuration\ConfigurationSourceInterface ...$sources
+     * @param \Quanta\Container\ConfigurationSourceInterface ...$sources
      */
     public function __construct(ConfigurationSourceInterface ...$sources)
     {

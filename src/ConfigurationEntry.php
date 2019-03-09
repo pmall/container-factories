@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Configuration;
+namespace Quanta\Container;
 
-use Quanta\Container\FactoryMapInterface;
+use Quanta\Container\Maps\FactoryMapInterface;
 use Quanta\Container\Passes\ExtensionPassInterface;
 use Quanta\Container\Passes\ProcessingPassInterface;
 
@@ -11,7 +11,7 @@ final class ConfigurationEntry
     /**
      * The factory map.
      *
-     * @var \Quanta\Container\FactoryMapInterface
+     * @var \Quanta\Container\Maps\FactoryMapInterface
      */
     private $map;
 
@@ -32,7 +32,7 @@ final class ConfigurationEntry
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\FactoryMapInterface             $map
+     * @param \Quanta\Container\Maps\FactoryMapInterface        $map
      * @param \Quanta\Container\Passes\ProcessingPassInterface  $processing
      * @param \Quanta\Container\Passes\ExtensionPassInterface   $extension
      */
@@ -49,7 +49,7 @@ final class ConfigurationEntry
     /**
      * Return the factory map.
      *
-     * @return \Quanta\Container\FactoryMapInterface
+     * @return \Quanta\Container\Maps\FactoryMapInterface
      */
     public function map(): FactoryMapInterface
     {

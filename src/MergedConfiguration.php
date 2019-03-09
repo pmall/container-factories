@@ -1,9 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Configuration;
+namespace Quanta\Container;
 
-use Quanta\Container\Utils;
-use Quanta\Container\MergedFactoryMap;
+use Quanta\Container\Maps\MergedFactoryMap;
 use Quanta\Container\Passes\MergedExtensionPass;
 use Quanta\Container\Passes\MergedProcessingPass;
 
@@ -12,14 +11,14 @@ final class MergedConfiguration implements ConfigurationInterface
     /**
      * The array of configurations to merge.
      *
-     * @var \Quanta\Container\Configuration\ConfigurationInterface[]
+     * @var \Quanta\Container\ConfigurationInterface[]
      */
     private $configurations;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Configuration\ConfigurationInterface ...$configurations
+     * @param \Quanta\Container\ConfigurationInterface ...$configurations
      */
     public function __construct(ConfigurationInterface ...$configurations)
     {

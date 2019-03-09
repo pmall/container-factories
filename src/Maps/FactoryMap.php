@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container;
+namespace Quanta\Container\Maps;
 
 final class FactoryMap implements FactoryMapInterface
 {

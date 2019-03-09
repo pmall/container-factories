@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Configuration;
+namespace Quanta\Container;
 
-use Quanta\Container\FactoryMap;
+use Quanta\Container\Maps\FactoryMap;
 use Quanta\Container\Values\ValueFactory;
 use Quanta\Container\Passes\Tagging;
 use Quanta\Container\Passes\TaggingPass;
