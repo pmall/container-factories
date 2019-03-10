@@ -2,10 +2,10 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\Configuration\MergedConfiguration;
-use Quanta\Container\Configuration\ConfigurationInterface;
-use Quanta\Container\Configuration\MergedConfigurationSource;
-use Quanta\Container\Configuration\ConfigurationSourceInterface;
+use Quanta\Container\MergedConfiguration;
+use Quanta\Container\ConfigurationInterface;
+use Quanta\Container\MergedConfigurationSource;
+use Quanta\Container\ConfigurationSourceInterface;
 
 describe('MergedConfigurationSource', function () {
 

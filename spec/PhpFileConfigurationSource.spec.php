@@ -1,10 +1,10 @@
 <?php
 
+use Quanta\Container\MergedConfiguration;
+use Quanta\Container\PhpFileConfiguration;
+use Quanta\Container\PhpFileConfigurationSource;
+use Quanta\Container\ConfigurationSourceInterface;
 use Quanta\Container\Values\ValueFactory;
-use Quanta\Container\Configuration\MergedConfiguration;
-use Quanta\Container\Configuration\PhpFileConfiguration;
-use Quanta\Container\Configuration\PhpFileConfigurationSource;
-use Quanta\Container\Configuration\ConfigurationSourceInterface;
 
 describe('PhpFileConfigurationSource', function () {
 
@@ -47,8 +47,8 @@ describe('PhpFileConfigurationSource', function () {
         beforeEach(function () {
 
             $this->source = new PhpFileConfigurationSource($this->factory, ...[
-                __DIR__ . '/../.test/config/*.php',
-                __DIR__ . '/../.test/config/factories/*.php',
+                __DIR__ . '/.test/config/*.php',
+                __DIR__ . '/.test/config/factories/*.php',
             ]);
 
         });
@@ -68,16 +68,16 @@ describe('PhpFileConfigurationSource', function () {
                 expect($test)->toEqual(
                     new MergedConfiguration(...[
                         new PhpFileConfiguration($this->factory, ...[
-                            __DIR__ . '/../.test/config/not_array.php',
+                            __DIR__ . '/.test/config/not_array.php',
                         ]),
                         new PhpFileConfiguration($this->factory, ...[
-                            __DIR__ . '/../.test/config/valid.php',
+                            __DIR__ . '/.test/config/valid.php',
                         ]),
                         new PhpFileConfiguration($this->factory, ...[
-                            __DIR__ . '/../.test/config/factories/not_array.php',
+                            __DIR__ . '/.test/config/factories/not_array.php',
                         ]),
                         new PhpFileConfiguration($this->factory, ...[
-                            __DIR__ . '/../.test/config/factories/not_array_of_callables.php',
+                            __DIR__ . '/.test/config/factories/not_array_of_callables.php',
                         ]),
                     ])
                 );

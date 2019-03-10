@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'passes' => [
-        new Test\TestProcessingPass('pass1'),
-        new class {},
-        new Test\TestProcessingPass('pass3'),
+    'mappers' => [
+        'id1' => new Test\TestProcessingPass('passes1'),
+        'id2' => 1,
+        'id3' => new Test\TestProcessingPass('passes1'),
     ],
 ];

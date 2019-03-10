@@ -1,14 +1,14 @@
 <?php
 
-use Quanta\Container\Tagging\Implementations;
+use Quanta\Container\Passes\Tagging\Implementations;
 
-require_once __DIR__ . '/../.test/classes.php';
+require_once __DIR__ . '/../../.test/classes.php';
 
 describe('Implementations', function () {
 
     beforeEach(function () {
 
-        $this->predicate = new Implementations(Test\TestInterface::class);
+        $this->predicate = new Implementations(Test\TestInterface1::class);
 
     });
 

@@ -1,7 +1,7 @@
 <?php
 
-use Quanta\Container\FactoryMap;
-use Quanta\Container\FactoryMapInterface;
+use Quanta\Container\Maps\FactoryMap;
+use Quanta\Container\Maps\FactoryMapInterface;
 
 describe('FactoryMap', function () {
 
@@ -23,15 +23,19 @@ describe('FactoryMap', function () {
 
         });
 
-        it('should merge all the arrays of factories', function () {
+        describe('->factories()', function () {
 
-            $test = $this->map->factories();
+            it('should merge all the arrays of factories', function () {
 
-            expect($test)->toBeAn('array');
-            expect($test)->toHaveLength(3);
-            expect($test['id1'])->toBe($this->factory1);
-            expect($test['id2'])->toBe($this->factory2);
-            expect($test['id3'])->toBe($this->factory3);
+                $test = $this->map->factories();
+
+                expect($test)->toBeAn('array');
+                expect($test)->toHaveLength(3);
+                expect($test['id1'])->toBe($this->factory1);
+                expect($test['id2'])->toBe($this->factory2);
+                expect($test['id3'])->toBe($this->factory3);
+
+            });
 
         });
 

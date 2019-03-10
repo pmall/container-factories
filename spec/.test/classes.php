@@ -4,12 +4,22 @@ namespace Test;
 
 use Psr\Container\ContainerInterface;
 
-interface TestInterface
+interface TestInterface1
 {
     //
 }
 
-final class TestClass implements TestInterface
+interface TestInterface2
+{
+    //
+}
+
+interface TestInterface3
+{
+    //
+}
+
+final class TestClass implements TestInterface1, TestInterface2, TestInterface3
 {
     private $xs;
 
@@ -64,7 +74,7 @@ final class TestInvokable
     }
 }
 
-final class TestProcessingPass implements \Quanta\Container\ProcessingPassInterface
+final class TestProcessingPass implements \Quanta\Container\Passes\ProcessingPassInterface
 {
     private $name;
 
@@ -73,8 +83,18 @@ final class TestProcessingPass implements \Quanta\Container\ProcessingPassInterf
         $this->name = $name;
     }
 
-    public function processed(array $factories): array
+    public function aliases(string $id): array
     {
-        //
+        return [];
+    }
+
+    public function tags(string ...$ids): array
+    {
+        return [];
+    }
+
+    public function processed(string $id, callable $factory): callable
+    {
+        return $factory;
     }
 }

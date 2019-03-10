@@ -2,9 +2,9 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\Configuration\ConfigurationSource;
-use Quanta\Container\Configuration\ConfigurationInterface;
-use Quanta\Container\Configuration\ConfigurationSourceInterface;
+use Quanta\Container\ConfigurationSource;
+use Quanta\Container\ConfigurationInterface;
+use Quanta\Container\ConfigurationSourceInterface;
 
 describe('ConfigurationSource', function () {
 

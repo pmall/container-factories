@@ -2,17 +2,19 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\FactoryMapInterface;
-use Quanta\Container\ProcessedFactoryMap;
-use Quanta\Container\Configuration\Configuration;
-use Quanta\Container\Configuration\ConfigurationInterface;
+use Quanta\Container\Configuration;
+use Quanta\Container\ConfiguredFactoryMap;
+use Quanta\Container\ConfigurationInterface;
+use Quanta\Container\Maps\FactoryMapInterface;
+use Quanta\Container\Passes\ProcessingPassInterface;
 
 describe('Configuration', function () {
 
     beforeEach(function () {
 
-        $this->map = new ProcessedFactoryMap(
-            mock(FactoryMapInterface::class)->get()
+        $this->map = new ConfiguredFactoryMap(
+            mock(FactoryMapInterface::class)->get(),
+            mock(ProcessingPassInterface::class)->get()
         );
 
         $this->configuration = new Configuration($this->map);
@@ -27,7 +29,7 @@ describe('Configuration', function () {
 
     describe('->map()', function () {
 
-        it('should return the processed factory map', function () {
+        it('should return the configured factory map', function () {
 
             $test = $this->configuration->map();
 

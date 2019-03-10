@@ -10,11 +10,11 @@ use Quanta\Container\Factories\CompilableFactoryInterface;
 
 describe('Tag::instance()', function () {
 
-    it('should return a new Tag with the given id', function () {
+    it('should return a new Tag with the given ids', function () {
 
-        $test = Tag::instance('id');
+        $test = Tag::instance('id1', 'id2', 'id3');
 
-        expect($test)->toEqual(new Tag('id'));
+        expect($test)->toEqual(new Tag('id1', 'id2', 'id3'));
 
     });
 
@@ -22,51 +22,48 @@ describe('Tag::instance()', function () {
 
 describe('Tag', function () {
 
-    beforeEach(function () {
-
-        $this->factory = new Tag('id');
-
-    });
-
-    it('should implement CompilableFactoryInterface', function () {
-
-        expect($this->factory)->toBeAnInstanceOf(CompilableFactoryInterface::class);
-
-    });
-
-    describe('->__invoke()', function () {
+    context('when there is no id', function () {
 
         beforeEach(function () {
 
-            $this->container = mock(ContainerInterface::class);
-
-            $this->container->get->with('id')->returns('value');
+            $this->factory = new Tag;
 
         });
 
-        context('when no array of previous container entries is given', function () {
+        it('should implement CompilableFactoryInterface', function () {
 
-            it('should return an array containing the container entry', function () {
+            expect($this->factory)->toBeAnInstanceOf(CompilableFactoryInterface::class);
 
-                $test = ($this->factory)($this->container->get());
+        });
 
-                expect($test)->toEqual(['value']);
+        describe('->__invoke()', function () {
+
+            it('should return an empty array', function () {
+
+                $container = mock(ContainerInterface::class);
+
+                $test = ($this->factory)($container->get());
+
+                expect($test)->toEqual([]);
 
             });
 
         });
 
-        context('when an array of previous container entries is given', function () {
+        describe('->compiled()', function () {
 
-            it('should add the container entry to the given array of previous container entries', function () {
+            it('should return the string representation of a factory returning an empty array', function () {
 
-                $test = ($this->factory)($this->container->get(), [
-                    'previous1',
-                    'previous2',
-                    'previous3',
-                ]);
+                $compiler = Compiler::withDummyClosureCompiler();
 
-                expect($test)->toEqual(['previous1', 'previous2', 'previous3', 'value']);
+                $test = (string) $this->factory->compiled($compiler);
+
+                expect($test)->toEqual(<<<'EOT'
+function (\Psr\Container\ContainerInterface $container) {
+    return [];
+}
+EOT
+                );
 
             });
 
@@ -74,20 +71,58 @@ describe('Tag', function () {
 
     });
 
-    describe('->compiled()', function () {
+    context('when there is at leas one id', function () {
 
-        it('should return a string representation of the tag', function () {
+        beforeEach(function () {
 
-            $compiler = Compiler::withDummyClosureCompiler();
+            $this->factory = new Tag('id1', 'id2', 'id3');
 
-            $test = (string) $this->factory->compiled($compiler);
+        });
 
-            expect($test)->toEqual(<<<'EOT'
-function (\Psr\Container\ContainerInterface $container, array $tagged) {
-    return array_merge($tagged, [$container->get('id')]);
+        it('should implement CompilableFactoryInterface', function () {
+
+            expect($this->factory)->toBeAnInstanceOf(CompilableFactoryInterface::class);
+
+        });
+
+        describe('->__invoke()', function () {
+
+            it('should return an array containing the container entries', function () {
+
+                $container = mock(ContainerInterface::class);
+
+                $container->get->with('id1')->returns('value1');
+                $container->get->with('id2')->returns('value2');
+                $container->get->with('id3')->returns('value3');
+
+                $test = ($this->factory)($container->get());
+
+                expect($test)->toEqual(['value1', 'value2', 'value3']);
+
+            });
+
+        });
+
+        describe('->compiled()', function () {
+
+            it('should return a string representation of the tag', function () {
+
+                $compiler = Compiler::withDummyClosureCompiler();
+
+                $test = (string) $this->factory->compiled($compiler);
+
+                expect($test)->toEqual(<<<'EOT'
+function (\Psr\Container\ContainerInterface $container) {
+    return array_map([$container, 'get'], [
+        'id1',
+        'id2',
+        'id3',
+    ]);
 }
 EOT
-            );
+                );
+
+            });
 
         });
 
