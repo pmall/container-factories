@@ -2,10 +2,6 @@
 
 namespace Quanta\Container\Passes;
 
-use Quanta\Container\Factories\Tag;
-use Quanta\Container\Factories\Extension;
-use Quanta\Container\Factories\EmptyArrayFactory;
-
 final class TaggingPass implements ProcessingPassInterface
 {
     /**
@@ -16,7 +12,7 @@ final class TaggingPass implements ProcessingPassInterface
     private $id;
 
     /**
-     * The predicate used to match container entry ids to tag.
+     * The predicate used to match container entry id to tag.
      *
      * @var callable
      */
@@ -49,28 +45,24 @@ final class TaggingPass implements ProcessingPassInterface
     /**
      * @inheritdoc
      */
-    public function processed(string ...$ids): array
+    public function aliases(string $id): array
     {
-        $tagged = array_filter($ids, [$this, 'tagged']);
-
-        $tags = array_map([Tag::class, 'instance'], $tagged);
-
-        return [
-            $this->id = array_reduce($tags, ...[
-                [Extension::class, 'instance'],
-                $factories[$this->id] ?? new EmptyArrayFactory,
-            ])
-        ];
+        return [];
     }
 
     /**
-     * Ensure the tag can't tag itself.
-     *
-     * @param string $id
-     * @return bool
+     * @inheritdoc
      */
-    private function tagged(string $id): bool
+    public function tags(string ...$ids): array
     {
-        return $id != $this->id && ($this->predicate)($id);
+        return [$this->id => array_values(array_filter($ids, $this->predicate))];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function processed(string $id, callable $factory): callable
+    {
+        return $factory;
     }
 }

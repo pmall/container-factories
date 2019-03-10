@@ -2,6 +2,8 @@
 
 namespace Quanta\Container\Passes;
 
+use Quanta\Container\Utils;
+
 final class MergedProcessingPass implements ProcessingPassInterface
 {
     /**
@@ -24,16 +26,32 @@ final class MergedProcessingPass implements ProcessingPassInterface
     /**
      * @inheritdoc
      */
-    public function processed(string ...$ids): array
+    public function aliases(string $id): array
     {
-        $factories = [];
+        return array_unique(
+            array_merge([], ...Utils::plucked($this->passes, 'aliases', $id))
+        );
+    }
 
+    /**
+     * @inheritdoc
+     */
+    public function tags(string ...$ids): array
+    {
+        return array_map('array_unique',
+            array_merge_recursive([], ...Utils::plucked($this->passes, 'tags', ...$ids))
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function processed(string $id, callable $factory): callable
+    {
         foreach ($this->passes as $pass) {
-            $factories = $pass->processed(...$ids);
-
-            $ids = array_keys($factories);
+            $factory = $pass->processed($id, $factory);
         }
 
-        return $factories;
+        return $factory;
     }
 }

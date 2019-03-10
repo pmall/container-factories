@@ -57,7 +57,7 @@ final class Extension implements CompilableFactoryInterface
      */
     public function compiled(Compiler $compiler): CompiledFactory
     {
-        return new CompiledFactory('container', '', ...[
+        return new CompiledFactory('container', ...[
             vsprintf('return (%s)($container, (%s)($container));', [
                 $compiler($this->extension),
                 $compiler($this->factory),

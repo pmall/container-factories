@@ -49,7 +49,7 @@ final class Factory implements CompilableFactoryInterface
      */
     public function compiled(Compiler $compiler): CompiledFactory
     {
-        return new CompiledFactory('container', '', ...[
+        return new CompiledFactory('container', ...[
             sprintf('return %s;', $this->value->str('container')),
         ]);
     }

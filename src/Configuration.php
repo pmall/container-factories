@@ -7,25 +7,25 @@ final class Configuration implements ConfigurationInterface
     /**
      * The processed factory map to provide.
      *
-     * @var \Quanta\Container\ConfigurationEntry
+     * @var \Quanta\Container\ConfiguredFactoryMap
      */
-    private $entry;
+    private $map;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\ConfigurationEntry $entry
+     * @param \Quanta\Container\ConfiguredFactoryMap $map
      */
-    public function __construct(ConfigurationEntry $entry)
+    public function __construct(ConfiguredFactoryMap $map)
     {
-        $this->entry = $entry;
+        $this->map = $map;
     }
 
     /**
      * @inheritdoc
      */
-    public function entry(): ConfigurationEntry
+    public function map(): ConfiguredFactoryMap
     {
-        return $this->entry;
+        return $this->map;
     }
 }

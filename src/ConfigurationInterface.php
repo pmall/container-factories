@@ -7,7 +7,7 @@ interface ConfigurationInterface
     /**
      * Return the configuration entry provided by the configuration.
      *
-     * @return \Quanta\Container\ConfigurationEntry
+     * @return \Quanta\Container\ConfiguredFactoryMap
      */
-    public function entry(): ConfigurationEntry;
+    public function map(): ConfiguredFactoryMap;
 }

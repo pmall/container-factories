@@ -4,7 +4,7 @@ namespace Quanta\Container\Passes;
 
 use Quanta\Container\Factories\Extension;
 
-final class ExtensionPass implements ExtensionPassInterface
+final class ExtensionPass implements ProcessingPassInterface
 {
     /**
      * The id of the container entry to extend.
@@ -47,7 +47,23 @@ final class ExtensionPass implements ExtensionPassInterface
     /**
      * @inheritdoc
      */
-    public function extended(string $id, callable $factory): callable
+    public function aliases(string $id): array
+    {
+        return [];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function tags(string ...$ids): array
+    {
+        return [];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function processed(string $id, callable $factory): callable
     {
         return $id == $this->id
             ? new Extension($factory, $this->extension)

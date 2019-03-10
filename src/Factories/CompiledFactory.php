@@ -16,13 +16,6 @@ final class CompiledFactory
     private $container;
 
     /**
-     * The previous parameter declaration.
-     *
-     * @var string
-     */
-    private $previous;
-
-    /**
      * The body of the factory.
      *
      * @var string
@@ -33,13 +26,11 @@ final class CompiledFactory
      * Constructor.
      *
      * @param string $container
-     * @param string $previous
      * @param string $body
      */
-    public function __construct(string $container, string $previous, string $body)
+    public function __construct(string $container, string $body)
     {
         $this->container = $container;
-        $this->previous = $previous;
         $this->body = $body;
     }
 
@@ -52,7 +43,7 @@ final class CompiledFactory
     {
         return vsprintf('function (\%s $%s) {%s%s%s}', [
             ContainerInterface::class,
-            implode(', ', array_filter([$this->container, $this->previous])),
+            $this->container,
             PHP_EOL,
             Utils::indented($this->body),
             PHP_EOL,
