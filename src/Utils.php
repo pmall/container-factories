@@ -58,7 +58,7 @@ final class Utils
             $keys = array_keys($strs);
             $vals = array_values($strs);
 
-            $strs = $keys == range(0, count($keys) - 1) ? $vals : array_map(function ($key, $val) {
+            $strs = $keys === range(0, count($keys) - 1) ? $vals : array_map(function ($key, $val) {
                 return vsprintf('%s => %s', [
                     is_int($key) ? $key : sprintf('\'%s\'', addslashes($key)),
                     $val,
