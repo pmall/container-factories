@@ -8,6 +8,7 @@ use Quanta\Container\Values\ValueInterface;
 
 use Quanta\Container\Factories\Factory;
 use Quanta\Container\Factories\Compiler;
+use Quanta\Container\Factories\DummyClosureCompiler;
 use Quanta\Container\Factories\CompilableFactoryInterface;
 
 describe('Factory::instance()', function () {
@@ -60,7 +61,7 @@ describe('Factory', function () {
 
         it('should return the string representation of the factory', function () {
 
-            $compiler = Compiler::withDummyClosureCompiler();
+            $compiler = new Compiler(new DummyClosureCompiler);
 
             $this->value->str->with('container')->returns('\'value\'');
 

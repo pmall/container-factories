@@ -24,10 +24,10 @@ final class MergedConfigurationSource implements ConfigurationSourceInterface
     /**
      * @inheritdoc
      */
-    public function configuration(): ConfigurationInterface
+    public function entry(): ConfigurationEntryInterface
     {
-        return new MergedConfiguration(
-            ...Utils::plucked($this->sources, 'configuration')
+        return new MergedConfigurationEntry(
+            ...Utils::plucked($this->sources, 'entry')
         );
     }
 }

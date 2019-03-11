@@ -12,22 +12,11 @@ final class ValueFactory
     private $parsers;
 
     /**
-     * Return a new ValueFactory with a dummy value parser using the given map.
-     *
-     * @param array $map
-     * @return \Quanta\Container\Values\ValueFactory
-     */
-    public static function withDummyValueParser(array $map): ValueFactory
-    {
-        return new self(new DummyParser($map));
-    }
-
-    /**
      * Return a new ValueFactory with the default value parsers.
      *
      * @return \Quanta\Container\Values\ValueFactory
      */
-    public static function withDefaultValueParser(): ValueFactory
+    public static function withDefaultParser(): ValueFactory
     {
         return new self(
             new EnvVarParser,

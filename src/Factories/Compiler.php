@@ -14,16 +14,6 @@ final class Compiler
     private $compiler;
 
     /**
-     * Return a new Compiler with a dummy closure compiler (testing purpose).
-     *
-     * @return \Quanta\Container\Factories\Compiler
-     */
-    public static function withDummyClosureCompiler(): Compiler
-    {
-        return new self(new DummyClosureCompiler);
-    }
-
-    /**
      * Constructor.
      *
      * @param \Quanta\Container\Factories\ClosureCompilerInterface $compiler

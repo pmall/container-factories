@@ -2,32 +2,16 @@
 
 use Quanta\Container\Values\Value;
 use Quanta\Container\Values\ArrayValue;
-use Quanta\Container\Values\DummyParser;
 use Quanta\Container\Values\ValueFactory;
+use Quanta\Container\Values\DummyValueParser;
 
 require_once __DIR__ . '/../.test/classes.php';
 
-describe('ValueFactory::withDummyValueParser()', function () {
-
-    it('should return a value factory with a dummy value parsers using the given map', function () {
-
-        $map = ['k1' => 'value1', 'k2' => 'value2', 'k3' => 'value3'];
-
-        $test = ValueFactory::withDummyValueParser($map);
-
-        expect($test)->toEqual(new ValueFactory(
-            new DummyParser($map)
-        ));
-
-    });
-
-});
-
-describe('ValueFactory::withDefaultValueParser()', function () {
+describe('ValueFactory::withDefaultParser()', function () {
 
     it('should return a value factory with the default value parsers', function () {
 
-        $test = ValueFactory::withDefaultValueParser();
+        $test = ValueFactory::withDefaultParser();
 
         expect($test)->toEqual(new ValueFactory(...[
             new Quanta\Container\Values\EnvVarParser,
@@ -104,13 +88,13 @@ describe('ValueFactory', function () {
         beforeEach(function () {
 
             $this->factory = new ValueFactory(...[
-                new DummyParser([
+                new DummyValueParser([
                     'value11' => 'parsed11', 'value12' => 'parsed12', 'value13' => 'parsed13',
                 ]),
-                new DummyParser([
+                new DummyValueParser([
                     'value21' => 'parsed21', 'value22' => 'parsed22', 'value23' => 'parsed23',
                 ]),
-                new DummyParser([
+                new DummyValueParser([
                     'value31' => 'parsed31', 'value32' => 'parsed32', 'value33' => 'parsed33',
                 ]),
             ]);

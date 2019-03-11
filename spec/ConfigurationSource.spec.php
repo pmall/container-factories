@@ -3,16 +3,16 @@
 use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\ConfigurationSource;
-use Quanta\Container\ConfigurationInterface;
+use Quanta\Container\ConfigurationEntryInterface;
 use Quanta\Container\ConfigurationSourceInterface;
 
 describe('ConfigurationSource', function () {
 
     beforeEach(function () {
 
-        $this->counfiguration = mock(ConfigurationInterface::class);
+        $this->entry = mock(ConfigurationEntryInterface::class);
 
-        $this->source = new ConfigurationSource($this->counfiguration->get());
+        $this->source = new ConfigurationSource($this->entry->get());
 
     });
 
@@ -22,13 +22,13 @@ describe('ConfigurationSource', function () {
 
     });
 
-    describe('->configuration()', function () {
+    describe('->entry()', function () {
 
-        it('should return the configuration', function () {
+        it('should return the configuration entry', function () {
 
-            $test = $this->source->configuration();
+            $test = $this->source->entry();
 
-            expect($test)->toBe($this->counfiguration->get());
+            expect($test)->toBe($this->entry->get());
 
         });
 

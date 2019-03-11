@@ -6,6 +6,7 @@ use Psr\Container\ContainerInterface;
 
 use Quanta\Container\Factories\Compiler;
 use Quanta\Container\Factories\Invokable;
+use Quanta\Container\Factories\DummyClosureCompiler;
 use Quanta\Container\Factories\CompilableFactoryInterface;
 
 require_once __DIR__ . '/../.test/classes.php';
@@ -56,7 +57,7 @@ describe('Invokable', function () {
 
         it('should return the string representation of the invokable', function () {
 
-            $compiler = Compiler::withDummyClosureCompiler();
+            $compiler = new Compiler(new DummyClosureCompiler);
 
             $test = (string) $this->factory->compiled($compiler);
 

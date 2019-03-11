@@ -6,6 +6,7 @@ use Psr\Container\ContainerInterface;
 
 use Quanta\Container\Factories\Alias;
 use Quanta\Container\Factories\Compiler;
+use Quanta\Container\Factories\DummyClosureCompiler;
 use Quanta\Container\Factories\CompilableFactoryInterface;
 
 describe('Alias::instance()', function () {
@@ -54,7 +55,7 @@ describe('Alias', function () {
 
         it('should return a string representation of the alias', function () {
 
-            $compiler = Compiler::withDummyClosureCompiler();
+            $compiler = new Compiler(new DummyClosureCompiler);
 
             $test = (string) $this->factory->compiled($compiler);
 

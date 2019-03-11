@@ -2,9 +2,9 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\MergedConfiguration;
-use Quanta\Container\ConfigurationInterface;
+use Quanta\Container\MergedConfigurationEntry;
 use Quanta\Container\MergedConfigurationSource;
+use Quanta\Container\ConfigurationEntryInterface;
 use Quanta\Container\ConfigurationSourceInterface;
 
 describe('MergedConfigurationSource', function () {
@@ -23,13 +23,13 @@ describe('MergedConfigurationSource', function () {
 
         });
 
-        describe('->configuration()', function () {
+        describe('->entry()', function () {
 
-            it('should return an empty merged configuration', function () {
+            it('should return an empty merged configuration entry', function () {
 
-                $test = $this->source->configuration();
+                $test = $this->source->entry();
 
-                expect($test)->toEqual(new MergedConfiguration);
+                expect($test)->toEqual(new MergedConfigurationEntry);
 
             });
 
@@ -37,7 +37,7 @@ describe('MergedConfigurationSource', function () {
 
     });
 
-    context('when there is at leas one configuration source', function () {
+    context('when there is at least one configuration source', function () {
 
         beforeEach(function () {
 
@@ -59,24 +59,24 @@ describe('MergedConfigurationSource', function () {
 
         });
 
-        describe('->configuration()', function () {
+        describe('->entry()', function () {
 
-            it('should merge the configurations provided by the configuration sources', function () {
+            it('should merge the configuration entries provided by the configuration sources', function () {
 
-                $configuration1 = mock(ConfigurationInterface::class);
-                $configuration2 = mock(ConfigurationInterface::class);
-                $configuration3 = mock(ConfigurationInterface::class);
+                $entry1 = mock(ConfigurationEntryInterface::class);
+                $entry2 = mock(ConfigurationEntryInterface::class);
+                $entry3 = mock(ConfigurationEntryInterface::class);
 
-                $this->source1->configuration->returns($configuration1->get());
-                $this->source2->configuration->returns($configuration2->get());
-                $this->source3->configuration->returns($configuration3->get());
+                $this->source1->entry->returns($entry1->get());
+                $this->source2->entry->returns($entry2->get());
+                $this->source3->entry->returns($entry3->get());
 
-                $test = $this->source->configuration();
+                $test = $this->source->entry();
 
-                expect($test)->toEqual(new MergedConfiguration(...[
-                    $configuration1->get(),
-                    $configuration2->get(),
-                    $configuration3->get(),
+                expect($test)->toEqual(new MergedConfigurationEntry(...[
+                    $entry1->get(),
+                    $entry2->get(),
+                    $entry3->get(),
                 ]));
 
             });

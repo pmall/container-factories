@@ -2,7 +2,7 @@
 
 namespace Quanta\Container\Values;
 
-final class DummyParser implements ValueParserInterface
+final class DummyValueParser implements ValueParserInterface
 {
     /**
      * The map associating a value to its parsed value.

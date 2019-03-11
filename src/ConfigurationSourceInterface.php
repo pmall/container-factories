@@ -5,9 +5,9 @@ namespace Quanta\Container;
 interface ConfigurationSourceInterface
 {
     /**
-     * Return the configuration provided by the source.
+     * Return a configuration entry.
      *
-     * @return \Quanta\Container\ConfigurationInterface
+     * @return \Quanta\Container\ConfigurationEntryInterface
      */
-    public function configuration(): ConfigurationInterface;
+    public function entry(): ConfigurationEntryInterface;
 }

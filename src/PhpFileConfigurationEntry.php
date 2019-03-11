@@ -15,7 +15,7 @@ use Quanta\Container\Factories\Factory;
 use Quanta\Container\Factories\Invokable;
 use Quanta\Container\Factories\Extension;
 
-final class PhpFileConfiguration implements ConfigurationInterface
+final class PhpFileConfigurationEntry implements ConfigurationEntryInterface
 {
     /**
      * The value factory used to parse parameters.
@@ -46,7 +46,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
     /**
      * @inheritdoc
      */
-    public function map(): ConfiguredFactoryMap
+    public function configuration(): Configuration
     {
         // ensure the file exists.
         if (! file_exists($this->path)) {
@@ -119,7 +119,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
         $passes[] = array_values($configuration['passes']);
 
         // Return the configured factory map.
-        return new ConfiguredFactoryMap(
+        return new Configuration(
             new FactoryMap(array_merge(...$factories)),
             new MergedProcessingPass(...array_merge(...$passes))
         );

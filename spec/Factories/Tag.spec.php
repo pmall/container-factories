@@ -6,6 +6,7 @@ use Psr\Container\ContainerInterface;
 
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Compiler;
+use Quanta\Container\Factories\DummyClosureCompiler;
 use Quanta\Container\Factories\CompilableFactoryInterface;
 
 describe('Tag::instance()', function () {
@@ -54,7 +55,7 @@ describe('Tag', function () {
 
             it('should return the string representation of a factory returning an empty array', function () {
 
-                $compiler = Compiler::withDummyClosureCompiler();
+                $compiler = new Compiler(new DummyClosureCompiler);
 
                 $test = (string) $this->factory->compiled($compiler);
 
@@ -107,7 +108,7 @@ EOT
 
             it('should return a string representation of the tag', function () {
 
-                $compiler = Compiler::withDummyClosureCompiler();
+                $compiler = new Compiler(new DummyClosureCompiler);
 
                 $test = (string) $this->factory->compiled($compiler);
 

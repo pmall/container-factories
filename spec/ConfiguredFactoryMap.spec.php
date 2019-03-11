@@ -2,7 +2,10 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
+use Quanta\Container\Configuration;
 use Quanta\Container\ConfiguredFactoryMap;
+use Quanta\Container\ConfigurationEntryInterface;
+use Quanta\Container\ConfigurationSourceInterface;
 use Quanta\Container\Maps\FactoryMapInterface;
 use Quanta\Container\Passes\ProcessingPassInterface;
 use Quanta\Container\Factories\Tag;
@@ -14,10 +17,18 @@ describe('ConfiguredFactoryMap', function () {
 
     beforeEach(function () {
 
+        $this->source = mock(ConfigurationSourceInterface::class);
+        $this->entry = mock(ConfigurationEntryInterface::class);
         $this->delegate = mock(FactoryMapInterface::class);
         $this->pass = mock(ProcessingPassInterface::class);
 
-        $this->map = new ConfiguredFactoryMap($this->delegate->get(), $this->pass->get());
+        $this->source->entry->returns($this->entry);
+
+        $this->entry->configuration->returns(
+            new Configuration($this->delegate->get(), $this->pass->get())
+        );
+
+        $this->map = new ConfiguredFactoryMap($this->source->get());
 
     });
 
@@ -27,33 +38,29 @@ describe('ConfiguredFactoryMap', function () {
 
     });
 
-    describe('->map()', function () {
-
-        it('should return the factory map', function () {
-
-            $test = $this->map->map();
-
-            expect($test)->toBe($this->delegate->get());
-
-        });
-
-    });
-
-    describe('->pass()', function () {
-
-        it('should return the processing pass', function () {
-
-            $test = $this->map->pass();
-
-            expect($test)->toBe($this->pass->get());
-
-        });
-
-    });
-
     describe('->factories()', function () {
 
-        it('should process the factories provided by the delegate with the processing pass', function () {
+        it('should get a configuration entry from the configuration source only once', function () {
+
+            $test = $this->map->factories();
+
+            expect($test)->toBeAn('array');
+
+            $this->source->entry->once()->called();
+
+        });
+
+        it('should get a configuration from the configuration entry only once', function () {
+
+            $test = $this->map->factories();
+
+            expect($test)->toBeAn('array');
+
+            $this->entry->configuration->once()->called();
+
+        });
+
+        it('should return an associative array of factories from the configuration', function () {
 
             $this->delegate->factories->returns([
                 'id1' => $factory1 = new Test\TestFactory('factory1'),

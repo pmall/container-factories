@@ -35,16 +35,16 @@ final class PhpFileConfigurationSource implements ConfigurationSourceInterface
     /**
      * @inheritdoc
      */
-    public function configuration(): ConfigurationInterface
+    public function entry(): ConfigurationEntryInterface
     {
-        $configurations = [];
+        $entries = [];
 
         foreach ($this->patterns as $pattern) {
             foreach (glob($pattern) as $path) {
-                $configurations[] = new PhpFileConfiguration($this->factory, $path);
+                $entries[] = new PhpFileConfigurationEntry($this->factory, $path);
             }
         }
 
-        return new MergedConfiguration(...$configurations);
+        return new MergedConfigurationEntry(...$entries);
     }
 }

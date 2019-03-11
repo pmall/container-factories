@@ -6,23 +6,10 @@ use Test\TestFactory;
 
 use Quanta\Container\Factories\Compiler;
 use Quanta\Container\Factories\CompiledFactory;
-use Quanta\Container\Factories\DummyClosureCompiler;
 use Quanta\Container\Factories\ClosureCompilerInterface;
 use Quanta\Container\Factories\CompilableFactoryInterface;
 
 require_once __DIR__ . '/../.test/classes.php';
-
-describe('Compiler::withDummyClosureCompiler()', function () {
-
-    it('should return a callable compiler with a dummy closure compiler', function () {
-
-        $test = Compiler::withDummyClosureCompiler();
-
-        expect($test)->toEqual(new Compiler(new DummyClosureCompiler));
-
-    });
-
-});
 
 describe('Compiler', function () {
 

@@ -10,49 +10,20 @@ use Quanta\Container\Factories\Alias;
 final class ConfiguredFactoryMap implements FactoryMapInterface
 {
     /**
-     * The factory map.
+     * The configuration source.
      *
-     * @var \Quanta\Container\Maps\FactoryMapInterface
+     * @var \Quanta\Container\ConfigurationSourceInterface
      */
-    private $map;
-
-    /**
-     * The processing pass.
-     *
-     * @var \Quanta\Container\Passes\ProcessingPassInterface
-     */
-    private $pass;
+    private $source;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Maps\FactoryMapInterface        $map
-     * @param \Quanta\Container\Passes\ProcessingPassInterface  $pass
+     * @param \Quanta\Container\ConfigurationSourceInterface $source
      */
-    public function __construct(FactoryMapInterface $map, ProcessingPassInterface $pass)
+    public function __construct(ConfigurationSourceInterface $source)
     {
-        $this->map = $map;
-        $this->pass = $pass;
-    }
-
-    /**
-     * Return the factory map.
-     *
-     * @return \Quanta\Container\Maps\FactoryMapInterface
-     */
-    public function map(): FactoryMapInterface
-    {
-        return $this->map;
-    }
-
-    /**
-     * Return the processing pass.
-     *
-     * @return \Quanta\Container\Passes\ProcessingPassInterface
-     */
-    public function pass(): ProcessingPassInterface
-    {
-        return $this->pass;
+        $this->source = $source;
     }
 
     /**
@@ -60,32 +31,39 @@ final class ConfiguredFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        $factories = $this->map->factories();
+        $configuration = $this->source->entry()->configuration();
+
+        $map = $configuration->map();
+        $pass = $configuration->pass();
+
+        $factories = $map->factories();
 
         $ids = array_keys($factories);
 
-        $factories+= $this->aliases(...$ids);
-        $factories+= $this->tags(...$ids);
+        $factories+= $this->aliases($pass, ...$ids);
+        $factories+= $this->tags($pass, ...$ids);
 
         foreach ($factories as $id => $factory) {
-            $factories[$id] = $this->pass->processed($id, $factory);
+            $factories[$id] = $pass->processed($id, $factory);
         }
 
         return $factories;
     }
 
     /**
-     * Return an array of aliases for the given ids.
+     * Return an array of aliases provided by the given configuration pass for
+     * the given ids.
      *
-     * @param string ...$ids
+     * @param \Quanta\Container\Passes\ProcessingPassInterface  $pass
+     * @param string                                            ...$ids
      * @return array
      */
-    private function aliases(string ...$ids): array
+    private function aliases(ProcessingPassInterface $pass, string ...$ids): array
     {
         $factories = [];
 
         foreach ($ids as $id) {
-            foreach ($this->pass->aliases($id) as $alias) {
+            foreach ($pass->aliases($id) as $alias) {
                 $factories[$alias] = new Alias($id);
             }
         }
@@ -94,16 +72,18 @@ final class ConfiguredFactoryMap implements FactoryMapInterface
     }
 
     /**
-     * Return an array of tags for the given ids.
+     * Return an array of tags provided by the given configuration pass for the
+     * given ids.
      *
-     * @param string ...$ids
+     * @param \Quanta\Container\Passes\ProcessingPassInterface  $pass
+     * @param string                                            ...$ids
      * @return array
      */
-    private function tags(string ...$ids): array
+    private function tags(ProcessingPassInterface $pass, string ...$ids): array
     {
         $factories = [];
 
-        foreach ($this->pass->tags(...$ids) as $tag => $ids) {
+        foreach ($pass->tags(...$ids) as $tag => $ids) {
             $factories[$tag] = new Tag(...$ids);
         }
 

@@ -1,17 +1,17 @@
 <?php
 
 use Quanta\Container\Values\Value;
-use Quanta\Container\Values\DummyParser;
 use Quanta\Container\Values\ParsedValue;
 use Quanta\Container\Values\ValueFactory;
 use Quanta\Container\Values\ParsingFailure;
+use Quanta\Container\Values\DummyValueParser;
 use Quanta\Container\Values\ValueParserInterface;
 
-describe('DummyParser', function () {
+describe('DummyValueParser', function () {
 
     beforeEach(function () {
 
-        $this->parser = new DummyParser([
+        $this->parser = new DummyValueParser([
             'k1' => 'value1',
             'k2' => 'value2',
             'k3' => 'value3',
