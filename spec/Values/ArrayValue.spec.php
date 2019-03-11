@@ -77,48 +77,107 @@ describe('ArrayValue', function () {
 
             context('when the array has no string keys', function () {
 
-                beforeEach(function () {
+                context('when the keys are a range from 0 to last index', function () {
 
-                    $this->value = new ArrayValue([
-                        $this->value1->get(),
-                        $this->value2->get(),
-                        $this->value3->get(),
-                    ]);
+                    beforeEach(function () {
 
-                });
-
-                it('should implement ValueInterface', function () {
-
-                    expect($this->value)->toBeAnInstanceOf(ValueInterface::class);
-
-                });
-
-                describe('->value()', function () {
-
-                    it('should return the array of values returned by the ValueInterface implementations ->value() methods', function () {
-
-                        $test = $this->value->value($this->container->get());
-
-                        expect($test)->toEqual(['value1', 'value2', 'value3']);
+                        $this->value = new ArrayValue([
+                            0 => $this->value1->get(),
+                            1 => $this->value2->get(),
+                            2 => $this->value3->get(),
+                        ]);
 
                     });
 
-                });
+                    it('should implement ValueInterface', function () {
 
-                describe('->str()', function () {
+                        expect($this->value)->toBeAnInstanceOf(ValueInterface::class);
 
-                    it('should return a string representation of the array of values returned by the ValueInterface implementations ->str() methods', function () {
+                    });
 
-                        $test = $this->value->str('container');
+                    describe('->value()', function () {
 
-                        expect($test)->toEqual(<<<'EOT'
+                        it('should return the array of values returned by the ValueInterface implementations ->value() methods', function () {
+
+                            $test = $this->value->value($this->container->get());
+
+                            expect($test)->toEqual(['value1', 'value2', 'value3']);
+
+                        });
+
+                    });
+
+                    describe('->str()', function () {
+
+                        it('should return a string representation of the array of values returned by the ValueInterface implementations ->str() methods', function () {
+
+                            $test = $this->value->str('container');
+
+                            expect($test)->toEqual(<<<'EOT'
 [
     'value1',
     'value2',
     'value3',
 ]
 EOT
-                        );
+                            );
+
+                        });
+
+                    });
+
+                });
+
+                context('when the keys are not a range from 0 to last index', function () {
+
+                    beforeEach(function () {
+
+                        $this->value = new ArrayValue([
+                            1 => $this->value1->get(),
+                            2 => $this->value2->get(),
+                            3 => $this->value3->get(),
+                        ]);
+
+                    });
+
+                    it('should implement ValueInterface', function () {
+
+                        expect($this->value)->toBeAnInstanceOf(ValueInterface::class);
+
+                    });
+
+                    describe('->value()', function () {
+
+                        it('should return the array of values returned by the ValueInterface implementations ->value() methods', function () {
+
+                            $test = $this->value->value($this->container->get());
+
+                            expect($test)->toBeAn('array');
+                            expect($test)->toHaveLength(3);
+                            expect($test[1])->toEqual('value1');
+                            expect($test[2])->toEqual('value2');
+                            expect($test[3])->toEqual('value3');
+
+                        });
+
+                    });
+
+                    describe('->str()', function () {
+
+                        it('should return a string representation of the array of values returned by the ValueInterface implementations ->str() methods', function () {
+
+                            $test = $this->value->str('container');
+
+                            expect($test)->toEqual(<<<'EOT'
+[
+    1 => 'value1',
+    2 => 'value2',
+    3 => 'value3',
+]
+EOT
+                            );
+
+                        });
 
                     });
 
