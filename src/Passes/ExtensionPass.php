@@ -21,7 +21,7 @@ final class ExtensionPass implements ProcessingPassInterface
     private $extension;
 
     /**
-     * Return a new ExtensionPass with the given id and extension.
+     * Return a new ExtensionPass from the given id and extension.
      *
      * @param string    $id
      * @param callable  $extension

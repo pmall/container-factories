@@ -19,7 +19,7 @@ final class TaggingPass implements ProcessingPassInterface
     private $predicate;
 
     /**
-     * Return a new TaggingPass with the given id and predicate.
+     * Return a new TaggingPass from the given id and predicate.
      *
      * @param string    $id
      * @param callable  $predicate

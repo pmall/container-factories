@@ -12,7 +12,7 @@ final class ValueFactory
     private $parsers;
 
     /**
-     * Return a new ValueFactory with the default value parsers.
+     * Return a new ValueFactory using the default value parsers.
      *
      * @return \Quanta\Container\Values\ValueFactory
      */
