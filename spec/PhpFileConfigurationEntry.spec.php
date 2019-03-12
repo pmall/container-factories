@@ -21,6 +21,20 @@ use Quanta\Container\Factories\Extension;
 
 require_once __DIR__ . '/.test/classes.php';
 
+describe('PhpFileConfigurationEntry::instance()', function () {
+
+    it('should return a new PhpFileConfigurationEntry with the given value factory and path', function () {
+
+        $factory = new ValueFactory;
+
+        $test = PhpFileConfigurationEntry::instance($factory, 'path');
+
+        expect($test)->toEqual(new PhpFileConfigurationEntry($factory, 'path'));
+
+    });
+
+});
+
 describe('PhpFileConfigurationEntry', function () {
 
     beforeEach(function () {

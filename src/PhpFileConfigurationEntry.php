@@ -32,6 +32,19 @@ final class PhpFileConfigurationEntry implements ConfigurationEntryInterface
     private $path;
 
     /**
+     * Return a new PhpFileConfigurationEntry from the given value factory and
+     * path.
+     *
+     * @param \Quanta\Container\Values\ValueFactory $factory
+     * @param string                                $path
+     * @return \Quanta\Container\PhpFileConfigurationEntry
+     */
+    public static function instance(ValueFactory $factory, string $path): PhpFileConfigurationEntry
+    {
+        return new PhpFileConfigurationEntry($factory, $path);
+    }
+
+    /**
      * Constructor.
      *
      * @param \Quanta\Container\Values\ValueFactory $factory
