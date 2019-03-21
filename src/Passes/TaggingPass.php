@@ -25,7 +25,7 @@ final class TaggingPass implements ProcessingPassInterface
      * @param callable  $predicate
      * @return \Quanta\Container\Passes\TaggingPass
      */
-    public static function instance(string $id, callable $predicate): TaggingPass
+    public static function instance(string $id, callable $predicate): self
     {
         return new self($id, $predicate);
     }

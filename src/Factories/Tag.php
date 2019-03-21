@@ -21,7 +21,7 @@ final class Tag implements CompilableFactoryInterface
      * @param string ...$ids
      * @return \Quanta\Container\Factories\Tag
      */
-    public static function instance(string ...$ids): Tag
+    public static function instance(string ...$ids): self
     {
         return new self(...$ids);
     }

@@ -27,7 +27,7 @@ final class Extension implements CompilableFactoryInterface
      * @param callable $extension
      * @return \Quanta\Container\Factories\Extension
      */
-    public static function instance(callable $factory, callable $extension): Extension
+    public static function instance(callable $factory, callable $extension): self
     {
         return new self($factory, $extension);
     }

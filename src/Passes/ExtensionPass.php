@@ -27,7 +27,7 @@ final class ExtensionPass implements ProcessingPassInterface
      * @param callable  $extension
      * @return \Quanta\Container\Passes\ExtensionPass
      */
-    public static function instance(string $id, callable $extension): ExtensionPass
+    public static function instance(string $id, callable $extension): self
     {
         return new self($id, $extension);
     }

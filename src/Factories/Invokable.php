@@ -19,7 +19,7 @@ final class Invokable implements CompilableFactoryInterface
      * @param string $class
      * @return \Quanta\Container\Factories\Invokable
      */
-    public static function instance(string $class): Invokable
+    public static function instance(string $class): self
     {
         return new self($class);
     }

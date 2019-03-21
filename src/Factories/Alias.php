@@ -19,7 +19,7 @@ final class Alias implements CompilableFactoryInterface
      * @param string $id
      * @return \Quanta\Container\Factories\Alias
      */
-    public static function instance(string $id): Alias
+    public static function instance(string $id): self
     {
         return new self($id);
     }
