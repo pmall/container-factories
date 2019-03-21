@@ -31,7 +31,7 @@ final class ConfiguredFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        $configuration = $this->source->entry()->configuration();
+        $configuration = $this->source->configuration()->entry();
 
         $map = $configuration->map();
         $pass = $configuration->pass();

@@ -4,7 +4,7 @@ namespace Quanta\Container;
 
 use Quanta\Container\Values\ValueFactory;
 
-final class PhpFileConfigurationSource implements ConfigurationSourceInterface
+final class PhpFileCollection implements ConfigurationSourceInterface
 {
     /**
      * The value factory used to parse parameters.
@@ -35,16 +35,16 @@ final class PhpFileConfigurationSource implements ConfigurationSourceInterface
     /**
      * @inheritdoc
      */
-    public function entry(): ConfigurationEntryInterface
+    public function configuration(): ConfigurationInterface
     {
         $entries = [];
 
         foreach ($this->patterns as $pattern) {
             foreach (glob($pattern) as $path) {
-                $entries[] = new PhpFileConfigurationEntry($this->factory, $path);
+                $entries[] = new PhpFileConfiguration($this->factory, $path);
             }
         }
 
-        return new MergedConfigurationEntry(...$entries);
+        return new MergedConfiguration(...$entries);
     }
 }

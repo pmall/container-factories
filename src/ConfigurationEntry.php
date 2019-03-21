@@ -2,30 +2,54 @@
 
 namespace Quanta\Container;
 
-final class ConfigurationEntry implements ConfigurationEntryInterface
+use Quanta\Container\Maps\FactoryMapInterface;
+use Quanta\Container\Passes\ProcessingPassInterface;
+
+final class ConfigurationEntry
 {
     /**
-     * The configuration to provide.
+     * The factory map.
      *
-     * @var \Quanta\Container\Configuration
+     * @var \Quanta\Container\Maps\FactoryMapInterface
      */
-    private $configuration;
+    private $map;
+
+    /**
+     * The processing pass.
+     *
+     * @var \Quanta\Container\Passes\ProcessingPassInterface
+     */
+    private $pass;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Configuration $configuration
+     * @param \Quanta\Container\Maps\FactoryMapInterface        $map
+     * @param \Quanta\Container\Passes\ProcessingPassInterface  $pass
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(FactoryMapInterface $map, ProcessingPassInterface $pass)
     {
-        $this->configuration = $configuration;
+        $this->map = $map;
+        $this->pass = $pass;
     }
 
     /**
-     * @inheritdoc
+     * Return the factory map.
+     *
+     * @return \Quanta\Container\Maps\FactoryMapInterface
      */
-    public function configuration(): Configuration
+    public function map(): FactoryMapInterface
     {
-        return $this->configuration;
+        return $this->map;
+    }
+
+    /**
+     * Return the processing pass.
+     *
+     * @return \Quanta\Container\Passes\ProcessingPassInterface
+     */
+    public function pass(): ProcessingPassInterface
+    {
+        return $this->pass;
     }
 }

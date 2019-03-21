@@ -5,27 +5,27 @@ namespace Quanta\Container;
 final class ConfigurationSource implements ConfigurationSourceInterface
 {
     /**
-     * The configuration entry to provide.
+     * The configuration to provide.
      *
-     * @var \Quanta\Container\ConfigurationEntryInterface
+     * @var \Quanta\Container\ConfigurationInterface
      */
-    private $entry;
+    private $configuration;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\ConfigurationEntryInterface $entry
+     * @param \Quanta\Container\ConfigurationInterface $configuration
      */
-    public function __construct(ConfigurationEntryInterface $entry)
+    public function __construct(ConfigurationInterface $configuration)
     {
-        $this->entry = $entry;
+        $this->configuration = $configuration;
     }
 
     /**
      * @inheritdoc
      */
-    public function entry(): ConfigurationEntryInterface
+    public function configuration(): ConfigurationInterface
     {
-        return $this->entry;
+        return $this->configuration;
     }
 }

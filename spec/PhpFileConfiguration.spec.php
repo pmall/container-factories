@@ -2,9 +2,9 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\Configuration;
-use Quanta\Container\PhpFileConfigurationEntry;
-use Quanta\Container\ConfigurationEntryInterface;
+use Quanta\Container\ConfigurationEntry;
+use Quanta\Container\PhpFileConfiguration;
+use Quanta\Container\ConfigurationInterface;
 use Quanta\Container\Maps\FactoryMap;
 use Quanta\Container\Values\Value;
 use Quanta\Container\Values\ValueFactory;
@@ -21,21 +21,21 @@ use Quanta\Container\Factories\Extension;
 
 require_once __DIR__ . '/.test/classes.php';
 
-describe('PhpFileConfigurationEntry::instance()', function () {
+describe('PhpFileConfiguration::instance()', function () {
 
-    it('should return a new PhpFileConfigurationEntry with the given value factory and path', function () {
+    it('should return a new PhpFileConfiguration with the given value factory and path', function () {
 
         $factory = new ValueFactory;
 
-        $test = PhpFileConfigurationEntry::instance($factory, 'path');
+        $test = PhpFileConfiguration::instance($factory, 'path');
 
-        expect($test)->toEqual(new PhpFileConfigurationEntry($factory, 'path'));
+        expect($test)->toEqual(new PhpFileConfiguration($factory, 'path'));
 
     });
 
 });
 
-describe('PhpFileConfigurationEntry', function () {
+describe('PhpFileConfiguration', function () {
 
     beforeEach(function () {
 
@@ -48,19 +48,19 @@ describe('PhpFileConfigurationEntry', function () {
 
         $this->path = tempnam(sys_get_temp_dir(), 'quanta');
 
-        $this->entry = new PhpFileConfigurationEntry($this->factory, $this->path);
+        $this->configuration = new PhpFileConfiguration($this->factory, $this->path);
 
         file_put_contents($this->path, '');
 
     });
 
-    it('should implement ConfigurationEntryInterface', function () {
+    it('should implement ConfigurationInterface', function () {
 
-        expect($this->entry)->toBeAnInstanceOf(ConfigurationEntryInterface::class);
+        expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
     });
 
-    describe('->configuration()', function () {
+    describe('->entry()', function () {
 
         context('when the file does not return an array', function () {
 
@@ -68,7 +68,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                 copy(__DIR__ . '/.test/config/not_array.php', $this->path);
 
-                expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
             });
 
@@ -78,14 +78,14 @@ describe('PhpFileConfigurationEntry', function () {
 
             context('when the configuration is valid', function () {
 
-                it('should return a Configuration', function () {
+                it('should return a configuration entry', function () {
 
                     copy(__DIR__ . '/.test/config/valid.php', $this->path);
 
-                    $test = $this->entry->configuration();
+                    $test = $this->configuration->entry();
 
                     expect($test)->toEqual(
-                        new Configuration(
+                        new ConfigurationEntry(
                             new FactoryMap([
                                 'id1' => new Factory(new Value('parsed1')),
                                 'id2' => new Alias('alias1'),
@@ -117,7 +117,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/parameters/not_array.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -129,7 +129,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/aliases/not_array.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -141,7 +141,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/aliases/not_array_of_strings.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -153,7 +153,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/invokables/not_array.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -165,7 +165,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/invokables/not_array_of_strings.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -177,7 +177,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/factories/not_array.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -189,7 +189,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/factories/not_array_of_callables.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -201,7 +201,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/tags/not_array.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -213,7 +213,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/tags/not_array_of_arrays.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -225,7 +225,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/tags/not_array_of_arrays_of_strings.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -237,7 +237,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/mappers/not_array.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -249,7 +249,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/mappers/not_array_of_strings.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -261,7 +261,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/extensions/not_array.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -273,7 +273,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/extensions/not_array_of_callables.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -285,7 +285,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/passes/not_array.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 
@@ -297,7 +297,7 @@ describe('PhpFileConfigurationEntry', function () {
 
                     copy(__DIR__ . '/.test/config/passes/not_array_of_passes.php', $this->path);
 
-                    expect([$this->entry, 'configuration'])->toThrow(new UnexpectedValueException);
+                    expect([$this->configuration, 'entry'])->toThrow(new UnexpectedValueException);
 
                 });
 

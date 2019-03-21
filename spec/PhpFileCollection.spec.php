@@ -1,12 +1,12 @@
 <?php
 
-use Quanta\Container\MergedConfigurationEntry;
-use Quanta\Container\PhpFileConfigurationEntry;
-use Quanta\Container\PhpFileConfigurationSource;
+use Quanta\Container\PhpFileCollection;
+use Quanta\Container\MergedConfiguration;
+use Quanta\Container\PhpFileConfiguration;
 use Quanta\Container\ConfigurationSourceInterface;
 use Quanta\Container\Values\ValueFactory;
 
-describe('PhpFileConfigurationSource', function () {
+describe('PhpFileCollection', function () {
 
     beforeEach(function () {
 
@@ -18,7 +18,7 @@ describe('PhpFileConfigurationSource', function () {
 
         beforeEach(function () {
 
-            $this->source = new PhpFileConfigurationSource($this->factory);
+            $this->source = new PhpFileCollection($this->factory);
 
         });
 
@@ -28,13 +28,13 @@ describe('PhpFileConfigurationSource', function () {
 
         });
 
-        describe('->entry()', function () {
+        describe('->configuration()', function () {
 
-            it('should return an empty MergedConfigurationEntry', function () {
+            it('should return an empty MergedConfiguration', function () {
 
-                $test = $this->source->entry();
+                $test = $this->source->configuration();
 
-                expect($test)->toEqual(new MergedConfigurationEntry);
+                expect($test)->toEqual(new MergedConfiguration);
 
             });
 
@@ -46,7 +46,7 @@ describe('PhpFileConfigurationSource', function () {
 
         beforeEach(function () {
 
-            $this->source = new PhpFileConfigurationSource($this->factory, ...[
+            $this->source = new PhpFileCollection($this->factory, ...[
                 __DIR__ . '/.test/config/*.php',
                 __DIR__ . '/.test/config/factories/*.php',
                 __DIR__ . '/.test/config/extensions/*.php',
@@ -60,30 +60,30 @@ describe('PhpFileConfigurationSource', function () {
 
         });
 
-        describe('->entry()', function () {
+        describe('->configuration()', function () {
 
             it('should create php file configuration entries from the files matched by the patterns and merge them', function () {
 
-                $test = $this->source->entry();
+                $test = $this->source->configuration();
 
                 expect($test)->toEqual(
-                    new MergedConfigurationEntry(...[
-                        new PhpFileConfigurationEntry($this->factory, ...[
+                    new MergedConfiguration(...[
+                        new PhpFileConfiguration($this->factory, ...[
                             __DIR__ . '/.test/config/not_array.php',
                         ]),
-                        new PhpFileConfigurationEntry($this->factory, ...[
+                        new PhpFileConfiguration($this->factory, ...[
                             __DIR__ . '/.test/config/valid.php',
                         ]),
-                        new PhpFileConfigurationEntry($this->factory, ...[
+                        new PhpFileConfiguration($this->factory, ...[
                             __DIR__ . '/.test/config/factories/not_array.php',
                         ]),
-                        new PhpFileConfigurationEntry($this->factory, ...[
+                        new PhpFileConfiguration($this->factory, ...[
                             __DIR__ . '/.test/config/factories/not_array_of_callables.php',
                         ]),
-                        new PhpFileConfigurationEntry($this->factory, ...[
+                        new PhpFileConfiguration($this->factory, ...[
                             __DIR__ . '/.test/config/extensions/not_array.php',
                         ]),
-                        new PhpFileConfigurationEntry($this->factory, ...[
+                        new PhpFileConfiguration($this->factory, ...[
                             __DIR__ . '/.test/config/extensions/not_array_of_callables.php',
                         ]),
                     ])

@@ -2,9 +2,7 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\Configuration;
 use Quanta\Container\ConfigurationEntry;
-use Quanta\Container\ConfigurationEntryInterface;
 use Quanta\Container\Maps\FactoryMapInterface;
 use Quanta\Container\Passes\ProcessingPassInterface;
 
@@ -12,28 +10,35 @@ describe('ConfigurationEntry', function () {
 
     beforeEach(function () {
 
-        $this->configuration = new Configuration(
-            mock(FactoryMapInterface::class)->get(),
-            mock(ProcessingPassInterface::class)->get()
+        $this->map = mock(FactoryMapInterface::class);
+        $this->pass = mock(ProcessingPassInterface::class);
+
+        $this->configuration = new ConfigurationEntry(
+            $this->map->get(),
+            $this->pass->get()
         );
 
-        $this->entry = new ConfigurationEntry($this->configuration);
+    });
+
+    describe('->map()', function () {
+
+        it('should return the factory map', function () {
+
+            $test = $this->configuration->map();
+
+            expect($test)->toBe($this->map->get());
+
+        });
 
     });
 
-    it('should implement ConfigurationEntryInterface', function () {
+    describe('->pass()', function () {
 
-        expect($this->entry)->toBeAnInstanceOf(ConfigurationEntryInterface::class);
+        it('should return the processing pass', function () {
 
-    });
+            $test = $this->configuration->pass();
 
-    describe('->configuration()', function () {
-
-        it('should return the configuration', function () {
-
-            $test = $this->entry->configuration();
-
-            expect($test)->toBe($this->configuration);
+            expect($test)->toBe($this->pass->get());
 
         });
 

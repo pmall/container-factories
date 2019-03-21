@@ -2,9 +2,9 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\Configuration;
+use Quanta\Container\ConfigurationEntry;
 use Quanta\Container\ConfiguredFactoryMap;
-use Quanta\Container\ConfigurationEntryInterface;
+use Quanta\Container\ConfigurationInterface;
 use Quanta\Container\ConfigurationSourceInterface;
 use Quanta\Container\Maps\FactoryMapInterface;
 use Quanta\Container\Passes\ProcessingPassInterface;
@@ -18,14 +18,14 @@ describe('ConfiguredFactoryMap', function () {
     beforeEach(function () {
 
         $this->source = mock(ConfigurationSourceInterface::class);
-        $this->entry = mock(ConfigurationEntryInterface::class);
+        $this->configuration = mock(ConfigurationInterface::class);
         $this->delegate = mock(FactoryMapInterface::class);
         $this->pass = mock(ProcessingPassInterface::class);
 
-        $this->source->entry->returns($this->entry);
+        $this->source->configuration->returns($this->configuration);
 
-        $this->entry->configuration->returns(
-            new Configuration($this->delegate->get(), $this->pass->get())
+        $this->configuration->entry->returns(
+            new ConfigurationEntry($this->delegate->get(), $this->pass->get())
         );
 
         $this->map = new ConfiguredFactoryMap($this->source->get());
@@ -46,17 +46,17 @@ describe('ConfiguredFactoryMap', function () {
 
             expect($test)->toBeAn('array');
 
-            $this->source->entry->once()->called();
+            $this->source->configuration->once()->called();
 
         });
 
-        it('should get a configuration from the configuration entry only once', function () {
+        it('should get a configuration entry from the configuration only once', function () {
 
             $test = $this->map->factories();
 
             expect($test)->toBeAn('array');
 
-            $this->entry->configuration->once()->called();
+            $this->configuration->entry->once()->called();
 
         });
 

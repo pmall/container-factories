@@ -15,7 +15,7 @@ use Quanta\Container\Factories\Factory;
 use Quanta\Container\Factories\Invokable;
 use Quanta\Container\Factories\Extension;
 
-final class PhpFileConfigurationEntry implements ConfigurationEntryInterface
+final class PhpFileConfiguration implements ConfigurationInterface
 {
     /**
      * The value factory used to parse parameters.
@@ -32,16 +32,15 @@ final class PhpFileConfigurationEntry implements ConfigurationEntryInterface
     private $path;
 
     /**
-     * Return a new PhpFileConfigurationEntry from the given value factory and
-     * path.
+     * Return a new PhpFileConfiguration from the given value factory and path.
      *
      * @param \Quanta\Container\Values\ValueFactory $factory
      * @param string                                $path
-     * @return \Quanta\Container\PhpFileConfigurationEntry
+     * @return \Quanta\Container\PhpFileConfiguration
      */
-    public static function instance(ValueFactory $factory, string $path): PhpFileConfigurationEntry
+    public static function instance(ValueFactory $factory, string $path): self
     {
-        return new PhpFileConfigurationEntry($factory, $path);
+        return new self($factory, $path);
     }
 
     /**
@@ -59,7 +58,7 @@ final class PhpFileConfigurationEntry implements ConfigurationEntryInterface
     /**
      * @inheritdoc
      */
-    public function configuration(): Configuration
+    public function entry(): ConfigurationEntry
     {
         // ensure the file exists.
         if (! file_exists($this->path)) {
@@ -132,7 +131,7 @@ final class PhpFileConfigurationEntry implements ConfigurationEntryInterface
         $passes[] = array_values($configuration['passes']);
 
         // Return the configured factory map.
-        return new Configuration(
+        return new ConfigurationEntry(
             new FactoryMap(array_merge(...$factories)),
             new MergedProcessingPass(...array_merge(...$passes))
         );
