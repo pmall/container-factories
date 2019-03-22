@@ -73,7 +73,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
         // ensure the file returns an array.
         if (! is_array($contents)) {
             throw new \UnexpectedValueException(
-                vsprintf('PHP configuration file must return an array, %s returned (see %s)', [
+                vsprintf('PHP configuration file must return an array, %s returned (%s)', [
                     gettype($contents),
                     realpath($this->path),
                 ])
@@ -94,7 +94,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
 
         if (! $result->isValid()) {
             throw new \UnexpectedValueException(
-                vsprintf('%s (see %s)', [
+                vsprintf('%s (%s)', [
                     $result->message()->source('configuration array'),
                     realpath($this->path),
                 ])
