@@ -103,11 +103,8 @@ final class PhpFileConfiguration implements ConfigurationInterface
 
         $configuration = $result->sanitized();
 
-        // convert parameters into container values using the value factory.
-        $values = array_map($this->factory, $configuration['parameters']);
-
         // build factories.
-        $factories[] = array_map([Factory::class, 'instance'], $values);
+        $factories[] = Utils::factories($this->factory, $configuration['parameters']);
         $factories[] = array_map([Alias::class, 'instance'], $configuration['aliases']);
         $factories[] = array_map([Invokable::class, 'instance'], $configuration['invokables']);
         $factories[] = $configuration['factories'];
