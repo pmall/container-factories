@@ -1,12 +1,12 @@
 <?php
 
-use Quanta\Container\PhpFileCollection;
 use Quanta\Container\MergedConfiguration;
 use Quanta\Container\PhpFileConfiguration;
+use Quanta\Container\PhpFileConfigurationSource;
 use Quanta\Container\ConfigurationSourceInterface;
 use Quanta\Container\Values\ValueFactory;
 
-describe('PhpFileCollection', function () {
+describe('PhpFileConfigurationSource', function () {
 
     beforeEach(function () {
 
@@ -18,7 +18,7 @@ describe('PhpFileCollection', function () {
 
         beforeEach(function () {
 
-            $this->source = new PhpFileCollection($this->factory);
+            $this->source = new PhpFileConfigurationSource($this->factory);
 
         });
 
@@ -46,7 +46,7 @@ describe('PhpFileCollection', function () {
 
         beforeEach(function () {
 
-            $this->source = new PhpFileCollection($this->factory, ...[
+            $this->source = new PhpFileConfigurationSource($this->factory, ...[
                 __DIR__ . '/.test/config/*.php',
                 __DIR__ . '/.test/config/factories/*.php',
                 __DIR__ . '/.test/config/extensions/*.php',

@@ -4,7 +4,7 @@ namespace Quanta\Container;
 
 use Quanta\Container\Values\ValueFactory;
 
-final class PhpFileCollection implements ConfigurationSourceInterface
+final class PhpFileConfigurationSource implements ConfigurationSourceInterface
 {
     /**
      * The value factory used to parse parameters.
