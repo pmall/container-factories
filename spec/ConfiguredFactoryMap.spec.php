@@ -2,14 +2,14 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\ConfigurationEntry;
+use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\ConfiguredFactoryMap;
-use Quanta\Container\ConfigurationInterface;
-use Quanta\Container\ConfigurationSourceInterface;
-use Quanta\Container\Maps\FactoryMapInterface;
-use Quanta\Container\Passes\ProcessingPassInterface;
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
+use Quanta\Container\Configuration\ConfigurationEntry;
+use Quanta\Container\Configuration\ConfigurationInterface;
+use Quanta\Container\Configuration\ConfigurationSourceInterface;
+use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
 require_once __DIR__ . '/.test/classes.php';
 

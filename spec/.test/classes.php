@@ -4,6 +4,8 @@ namespace Test;
 
 use Psr\Container\ContainerInterface;
 
+use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
+
 interface TestInterface1
 {
     //
@@ -74,7 +76,7 @@ final class TestInvokable
     }
 }
 
-final class TestProcessingPass implements \Quanta\Container\Passes\ProcessingPassInterface
+final class TestProcessingPass implements ProcessingPassInterface
 {
     private $name;
 

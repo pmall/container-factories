@@ -2,24 +2,24 @@
 
 namespace Quanta\Container;
 
-use Quanta\Container\Maps\FactoryMapInterface;
-use Quanta\Container\Passes\ProcessingPassInterface;
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
+use Quanta\Container\Configuration\ConfigurationSourceInterface;
+use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
 final class ConfiguredFactoryMap implements FactoryMapInterface
 {
     /**
      * The configuration source.
      *
-     * @var \Quanta\Container\ConfigurationSourceInterface
+     * @var \Quanta\Container\Configuration\ConfigurationSourceInterface
      */
     private $source;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\ConfigurationSourceInterface $source
+     * @param \Quanta\Container\Configuration\ConfigurationSourceInterface $source
      */
     public function __construct(ConfigurationSourceInterface $source)
     {
@@ -54,8 +54,8 @@ final class ConfiguredFactoryMap implements FactoryMapInterface
      * Return an array of aliases provided by the given configuration pass for
      * the given ids.
      *
-     * @param \Quanta\Container\Passes\ProcessingPassInterface  $pass
-     * @param string                                            ...$ids
+     * @param \Quanta\Container\Configuration\Passes\ProcessingPassInterface    $pass
+     * @param string                                                            ...$ids
      * @return array
      */
     private function aliases(ProcessingPassInterface $pass, string ...$ids): array
@@ -75,8 +75,8 @@ final class ConfiguredFactoryMap implements FactoryMapInterface
      * Return an array of tags provided by the given configuration pass for the
      * given ids.
      *
-     * @param \Quanta\Container\Passes\ProcessingPassInterface  $pass
-     * @param string                                            ...$ids
+     * @param \Quanta\Container\Configuration\Passes\ProcessingPassInterface    $pass
+     * @param string                                                            ...$ids
      * @return array
      */
     private function tags(ProcessingPassInterface $pass, string ...$ids): array
