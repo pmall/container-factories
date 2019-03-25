@@ -33,25 +33,13 @@ describe('InterfaceAliasingPass', function () {
 
         });
 
-        context('when the given id is an interface name', function () {
-
-            it('should return an empty array', function () {
-
-                $test = $this->pass->aliases(Test\TestInterface1::class);
-
-                expect($test)->toEqual([]);
-
-            });
-
-        });
-
         context('when the given id is a class name', function () {
 
-            context('when the class with the given name does not implement any interface', function () {
+            context('when the given id is in fact an interface name', function () {
 
                 it('should return an empty array', function () {
 
-                    $test = $this->pass->aliases(StdClass::class);
+                    $test = $this->pass->aliases(Test\TestInterface1::class);
 
                     expect($test)->toEqual([]);
 
@@ -59,17 +47,50 @@ describe('InterfaceAliasingPass', function () {
 
             });
 
-            context('when the class with the given name implements at least one interface', function () {
+            context('when the given id is actually a class name', function () {
 
-                it('should return the names of the interfaces implemented by the class with he given name', function () {
+                context('when the class with the given name is built in', function () {
 
-                    $test = $this->pass->aliases(Test\TestClass::class);
+                    it('should return an empty array', function () {
 
-                    expect($test)->toEqual([
-                        Test\TestInterface1::class,
-                        Test\TestInterface2::class,
-                        Test\TestInterface3::class,
-                    ]);
+                        // ArrayIterator implements many interfaces.
+                        $test = $this->pass->aliases(ArrayIterator::class);
+
+                        expect($test)->toEqual([]);
+
+                    });
+
+                });
+
+                context('when the class with the given name is user defined', function () {
+
+                    context('when the class does not implement any interface', function () {
+
+                        it('should return an empty array', function () {
+
+                            $test = $this->pass->aliases(TestClassWithNoInterface::class);
+
+                            expect($test)->toEqual([]);
+
+                        });
+
+                    });
+
+                    context('when the class implements at least one interface', function () {
+
+                        it('should return the names of the interfaces implemented by the class', function () {
+
+                            $test = $this->pass->aliases(Test\TestClass::class);
+
+                            expect($test)->toEqual([
+                                Test\TestInterface1::class,
+                                Test\TestInterface2::class,
+                                Test\TestInterface3::class,
+                            ]);
+
+                        });
+
+                    });
 
                 });
 

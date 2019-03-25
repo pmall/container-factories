@@ -9,9 +9,17 @@ final class InterfaceAliasingPass implements ProcessingPassInterface
      */
     public function aliases(string $id): array
     {
-        return class_exists($id) && ($interfaces = class_implements($id, true))
-            ? array_values($interfaces)
-            : [];
+        try {
+            $reflection = new \ReflectionClass($id);
+
+            return ! $reflection->isInterface() && $reflection->isUserDefined()
+                ? $reflection->getInterfaceNames()
+                : [];
+        }
+
+        catch (\ReflectionException $e) {
+            return [];
+        }
     }
 
     /**

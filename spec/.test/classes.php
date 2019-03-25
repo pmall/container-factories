@@ -31,6 +31,11 @@ final class TestClass implements TestInterface1, TestInterface2, TestInterface3
     }
 }
 
+final class TestClassWithNoInterface
+{
+    //
+}
+
 final class TestFactory
 {
     private $name;
