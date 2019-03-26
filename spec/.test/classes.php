@@ -6,6 +6,16 @@ use Psr\Container\ContainerInterface;
 
 use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
+interface TestInterface
+{
+    //
+}
+
+interface TestChildInterface extends TestInterface
+{
+
+}
+
 interface TestInterface1
 {
     //
@@ -21,7 +31,12 @@ interface TestInterface3
     //
 }
 
-final class TestClass implements TestInterface1, TestInterface2, TestInterface3
+final class TestClassWithNoInterface
+{
+    //
+}
+
+final class TestClass implements \IteratorAggregate, TestInterface1, TestInterface2, TestInterface3
 {
     private $xs;
 
@@ -29,11 +44,11 @@ final class TestClass implements TestInterface1, TestInterface2, TestInterface3
     {
         $this->xs = $xs;
     }
-}
 
-final class TestClassWithNoInterface
-{
-    //
+    public function getIterator()
+    {
+        //
+    }
 }
 
 final class TestFactory
