@@ -1,12 +1,12 @@
 <?php
 
 use Quanta\Container\Values\ValueFactory;
-use Quanta\Container\Configuration\MergedConfiguration;
 use Quanta\Container\Configuration\PhpFileConfiguration;
-use Quanta\Container\Configuration\PhpFileConfigurationSource;
-use Quanta\Container\Configuration\ConfigurationSourceInterface;
+use Quanta\Container\Configuration\ConfigurationInterface;
+use Quanta\Container\Configuration\ArrayConfigurationUnit;
+use Quanta\Container\Configuration\MergedConfigurationUnit;
 
-describe('PhpFileConfigurationSource', function () {
+describe('PhpFileConfiguration', function () {
 
     beforeEach(function () {
 
@@ -18,23 +18,23 @@ describe('PhpFileConfigurationSource', function () {
 
         beforeEach(function () {
 
-            $this->source = new PhpFileConfigurationSource($this->factory);
+            $this->configuration = new PhpFileConfiguration($this->factory);
 
         });
 
-        it('should implement ConfigurationSourceInterface', function () {
+        it('should implement ConfigurationInterface', function () {
 
-            expect($this->source)->toBeAnInstanceOf(ConfigurationSourceInterface::class);
+            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
         });
 
-        describe('->configuration()', function () {
+        describe('->unit()', function () {
 
-            it('should return an empty MergedConfiguration', function () {
+            it('should return an empty merged configuration unit', function () {
 
-                $test = $this->source->configuration();
+                $test = $this->configuration->unit();
 
-                expect($test)->toEqual(new MergedConfiguration);
+                expect($test)->toEqual(new MergedConfigurationUnit);
 
             });
 
@@ -44,50 +44,76 @@ describe('PhpFileConfigurationSource', function () {
 
     context('when there is at least one pattern', function () {
 
-        beforeEach(function () {
+        context('when all the files matching by the patterns are returning arrays', function () {
 
-            $this->source = new PhpFileConfigurationSource($this->factory, ...[
-                __DIR__ . '/../.test/config/*.php',
-                __DIR__ . '/../.test/config/factories/*.php',
-                __DIR__ . '/../.test/config/extensions/*.php',
-            ]);
+            beforeEach(function () {
+
+                $this->configuration = new PhpFileConfiguration($this->factory, ...[
+                    __DIR__ . '/../.test/config1/test*.valid.php',
+                    __DIR__ . '/../.test/config2/test*.valid.php',
+                ]);
+
+            });
+
+            it('should implement ConfigurationInterface', function () {
+
+                expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
+
+            });
+
+            describe('->unit()', function () {
+
+                it('should return a merged configuration unit from the files', function () {
+
+                    $test = $this->configuration->unit();
+
+                    expect($test)->toEqual(
+                        new MergedConfigurationUnit(...[
+                            new ArrayConfigurationUnit($this->factory, [
+                                'key11' => 'value11',
+                            ], realpath(__DIR__ . '/../.test/config1/test1.valid.php')),
+                            new ArrayConfigurationUnit($this->factory, [
+                                'key13' => 'value13',
+                            ], realpath(__DIR__ . '/../.test/config1/test3.valid.php')),
+                            new ArrayConfigurationUnit($this->factory, [
+                                'key21' => 'value21',
+                            ], realpath(__DIR__ . '/../.test/config2/test1.valid.php')),
+                            new ArrayConfigurationUnit($this->factory, [
+                                'key23' => 'value23',
+                            ], realpath(__DIR__ . '/../.test/config2/test3.valid.php')),
+                        ])
+                    );
+
+                });
+
+            });
 
         });
 
-        it('should implement ConfigurationSourceInterface', function () {
+        context('when a file matched by the patterns is not returning an array', function () {
 
-            expect($this->source)->toBeAnInstanceOf(ConfigurationSourceInterface::class);
+            beforeEach(function () {
 
-        });
+                $this->configuration = new PhpFileConfiguration($this->factory, ...[
+                    __DIR__ . '/../.test/config1/test*.php',
+                    __DIR__ . '/../.test/config2/test*.php',
+                ]);
 
-        describe('->configuration()', function () {
+            });
 
-            it('should create php file configuration entries from the files matched by the patterns and merge them', function () {
+            it('should implement ConfigurationInterface', function () {
 
-                $test = $this->source->configuration();
+                expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
-                expect($test)->toEqual(
-                    new MergedConfiguration(...[
-                        new PhpFileConfiguration($this->factory, ...[
-                            __DIR__ . '/../.test/config/not_array.php',
-                        ]),
-                        new PhpFileConfiguration($this->factory, ...[
-                            __DIR__ . '/../.test/config/valid.php',
-                        ]),
-                        new PhpFileConfiguration($this->factory, ...[
-                            __DIR__ . '/../.test/config/factories/not_array.php',
-                        ]),
-                        new PhpFileConfiguration($this->factory, ...[
-                            __DIR__ . '/../.test/config/factories/not_array_of_callables.php',
-                        ]),
-                        new PhpFileConfiguration($this->factory, ...[
-                            __DIR__ . '/../.test/config/extensions/not_array.php',
-                        ]),
-                        new PhpFileConfiguration($this->factory, ...[
-                            __DIR__ . '/../.test/config/extensions/not_array_of_callables.php',
-                        ]),
-                    ])
-                );
+            });
+
+            describe('->unit()', function () {
+
+                it('should throw an UnexpectedValueException', function () {
+
+                    expect([$this->configuration, 'unit'])->toThrow(new UnexpectedValueException);
+
+                });
 
             });
 

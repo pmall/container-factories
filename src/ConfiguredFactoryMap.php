@@ -4,26 +4,26 @@ namespace Quanta\Container;
 
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
-use Quanta\Container\Configuration\ConfigurationSourceInterface;
+use Quanta\Container\Configuration\ConfigurationInterface;
 use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
 final class ConfiguredFactoryMap implements FactoryMapInterface
 {
     /**
-     * The configuration source.
+     * The configuration.
      *
-     * @var \Quanta\Container\Configuration\ConfigurationSourceInterface
+     * @var \Quanta\Container\Configuration\ConfigurationInterface
      */
-    private $source;
+    private $configuration;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Configuration\ConfigurationSourceInterface $source
+     * @param \Quanta\Container\Configuration\ConfigurationInterface $configuration
      */
-    public function __construct(ConfigurationSourceInterface $source)
+    public function __construct(ConfigurationInterface $configuration)
     {
-        $this->source = $source;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -31,10 +31,10 @@ final class ConfiguredFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        $configuration = $this->source->configuration()->entry();
+        $unit = $this->configuration->unit();
 
-        $map = $configuration->map();
-        $pass = $configuration->pass();
+        $map = $unit->map();
+        $pass = $unit->pass();
 
         $factories = $map->factories();
 

@@ -3,9 +3,10 @@
 namespace Quanta\Container\Configuration;
 
 use Quanta\Container\FactoryMapInterface;
+use Quanta\Container\Configuration\Passes\MergedProcessingPass;
 use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
-final class ConfigurationEntry
+final class ConfigurationUnit implements ConfigurationUnitInterface
 {
     /**
      * The factory map.
@@ -15,28 +16,26 @@ final class ConfigurationEntry
     private $map;
 
     /**
-     * The processing pass.
+     * The array of processing passes.
      *
-     * @var \Quanta\Container\Configuration\Passes\ProcessingPassInterface
+     * @var \Quanta\Container\Configuration\Passes\ProcessingPassInterface[]
      */
-    private $pass;
+    private $passes;
 
     /**
      * Constructor.
      *
      * @param \Quanta\Container\FactoryMapInterface                             $map
-     * @param \Quanta\Container\Configuration\Passes\ProcessingPassInterface    $pass
+     * @param \Quanta\Container\Configuration\Passes\ProcessingPassInterface    ...$passes
      */
-    public function __construct(FactoryMapInterface $map, ProcessingPassInterface $pass)
+    public function __construct(FactoryMapInterface $map, ProcessingPassInterface ...$passes)
     {
         $this->map = $map;
-        $this->pass = $pass;
+        $this->passes = $passes;
     }
 
     /**
-     * Return the factory map.
-     *
-     * @return \Quanta\Container\FactoryMapInterface
+     * @inheritdoc
      */
     public function map(): FactoryMapInterface
     {
@@ -44,12 +43,10 @@ final class ConfigurationEntry
     }
 
     /**
-     * Return the processing pass.
-     *
-     * @return \Quanta\Container\Configuration\Passes\ProcessingPassInterface
+     * @inheritdoc
      */
     public function pass(): ProcessingPassInterface
     {
-        return $this->pass;
+        return new MergedProcessingPass(...$this->passes);
     }
 }

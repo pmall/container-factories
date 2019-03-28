@@ -4,9 +4,8 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\Configuration\Configuration;
-use Quanta\Container\Configuration\ConfigurationEntry;
+use Quanta\Container\Configuration\ConfigurationUnit;
 use Quanta\Container\Configuration\ConfigurationInterface;
-use Quanta\Container\Configuration\Passes\MergedProcessingPass;
 use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
 describe('Configuration', function () {
@@ -31,16 +30,13 @@ describe('Configuration', function () {
 
         });
 
-        describe('->entry()', function () {
+        describe('->unit()', function () {
 
-            it('should return a configuration entry with an empty merged processing pass', function () {
+            it('should return a configuration unit with no processing pass', function () {
 
-                $test = $this->configuration->entry();
+                $test = $this->configuration->unit();
 
-                expect($test)->toEqual(new ConfigurationEntry(
-                    $this->map->get(),
-                    new MergedProcessingPass
-                ));
+                expect($test)->toEqual(new ConfigurationUnit($this->map->get()));
 
             });
 
@@ -70,20 +66,17 @@ describe('Configuration', function () {
 
         });
 
-        describe('->entry()', function () {
+        describe('->unit()', function () {
 
-            it('should return a configuration entry with the merged processing pass', function () {
+            it('should return a configuration unit with the processing passes', function () {
 
-                $test = $this->configuration->entry();
+                $test = $this->configuration->unit();
 
-                expect($test)->toEqual(new ConfigurationEntry(
-                    $this->map->get(),
-                    new MergedProcessingPass(
-                        $this->pass1->get(),
-                        $this->pass2->get(),
-                        $this->pass3->get()
-                    )
-                ));
+                expect($test)->toEqual(new ConfigurationUnit($this->map->get(), ...[
+                    $this->pass1->get(),
+                    $this->pass2->get(),
+                    $this->pass3->get()
+                ]));
 
             });
 

@@ -3,9 +3,9 @@
 use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\EmptyFactoryMap;
-use Quanta\Container\Configuration\Configuration;
+use Quanta\Container\Configuration\ConfigurationUnit;
+use Quanta\Container\Configuration\ConfigurationInterface;
 use Quanta\Container\Configuration\ProcessingPassCollection;
-use Quanta\Container\Configuration\ConfigurationSourceInterface;
 use Quanta\Container\Configuration\Passes\MergedProcessingPass;
 use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
@@ -15,25 +15,24 @@ describe('ProcessingPassCollection', function () {
 
         beforeEach(function () {
 
-            $this->source = new ProcessingPassCollection;
+            $this->configuration = new ProcessingPassCollection;
 
         });
 
-        it('should implement ConfigurationSourceInterface', function () {
+        it('should implement ConfigurationInterface', function () {
 
-            expect($this->source)->toBeAnInstanceOf(ConfigurationSourceInterface::class);
+            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
         });
 
-        describe('->configuration()', function () {
+        describe('->unit()', function () {
 
-            it('should return a configuration with an empty merged processing pass', function () {
+            it('should return a configuration unit with an empty merged processing pass', function () {
 
-                $test = $this->source->configuration();
+                $test = $this->configuration->unit();
 
-                expect($test)->toEqual(new Configuration(
-                    new EmptyFactoryMap,
-                    new MergedProcessingPass
+                expect($test)->toEqual(new ConfigurationUnit(
+                    new EmptyFactoryMap
                 ));
 
             });
@@ -42,7 +41,7 @@ describe('ProcessingPassCollection', function () {
 
     });
 
-    context('when there is no processing pass', function () {
+    context('when there is at least one processing pass', function () {
 
         beforeEach(function () {
 
@@ -50,7 +49,7 @@ describe('ProcessingPassCollection', function () {
             $this->pass2 = mock(ProcessingPassInterface::class);
             $this->pass3 = mock(ProcessingPassInterface::class);
 
-            $this->source = new ProcessingPassCollection(...[
+            $this->configuration = new ProcessingPassCollection(...[
                 $this->pass1->get(),
                 $this->pass2->get(),
                 $this->pass3->get(),
@@ -58,26 +57,25 @@ describe('ProcessingPassCollection', function () {
 
         });
 
-        it('should implement ConfigurationSourceInterface', function () {
+        it('should implement ConfigurationInterface', function () {
 
-            expect($this->source)->toBeAnInstanceOf(ConfigurationSourceInterface::class);
+            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
         });
 
-        describe('->configuration()', function () {
+        describe('->unit()', function () {
 
-            it('should return a configuration with a merged processing pass', function () {
+            it('should return a configuration unit with a merged processing pass', function () {
 
-                $test = $this->source->configuration();
+                $test = $this->configuration->unit();
 
-                expect($test)->toEqual(new Configuration(
-                    new EmptyFactoryMap,
-                    new MergedProcessingPass(...[
+                expect($test)->toEqual(new ConfigurationUnit(
+                    new EmptyFactoryMap, ...[
                         $this->pass1->get(),
                         $this->pass2->get(),
                         $this->pass3->get(),
                     ])
-                ));
+                );
 
             });
 

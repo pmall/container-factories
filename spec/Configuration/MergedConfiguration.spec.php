@@ -2,13 +2,10 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\MergedFactoryMap;
-use Quanta\Container\FactoryMapInterface;
-use Quanta\Container\Configuration\ConfigurationEntry;
 use Quanta\Container\Configuration\MergedConfiguration;
 use Quanta\Container\Configuration\ConfigurationInterface;
-use Quanta\Container\Configuration\Passes\MergedProcessingPass;
-use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
+use Quanta\Container\Configuration\MergedConfigurationUnit;
+use Quanta\Container\Configuration\ConfigurationUnitInterface;
 
 describe('MergedConfiguration', function () {
 
@@ -26,16 +23,13 @@ describe('MergedConfiguration', function () {
 
         });
 
-        describe('->entry()', function () {
+        describe('->unit()', function () {
 
-            it('should return an empty configuration entry', function () {
+            it('should return an empty merged configuration unit', function () {
 
-                $test = $this->configuration->entry();
+                $test = $this->configuration->unit();
 
-                expect($test)->toEqual(new ConfigurationEntry(
-                    new MergedFactoryMap,
-                    new MergedProcessingPass
-                ));
+                expect($test)->toEqual(new MergedConfigurationUnit);
 
             });
 
@@ -65,32 +59,25 @@ describe('MergedConfiguration', function () {
 
         });
 
-        describe('->entry()', function () {
+        describe('->unit()', function () {
 
-            it('should merge the configuration provided by the configuration entries', function () {
+            it('should merge the configuration units provided by the configurations', function () {
 
-                $map1 = mock(FactoryMapInterface::class);
-                $map2 = mock(FactoryMapInterface::class);
-                $map3 = mock(FactoryMapInterface::class);
+                $unit1 = mock(ConfigurationUnitInterface::class);
+                $unit2 = mock(ConfigurationUnitInterface::class);
+                $unit3 = mock(ConfigurationUnitInterface::class);
 
-                $pass1 = mock(ProcessingPassInterface::class);
-                $pass2 = mock(ProcessingPassInterface::class);
-                $pass3 = mock(ProcessingPassInterface::class);
+                $this->configuration1->unit->returns($unit1);
+                $this->configuration2->unit->returns($unit2);
+                $this->configuration3->unit->returns($unit3);
 
-                $entry1 = new ConfigurationEntry($map1->get(), $pass1->get());
-                $entry2 = new ConfigurationEntry($map2->get(), $pass2->get());
-                $entry3 = new ConfigurationEntry($map3->get(), $pass3->get());
+                $test = $this->configuration->unit();
 
-                $this->configuration1->entry->returns($entry1);
-                $this->configuration2->entry->returns($entry2);
-                $this->configuration3->entry->returns($entry3);
-
-                $test = $this->configuration->entry();
-
-                expect($test)->toEqual(new ConfigurationEntry(
-                    new MergedFactoryMap($map1->get(), $map2->get(), $map3->get()),
-                    new MergedProcessingPass($pass1->get(), $pass2->get(), $pass3->get())
-                ));
+                expect($test)->toEqual(new MergedConfigurationUnit(...[
+                    $unit1->get(),
+                    $unit2->get(),
+                    $unit3->get(),
+                ]));
 
             });
 

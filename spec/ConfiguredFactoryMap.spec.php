@@ -6,9 +6,8 @@ use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\ConfiguredFactoryMap;
 use Quanta\Container\Factories\Tag;
 use Quanta\Container\Factories\Alias;
-use Quanta\Container\Configuration\ConfigurationEntry;
 use Quanta\Container\Configuration\ConfigurationInterface;
-use Quanta\Container\Configuration\ConfigurationSourceInterface;
+use Quanta\Container\Configuration\ConfigurationUnitInterface;
 use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
 require_once __DIR__ . '/.test/classes.php';
@@ -17,18 +16,9 @@ describe('ConfiguredFactoryMap', function () {
 
     beforeEach(function () {
 
-        $this->source = mock(ConfigurationSourceInterface::class);
         $this->configuration = mock(ConfigurationInterface::class);
-        $this->delegate = mock(FactoryMapInterface::class);
-        $this->pass = mock(ProcessingPassInterface::class);
 
-        $this->source->configuration->returns($this->configuration);
-
-        $this->configuration->entry->returns(
-            new ConfigurationEntry($this->delegate->get(), $this->pass->get())
-        );
-
-        $this->map = new ConfiguredFactoryMap($this->source->get());
+        $this->map = new ConfiguredFactoryMap($this->configuration->get());
 
     });
 
@@ -40,23 +30,26 @@ describe('ConfiguredFactoryMap', function () {
 
     describe('->factories()', function () {
 
-        it('should get a configuration entry from the configuration source only once', function () {
+        beforeEach(function () {
 
-            $test = $this->map->factories();
+            $unit = mock(ConfigurationUnitInterface::class);
+            $this->delegate = mock(FactoryMapInterface::class);
+            $this->pass = mock(ProcessingPassInterface::class);
 
-            expect($test)->toBeAn('array');
+            $this->configuration->unit->returns($unit);
 
-            $this->source->configuration->once()->called();
+            $unit->map->returns($this->delegate);
+            $unit->pass->returns($this->pass);
 
         });
 
-        it('should get a configuration entry from the configuration only once', function () {
+        it('should get a configuration unit from the configuration only once', function () {
 
             $test = $this->map->factories();
 
             expect($test)->toBeAn('array');
 
-            $this->configuration->entry->once()->called();
+            $this->configuration->unit->once()->called();
 
         });
 

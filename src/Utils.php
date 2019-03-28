@@ -8,21 +8,6 @@ use Quanta\Container\Factories\Factory;
 final class Utils
 {
     /**
-     * Returns an array of factories from the given value factory and array of
-     * parameters.
-     *
-     * @param \Quanta\Container\Values\ValueFactory $factory
-     * @param array                                 $parameters
-     * @return \Quanta\Container\Factories\Factory[]
-     */
-    public static function factories(ValueFactory $factory, array $parameters): array
-    {
-        return array_map(function ($parameter) use ($factory) {
-            return new Factory($factory($parameter));
-        }, $parameters);
-    }
-
-    /**
      * Call the given method on all the objects of the given array with the
      * given extra arguments.
      *

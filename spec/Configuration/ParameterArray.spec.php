@@ -1,25 +1,17 @@
 <?php
 
 use Quanta\Container\FactoryMap;
-use Quanta\Container\Values\Value;
+use Quanta\Container\ParameterFactoryMap;
 use Quanta\Container\Values\ValueFactory;
-use Quanta\Container\Values\DummyValueParser;
-use Quanta\Container\Factories\Factory;
-use Quanta\Container\Configuration\Configuration;
 use Quanta\Container\Configuration\ParameterArray;
-use Quanta\Container\Configuration\ConfigurationSourceInterface;
+use Quanta\Container\Configuration\ConfigurationUnit;
+use Quanta\Container\Configuration\ConfigurationInterface;
 
 describe('ParameterArray', function () {
 
     beforeEach(function () {
 
-        $this->factory = new ValueFactory(
-            new DummyValueParser([
-                'parameter1' => 'parsed1',
-                'parameter2' => 'parsed2',
-                'parameter3' => 'parsed3',
-            ])
-        );
+        $this->factory = new ValueFactory;
 
     });
 
@@ -27,24 +19,24 @@ describe('ParameterArray', function () {
 
         beforeEach(function () {
 
-            $this->source = new ParameterArray($this->factory, []);
+            $this->configuration = new ParameterArray($this->factory, []);
 
         });
 
-        it('should implement ConfigurationSourceInterface', function () {
+        it('should implement ConfigurationInterface', function () {
 
-            expect($this->source)->toBeAnInstanceOf(ConfigurationSourceInterface::class);
+            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
         });
 
-        describe('->configuration()', function () {
+        describe('->unit()', function () {
 
-            it('should return a configuration providing an empty array', function () {
+            it('should return a configuration unit providing an empty parameter factory map', function () {
 
-                $test = $this->source->configuration();
+                $test = $this->configuration->unit();
 
-                expect($test)->toEqual(new Configuration(
-                    new FactoryMap([])
+                expect($test)->toEqual(new ConfigurationUnit(
+                    new ParameterFactoryMap($this->factory, [])
                 ));
 
             });
@@ -57,7 +49,7 @@ describe('ParameterArray', function () {
 
         beforeEach(function () {
 
-            $this->source = new ParameterArray($this->factory, [
+            $this->configuration = new ParameterArray($this->factory, [
                 'id1' => 'parameter1',
                 'id2' => 'parameter2',
                 'id3' => 'parameter3',
@@ -65,23 +57,23 @@ describe('ParameterArray', function () {
 
         });
 
-        it('should implement ConfigurationSourceInterface', function () {
+        it('should implement ConfigurationInterface', function () {
 
-            expect($this->source)->toBeAnInstanceOf(ConfigurationSourceInterface::class);
+            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
         });
 
-        describe('->configuration()', function () {
+        describe('->unit()', function () {
 
-            it('should return a configuration providing the parsed array of parameters', function () {
+            it('should return a configuration unit providing the parsed array of parameters', function () {
 
-                $test = $this->source->configuration();
+                $test = $this->configuration->unit();
 
-                expect($test)->toEqual(new Configuration(
-                    new FactoryMap([
-                        'id1' => new Factory(new Value('parsed1')),
-                        'id2' => new Factory(new Value('parsed2')),
-                        'id3' => new Factory(new Value('parsed3')),
+                expect($test)->toEqual(new ConfigurationUnit(
+                    new ParameterFactoryMap($this->factory, [
+                        'id1' => 'parameter1',
+                        'id2' => 'parameter2',
+                        'id3' => 'parameter3',
                     ])
                 ));
 

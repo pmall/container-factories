@@ -3,8 +3,6 @@
 namespace Quanta\Container\Configuration;
 
 use Quanta\Container\Utils;
-use Quanta\Container\MergedFactoryMap;
-use Quanta\Container\Configuration\Passes\MergedProcessingPass;
 
 final class MergedConfiguration implements ConfigurationInterface
 {
@@ -28,13 +26,10 @@ final class MergedConfiguration implements ConfigurationInterface
     /**
      * @inheritdoc
      */
-    public function entry(): ConfigurationEntry
+    public function unit(): ConfigurationUnitInterface
     {
-        $entries = Utils::plucked($this->configurations, 'entry');
-
-        return new ConfigurationEntry(
-            new MergedFactoryMap(...Utils::plucked($entries, 'map')),
-            new MergedProcessingPass(...Utils::plucked($entries, 'pass'))
+        return new MergedConfigurationUnit(
+            ...Utils::plucked($this->configurations, 'unit')
         );
     }
 }

@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Configuration;
+namespace Quanta\Container;
 
-use Quanta\Container\ParameterFactoryMap;
 use Quanta\Container\Values\ValueFactory;
+use Quanta\Container\Factories\Factory;
 
-final class ParameterArray implements ConfigurationInterface
+final class ParameterFactoryMap implements FactoryMapInterface
 {
     /**
      * The value factory used to parse parameters.
@@ -15,7 +15,7 @@ final class ParameterArray implements ConfigurationInterface
     private $factory;
 
     /**
-     * The array of parameters to provide.
+     * The array of parameters.
      *
      * @var array
      */
@@ -36,10 +36,19 @@ final class ParameterArray implements ConfigurationInterface
     /**
      * @inheritdoc
      */
-    public function unit(): ConfigurationUnitInterface
+    public function factories(): array
     {
-        return new ConfigurationUnit(
-            new ParameterFactoryMap($this->factory, $this->parameters)
-        );
+        return array_map([$this, 'factory'], $this->parameters);
+    }
+
+    /**
+     * Return a factory from the given parameter parsed with the value factory.
+     *
+     * @param mixed $parameter
+     * @return \Quanta\Container\Factories\Factory;
+     */
+    private function factory($parameter): Factory
+    {
+        return new Factory(($this->factory)($parameter));
     }
 }

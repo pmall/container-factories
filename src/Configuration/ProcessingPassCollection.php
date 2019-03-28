@@ -3,10 +3,9 @@
 namespace Quanta\Container\Configuration;
 
 use Quanta\Container\EmptyFactoryMap;
-use Quanta\Container\Configuration\Passes\MergedProcessingPass;
 use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
-final class ProcessingPassCollection implements ConfigurationSourceInterface
+final class ProcessingPassCollection implements ConfigurationInterface
 {
     /**
      * The array of processing passes to provide.
@@ -28,11 +27,8 @@ final class ProcessingPassCollection implements ConfigurationSourceInterface
     /**
      * @inheritdoc
      */
-    public function configuration(): ConfigurationInterface
+    public function unit(): ConfigurationUnitInterface
     {
-        return new Configuration(
-            new EmptyFactoryMap,
-            new MergedProcessingPass(...$this->passes)
-        );
+        return new ConfigurationUnit(new EmptyFactoryMap, ...$this->passes);
     }
 }

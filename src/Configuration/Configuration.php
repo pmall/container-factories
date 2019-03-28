@@ -3,7 +3,6 @@
 namespace Quanta\Container\Configuration;
 
 use Quanta\Container\FactoryMapInterface;
-use Quanta\Container\Configuration\Passes\MergedProcessingPass;
 use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
 final class Configuration implements ConfigurationInterface
@@ -37,10 +36,8 @@ final class Configuration implements ConfigurationInterface
     /**
      * @inheritdoc
      */
-    public function entry(): ConfigurationEntry
+    public function unit(): ConfigurationUnitInterface
     {
-        return new ConfigurationEntry($this->map,
-            new MergedProcessingPass(...$this->passes)
-        );
+        return new ConfigurationUnit($this->map, ...$this->passes);
     }
 }
