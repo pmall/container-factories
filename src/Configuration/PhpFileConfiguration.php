@@ -2,16 +2,16 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\Values\ValueFactory;
+use Quanta\Container\Parsing\ParserInterface;
 
 final class PhpFileConfiguration implements ConfigurationInterface
 {
     /**
-     * The value factory used to parse parameters.
+     * The parser used to produce factories from parameters.
      *
-     * @var \Quanta\Container\Values\ValueFactory
+     * @var \Quanta\Container\Parsing\ParserInterface
      */
-    private $factory;
+    private $parser;
 
     /**
      * The glob patterns used to collect php files.
@@ -23,12 +23,12 @@ final class PhpFileConfiguration implements ConfigurationInterface
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Values\ValueFactory $factory
-     * @param string                                ...$patterns
+     * @param \Quanta\Container\Parsing\ParserInterface $parser
+     * @param string                                    ...$patterns
      */
-    public function __construct(ValueFactory $factory, string ...$patterns)
+    public function __construct(ParserInterface $parser, string ...$patterns)
     {
-        $this->factory = $factory;
+        $this->parser = $parser;
         $this->patterns = $patterns;
     }
 
@@ -53,7 +53,7 @@ final class PhpFileConfiguration implements ConfigurationInterface
                 }
 
                 $parsed[] = new ArrayConfigurationUnit(
-                    $this->factory,
+                    $this->parser,
                     $configuration,
                     (string) realpath($path)
                 );

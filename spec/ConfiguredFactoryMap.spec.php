@@ -2,13 +2,13 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
+use Quanta\Container\Tag;
+use Quanta\Container\Alias;
 use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\ConfiguredFactoryMap;
-use Quanta\Container\Factories\Tag;
-use Quanta\Container\Factories\Alias;
+use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Configuration\ConfigurationInterface;
 use Quanta\Container\Configuration\ConfigurationUnitInterface;
-use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
 require_once __DIR__ . '/.test/classes.php';
 
@@ -56,9 +56,9 @@ describe('ConfiguredFactoryMap', function () {
         it('should return an associative array of factories from the configuration', function () {
 
             $this->delegate->factories->returns([
-                'id1' => $factory1 = new Test\TestFactory('factory1'),
-                'id2' => $factory2 = new Test\TestFactory('factory2'),
-                'id3' => $factory3 = new Test\TestFactory('factory3'),
+                'id1' => $factory1 = function () {},
+                'id2' => $factory2 = function () {},
+                'id3' => $factory3 = function () {},
             ]);
 
             $this->pass->aliases->with('id1')->returns(['alias1', 'alias3']);
@@ -71,9 +71,9 @@ describe('ConfiguredFactoryMap', function () {
                 'tag3' => ['id3'],
             ]);
 
-            $this->pass->processed->with('id1', $factory1)->returns($processed1 = function () {});
-            $this->pass->processed->with('id2', $factory2)->returns($processed2 = function () {});
-            $this->pass->processed->with('id3', $factory3)->returns($processed3 = function () {});
+            $this->pass->processed->with('id1', Kahlan\Arg::toBe($factory1))->returns($processed1 = function () {});
+            $this->pass->processed->with('id2', Kahlan\Arg::toBe($factory2))->returns($processed2 = function () {});
+            $this->pass->processed->with('id3', Kahlan\Arg::toBe($factory3))->returns($processed3 = function () {});
             $this->pass->processed->with('alias1', new Alias('id1'))->returns($processed4 = function () {});
             $this->pass->processed->with('alias2', new Alias('id3'))->returns($processed5 = function () {});
             $this->pass->processed->with('alias3', new Alias('id1'))->returns($processed6 = function () {});

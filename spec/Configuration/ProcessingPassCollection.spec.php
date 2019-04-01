@@ -3,11 +3,11 @@
 use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\EmptyFactoryMap;
+use Quanta\Container\MergedProcessingPass;
+use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Configuration\ConfigurationUnit;
 use Quanta\Container\Configuration\ConfigurationInterface;
 use Quanta\Container\Configuration\ProcessingPassCollection;
-use Quanta\Container\Configuration\Passes\MergedProcessingPass;
-use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
 describe('ProcessingPassCollection', function () {
 

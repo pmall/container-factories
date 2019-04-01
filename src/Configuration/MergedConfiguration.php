@@ -2,8 +2,6 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\Utils;
-
 final class MergedConfiguration implements ConfigurationInterface
 {
     /**
@@ -29,7 +27,9 @@ final class MergedConfiguration implements ConfigurationInterface
     public function unit(): ConfigurationUnitInterface
     {
         return new MergedConfigurationUnit(
-            ...Utils::plucked($this->configurations, 'unit')
+            ...array_map(function ($configuration) {
+                return $configuration->unit();
+            }, $this->configurations)
         );
     }
 }

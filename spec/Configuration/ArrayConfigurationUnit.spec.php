@@ -2,25 +2,67 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
+use Quanta\Container\Alias;
+use Quanta\Container\Tagging;
+use Quanta\Container\Invokable;
 use Quanta\Container\FactoryMap;
+use Quanta\Container\TaggingPass;
+use Quanta\Container\ExtensionPass;
 use Quanta\Container\MergedFactoryMap;
 use Quanta\Container\ParameterFactoryMap;
-use Quanta\Container\Values\ValueFactory;
-use Quanta\Container\Factories\Alias;
-use Quanta\Container\Factories\Invokable;
+use Quanta\Container\MergedProcessingPass;
+use Quanta\Container\ProcessingPassInterface;
+use Quanta\Container\Parsing\ParserInterface;
 use Quanta\Container\Configuration\ArrayConfigurationUnit;
 use Quanta\Container\Configuration\ConfigurationUnitInterface;
-use Quanta\Container\Configuration\Passes\Tagging;
-use Quanta\Container\Configuration\Passes\TaggingPass;
-use Quanta\Container\Configuration\Passes\ExtensionPass;
-use Quanta\Container\Configuration\Passes\MergedProcessingPass;
-use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
+
+describe('ArrayConfigurationUnit::instance()', function () {
+
+    beforeEach(function () {
+
+        $this->parser = mock(ParserInterface::class);
+
+    });
+
+    context('when no source is given', function () {
+
+        it('should return a new ArrayConfigurationUnit with the given parser, configuration array and an empty source', function () {
+
+            $test = ArrayConfigurationUnit::instance($this->parser->get(), [
+                'key' => 'value',
+            ]);
+
+            expect($test)->toEqual(new ArrayConfigurationUnit($this->parser->get(), [
+                'key' => 'value',
+            ], ''));
+
+        });
+
+    });
+
+    context('when a source is given', function () {
+
+        it('should return a new ArrayConfigurationUnit with the given parser, configuration array and source', function () {
+
+            $test = ArrayConfigurationUnit::instance($this->parser->get(), [
+                'key' => 'value',
+            ], 'source');
+
+            expect($test)->toEqual(new ArrayConfigurationUnit($this->parser->get(), [
+                'key' => 'value',
+            ], 'source'));
+
+        });
+
+    });
+
+});
 
 describe('ArrayConfigurationUnit', function () {
 
     beforeEach(function () {
 
-        $this->factory = new ValueFactory;
+        $this->parser = mock(ParserInterface::class);
 
     });
 
@@ -28,7 +70,7 @@ describe('ArrayConfigurationUnit', function () {
 
         beforeEach(function () {
 
-            $this->unit = new ArrayConfigurationUnit($this->factory, [
+            $this->unit = new ArrayConfigurationUnit($this->parser->get(), [
                 'parameters' => [
                     'id1' => 'parameter1',
                     'id2' => 'parameter2',
@@ -87,7 +129,7 @@ describe('ArrayConfigurationUnit', function () {
                 $test = $this->unit->map();
 
                 expect($test)->toEqual(new MergedFactoryMap(...[
-                    new ParameterFactoryMap($this->factory, [
+                    new ParameterFactoryMap($this->parser->get(), [
                         'id1' => 'parameter1',
                         'id2' => 'parameter2',
                         'id3' => 'parameter3',
@@ -150,7 +192,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'parameters' => 1,
                         ]);
 
@@ -164,7 +206,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'parameters' => 1,
                         ], 'source');
 
@@ -190,7 +232,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'aliases' => 1,
                         ]);
 
@@ -204,7 +246,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'aliases' => 1,
                         ], 'source');
 
@@ -230,7 +272,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'aliases' => [
                                 'id1' => 'alias1',
                                 'id2' => [],
@@ -248,7 +290,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'aliases' => [
                                 'id1' => 'alias1',
                                 'id2' => [],
@@ -278,7 +320,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'invokables' => 1,
                         ]);
 
@@ -292,7 +334,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'invokables' => 1,
                         ], 'source');
 
@@ -318,7 +360,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'invokables' => [
                                 'id1' => Test\SomeInvokable1::class,
                                 'id2' => [],
@@ -336,7 +378,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'invokables' => [
                                 'id1' => Test\SomeInvokable1::class,
                                 'id2' => [],
@@ -366,7 +408,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'factories' => 1,
                         ]);
 
@@ -380,7 +422,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'factories' => 1,
                         ], 'source');
 
@@ -406,7 +448,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'factories' => [
                                 'id1' => function () {},
                                 'id2' => 1,
@@ -424,7 +466,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'factories' => [
                                 'id1' => function () {},
                                 'id2' => 1,
@@ -458,7 +500,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'tags' => 1,
                         ]);
 
@@ -472,7 +514,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'tags' => 1,
                         ], 'source');
 
@@ -498,7 +540,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'tags' => [
                                 'id1' => [],
                                 'id2' => 1,
@@ -516,7 +558,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'tags' => [
                                 'id1' => [],
                                 'id2' => 1,
@@ -546,7 +588,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'tags' => [
                                 'id1' => ['tag11', 'tag12', 'tag13'],
                                 'id2' => ['tag21', [], 'tag23'],
@@ -564,7 +606,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'tags' => [
                                 'id1' => ['tag11', 'tag12', 'tag13'],
                                 'id2' => ['tag21', [], 'tag23'],
@@ -594,7 +636,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'mappers' => 1,
                         ]);
 
@@ -608,7 +650,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'mappers' => 1,
                         ], 'source');
 
@@ -634,7 +676,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'mappers' => [
                                 'id1' => Test\SomeInterface1::class,
                                 'id2' => [],
@@ -652,7 +694,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'mappers' => [
                                 'id1' => Test\SomeInterface1::class,
                                 'id2' => [],
@@ -682,7 +724,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'extensions' => 1,
                         ]);
 
@@ -696,7 +738,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'extensions' => 1,
                         ], 'source');
 
@@ -722,7 +764,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'extensions' => [
                                 'id1' => function () {},
                                 'id2' => 1,
@@ -740,7 +782,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'extensions' => [
                                 'id1' => function () {},
                                 'id2' => 1,
@@ -770,7 +812,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'passes' => 1,
                         ]);
 
@@ -784,7 +826,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'passes' => 1,
                         ], 'source');
 
@@ -810,7 +852,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'passes' => [
                                 'id1' => mock(ProcessingPassInterface::class)->get(),
                                 'id2' => Test\SomeClass::class,
@@ -828,7 +870,7 @@ describe('ArrayConfigurationUnit', function () {
 
                     it('should throw an unexpected value exception displaying the source', function () {
 
-                        $unit = new ArrayConfigurationUnit($this->factory, [
+                        $unit = new ArrayConfigurationUnit($this->parser->get(), [
                             'passes' => [
                                 'id1' => mock(ProcessingPassInterface::class)->get(),
                                 'id2' => Test\SomeClass::class,

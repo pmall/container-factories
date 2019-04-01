@@ -26,6 +26,8 @@ final class MergedFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        return array_merge([], ...Utils::plucked($this->maps, 'factories'));
+        return array_merge([], ...array_map(function ($map) {
+            return $map->factories();
+        }, $this->maps));
     }
 }

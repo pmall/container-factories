@@ -3,10 +3,10 @@
 use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\FactoryMapInterface;
+use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Configuration\Configuration;
 use Quanta\Container\Configuration\ConfigurationUnit;
 use Quanta\Container\Configuration\ConfigurationInterface;
-use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
 describe('Configuration', function () {
 

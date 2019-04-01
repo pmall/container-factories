@@ -3,7 +3,7 @@
 namespace Quanta\Container\Configuration;
 
 use Quanta\Container\FactoryMapInterface;
-use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
+use Quanta\Container\ProcessingPassInterface;
 
 interface ConfigurationUnitInterface
 {
@@ -17,7 +17,7 @@ interface ConfigurationUnitInterface
     /**
      * Return a processing pass.
      *
-     * @return \Quanta\Container\Configuration\Passes\ProcessingPassInterface
+     * @return \Quanta\Container\ProcessingPassInterface
      */
     public function pass(): ProcessingPassInterface;
 }

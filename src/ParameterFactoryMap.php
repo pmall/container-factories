@@ -2,35 +2,34 @@
 
 namespace Quanta\Container;
 
-use Quanta\Container\Values\ValueFactory;
-use Quanta\Container\Factories\Factory;
+use Quanta\Container\Parsing\ParserInterface;
 
 final class ParameterFactoryMap implements FactoryMapInterface
 {
     /**
-     * The value factory used to parse parameters.
+     * The parser used to produce factories from the values.
      *
-     * @var \Quanta\Container\Values\ValueFactory
+     * @var \Quanta\Container\Parsing\ParserInterface
      */
-    private $factory;
+    private $parser;
 
     /**
-     * The array of parameters.
+     * The array of values.
      *
      * @var array
      */
-    private $parameters;
+    private $values;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Values\ValueFactory $factory
-     * @param array                                 $parameters
+     * @param \Quanta\Container\Parsing\ParserInterface $parser
+     * @param array                                     $values
      */
-    public function __construct(ValueFactory $factory, array $parameters)
+    public function __construct(ParserInterface $parser, array $values)
     {
-        $this->factory = $factory;
-        $this->parameters = $parameters;
+        $this->parser = $parser;
+        $this->values = $values;
     }
 
     /**
@@ -38,17 +37,10 @@ final class ParameterFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        return array_map([$this, 'factory'], $this->parameters);
-    }
+        $parsed = array_map($this->parser, $this->values);
 
-    /**
-     * Return a factory from the given parameter parsed with the value factory.
-     *
-     * @param mixed $parameter
-     * @return \Quanta\Container\Factories\Factory;
-     */
-    private function factory($parameter): Factory
-    {
-        return new Factory(($this->factory)($parameter));
+        return array_map(function ($parsed) {
+            return $parsed->factory();
+        }, $parsed);
     }
 }

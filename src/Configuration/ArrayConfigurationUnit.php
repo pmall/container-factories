@@ -2,30 +2,29 @@
 
 namespace Quanta\Container\Configuration;
 
+use Quanta\Container\Tag;
+use Quanta\Container\Alias;
+use Quanta\Container\Tagging;
+use Quanta\Container\Invokable;
+use Quanta\Container\Extension;
 use Quanta\Container\FactoryMap;
+use Quanta\Container\TaggingPass;
+use Quanta\Container\ExtensionPass;
 use Quanta\Container\MergedFactoryMap;
 use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\ParameterFactoryMap;
-use Quanta\Container\Values\ValueFactory;
-use Quanta\Container\Factories\Tag;
-use Quanta\Container\Factories\Alias;
-use Quanta\Container\Factories\Factory;
-use Quanta\Container\Factories\Invokable;
-use Quanta\Container\Factories\Extension;
-use Quanta\Container\Configuration\Passes\Tagging;
-use Quanta\Container\Configuration\Passes\TaggingPass;
-use Quanta\Container\Configuration\Passes\ExtensionPass;
-use Quanta\Container\Configuration\Passes\MergedProcessingPass;
-use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
+use Quanta\Container\MergedProcessingPass;
+use Quanta\Container\ProcessingPassInterface;
+use Quanta\Container\Parsing\ParserInterface;
 
 final class ArrayConfigurationUnit implements ConfigurationUnitInterface
 {
     /**
-     * The value factory used to parse parameters.
+     * The parser used to produce factories from parameters.
      *
-     * @var \Quanta\Container\Values\ValueFactory
+     * @var \Quanta\Container\Parsing\ParserInterface
      */
-    private $factory;
+    private $parser;
 
     /**
      * The configuration array.
@@ -44,29 +43,29 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
     private $source;
 
     /**
-     * Return a new ArrayConfigurationUnit from the given value factory,
-     * configuration array and source.
+     * Return a new ArrayConfigurationUnit from the given parser, configuration
+     * array and source.
      *
-     * @param \Quanta\Container\Values\ValueFactory $factory
-     * @param array                                 $configuration
-     * @param string                                $source
+     * @param \Quanta\Container\Parsing\ParserInterface $parser
+     * @param array                                     $configuration
+     * @param string                                    $source
      * @return \Quanta\Container\Configuration\ArrayConfigurationUnit
      */
-    public static function instance(ValueFactory $factory, array $configuration, string $source = ''): self
+    public static function instance(ParserInterface $parser, array $configuration, string $source = ''): self
     {
-        return new self($factory, $configuration, $source);
+        return new self($parser, $configuration, $source);
     }
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Values\ValueFactory $factory
-     * @param array                                 $configuration
-     * @param string                                $source
+     * @param \Quanta\Container\Parsing\ParserInterface $parser
+     * @param array                                     $configuration
+     * @param string                                    $source
      */
-    public function __construct(ValueFactory $factory, array $configuration, string $source = '')
+    public function __construct(ParserInterface $parser, array $configuration, string $source = '')
     {
-        $this->factory = $factory;
+        $this->parser = $parser;
         $this->configuration = $configuration;
         $this->source = $source;
     }
@@ -91,7 +90,7 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
 
         $configuration = $result->sanitized();
 
-        $maps[] = new ParameterFactoryMap($this->factory, $configuration['parameters']);
+        $maps[] = new ParameterFactoryMap($this->parser, $configuration['parameters']);
         $maps[] = new FactoryMap(array_map([Alias::class, 'instance'], $configuration['aliases']));
         $maps[] = new FactoryMap(array_map([Invokable::class, 'instance'], $configuration['invokables']));
         $maps[] = new FactoryMap($configuration['factories']);
@@ -145,7 +144,7 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
      *
      * @param string    $id
      * @param string[]  $ids
-     * @return \Quanta\Container\Configuration\Passes\TaggingPass
+     * @return \Quanta\Container\TaggingPass
      */
     private function taggingPass(string $id, array $ids): TaggingPass
     {
@@ -158,7 +157,7 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
      *
      * @param string $id
      * @param string $class
-     * @return \Quanta\Container\Configuration\Passes\TaggingPass
+     * @return \Quanta\Container\TaggingPass
      */
     private function reverseTaggingPass(string $id, string $class): TaggingPass
     {

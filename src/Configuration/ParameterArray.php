@@ -3,16 +3,16 @@
 namespace Quanta\Container\Configuration;
 
 use Quanta\Container\ParameterFactoryMap;
-use Quanta\Container\Values\ValueFactory;
+use Quanta\Container\Parsing\ParserInterface;
 
 final class ParameterArray implements ConfigurationInterface
 {
     /**
-     * The value factory used to parse parameters.
+     * The parser used to produce factories from parameters.
      *
-     * @var \Quanta\Container\Values\ValueFactory
+     * @var \Quanta\Container\Parsing\ParserInterface
      */
-    private $factory;
+    private $parser;
 
     /**
      * The array of parameters to provide.
@@ -24,12 +24,12 @@ final class ParameterArray implements ConfigurationInterface
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Values\ValueFactory $factory
-     * @param array                                 $parameters
+     * @param \Quanta\Container\Parsing\ParserInterface $parser
+     * @param array                                     $parameters
      */
-    public function __construct(ValueFactory $factory, array $parameters)
+    public function __construct(ParserInterface $parser, array $parameters)
     {
-        $this->factory = $factory;
+        $this->parser = $parser;
         $this->parameters = $parameters;
     }
 
@@ -39,7 +39,7 @@ final class ParameterArray implements ConfigurationInterface
     public function unit(): ConfigurationUnitInterface
     {
         return new ConfigurationUnit(
-            new ParameterFactoryMap($this->factory, $this->parameters)
+            new ParameterFactoryMap($this->parser, $this->parameters)
         );
     }
 }

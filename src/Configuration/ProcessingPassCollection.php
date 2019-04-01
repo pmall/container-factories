@@ -3,21 +3,21 @@
 namespace Quanta\Container\Configuration;
 
 use Quanta\Container\EmptyFactoryMap;
-use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
+use Quanta\Container\ProcessingPassInterface;
 
 final class ProcessingPassCollection implements ConfigurationInterface
 {
     /**
      * The array of processing passes to provide.
      *
-     * @var \Quanta\Container\Configuration\Passes\ProcessingPassInterface[]
+     * @var \Quanta\Container\ProcessingPassInterface[]
      */
     private $passes;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Configuration\Passes\ProcessingPassInterface ...$passes
+     * @param \Quanta\Container\ProcessingPassInterface ...$passes
      */
     public function __construct(ProcessingPassInterface ...$passes)
     {

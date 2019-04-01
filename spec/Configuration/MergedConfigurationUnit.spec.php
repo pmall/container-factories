@@ -4,10 +4,10 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\MergedFactoryMap;
 use Quanta\Container\FactoryMapInterface;
+use Quanta\Container\MergedProcessingPass;
+use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Configuration\MergedConfigurationUnit;
 use Quanta\Container\Configuration\ConfigurationUnitInterface;
-use Quanta\Container\Configuration\Passes\MergedProcessingPass;
-use Quanta\Container\Configuration\Passes\ProcessingPassInterface;
 
 describe('MergedConfigurationUnit', function () {
 

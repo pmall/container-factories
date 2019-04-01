@@ -1,8 +1,10 @@
 <?php
 
+use function Eloquent\Phony\Kahlan\mock;
+
 use Quanta\Container\FactoryMap;
 use Quanta\Container\ParameterFactoryMap;
-use Quanta\Container\Values\ValueFactory;
+use Quanta\Container\Parsing\ParserInterface;
 use Quanta\Container\Configuration\ParameterArray;
 use Quanta\Container\Configuration\ConfigurationUnit;
 use Quanta\Container\Configuration\ConfigurationInterface;
@@ -11,7 +13,7 @@ describe('ParameterArray', function () {
 
     beforeEach(function () {
 
-        $this->factory = new ValueFactory;
+        $this->parser = mock(ParserInterface::class);
 
     });
 
@@ -19,7 +21,7 @@ describe('ParameterArray', function () {
 
         beforeEach(function () {
 
-            $this->configuration = new ParameterArray($this->factory, []);
+            $this->configuration = new ParameterArray($this->parser->get(), []);
 
         });
 
@@ -36,7 +38,7 @@ describe('ParameterArray', function () {
                 $test = $this->configuration->unit();
 
                 expect($test)->toEqual(new ConfigurationUnit(
-                    new ParameterFactoryMap($this->factory, [])
+                    new ParameterFactoryMap($this->parser->get(), [])
                 ));
 
             });
@@ -49,7 +51,7 @@ describe('ParameterArray', function () {
 
         beforeEach(function () {
 
-            $this->configuration = new ParameterArray($this->factory, [
+            $this->configuration = new ParameterArray($this->parser->get(), [
                 'id1' => 'parameter1',
                 'id2' => 'parameter2',
                 'id3' => 'parameter3',
@@ -70,7 +72,7 @@ describe('ParameterArray', function () {
                 $test = $this->configuration->unit();
 
                 expect($test)->toEqual(new ConfigurationUnit(
-                    new ParameterFactoryMap($this->factory, [
+                    new ParameterFactoryMap($this->parser->get(), [
                         'id1' => 'parameter1',
                         'id2' => 'parameter2',
                         'id3' => 'parameter3',
