@@ -1,17 +1,17 @@
 {
-    "name": "quanta/container-configuration",
+    "name": "quanta/container-factories",
     "type": "library",
-    "description": "Library for creating associative arrays of Psr-11 factories",
+    "description": "Library for creating Psr-11 container factories",
     "keywords": [
         "psr-11",
         "container",
         "dependency-injection"
     ],
     "license": "MIT",
-    "homepage": "https://github.com/quantaphp/container-configuration",
+    "homepage": "https://github.com/quantaphp/container-factories",
     "support": {
-        "issues": "https://github.com/quantaphp/container-configuration/issues",
-        "source": "https://github.com/quantaphp/container-configuration"
+        "issues": "https://github.com/quantaphp/container-factories/issues",
+        "source": "https://github.com/quantaphp/container-factories"
     },
     "authors": [
         {
