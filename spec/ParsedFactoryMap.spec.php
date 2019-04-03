@@ -3,12 +3,12 @@
 use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\FactoryInterface;
+use Quanta\Container\ParsedFactoryMap;
 use Quanta\Container\FactoryMapInterface;
-use Quanta\Container\ParameterFactoryMap;
 use Quanta\Container\Parsing\ParserInterface;
 use Quanta\Container\Parsing\ParsingResultInterface;
 
-describe('ParameterFactoryMap', function () {
+describe('ParsedFactoryMap', function () {
 
     beforeEach(function () {
 
@@ -20,7 +20,7 @@ describe('ParameterFactoryMap', function () {
 
         beforeEach(function () {
 
-            $this->map = new ParameterFactoryMap($this->parser->get(), []);
+            $this->map = new ParsedFactoryMap($this->parser->get(), []);
 
         });
 
@@ -48,7 +48,7 @@ describe('ParameterFactoryMap', function () {
 
         beforeEach(function () {
 
-            $this->map = new ParameterFactoryMap($this->parser->get(), [
+            $this->map = new ParsedFactoryMap($this->parser->get(), [
                 'id1' => 'parameter1',
                 'id2' => 'parameter2',
                 'id3' => 'parameter3',

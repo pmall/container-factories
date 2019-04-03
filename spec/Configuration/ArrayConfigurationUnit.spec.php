@@ -8,8 +8,8 @@ use Quanta\Container\Invokable;
 use Quanta\Container\FactoryMap;
 use Quanta\Container\TaggingPass;
 use Quanta\Container\ExtensionPass;
+use Quanta\Container\ParsedFactoryMap;
 use Quanta\Container\MergedFactoryMap;
-use Quanta\Container\ParameterFactoryMap;
 use Quanta\Container\MergedProcessingPass;
 use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Parsing\ParserInterface;
@@ -129,7 +129,7 @@ describe('ArrayConfigurationUnit', function () {
                 $test = $this->unit->map();
 
                 expect($test)->toEqual(new MergedFactoryMap(...[
-                    new ParameterFactoryMap($this->parser->get(), [
+                    new ParsedFactoryMap($this->parser->get(), [
                         'id1' => 'parameter1',
                         'id2' => 'parameter2',
                         'id3' => 'parameter3',

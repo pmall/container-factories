@@ -4,7 +4,7 @@ namespace Quanta\Container;
 
 use Quanta\Container\Parsing\ParserInterface;
 
-final class ParameterFactoryMap implements FactoryMapInterface
+final class ParsedFactoryMap implements FactoryMapInterface
 {
     /**
      * The parser used to produce factories from the values.

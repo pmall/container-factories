@@ -3,7 +3,7 @@
 use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\FactoryMap;
-use Quanta\Container\ParameterFactoryMap;
+use Quanta\Container\ParsedFactoryMap;
 use Quanta\Container\Parsing\ParserInterface;
 use Quanta\Container\Configuration\ParameterArray;
 use Quanta\Container\Configuration\ConfigurationUnit;
@@ -38,7 +38,7 @@ describe('ParameterArray', function () {
                 $test = $this->configuration->unit();
 
                 expect($test)->toEqual(new ConfigurationUnit(
-                    new ParameterFactoryMap($this->parser->get(), [])
+                    new ParsedFactoryMap($this->parser->get(), [])
                 ));
 
             });
@@ -72,7 +72,7 @@ describe('ParameterArray', function () {
                 $test = $this->configuration->unit();
 
                 expect($test)->toEqual(new ConfigurationUnit(
-                    new ParameterFactoryMap($this->parser->get(), [
+                    new ParsedFactoryMap($this->parser->get(), [
                         'id1' => 'parameter1',
                         'id2' => 'parameter2',
                         'id3' => 'parameter3',

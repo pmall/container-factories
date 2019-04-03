@@ -12,7 +12,7 @@ use Quanta\Container\TaggingPass;
 use Quanta\Container\ExtensionPass;
 use Quanta\Container\MergedFactoryMap;
 use Quanta\Container\FactoryMapInterface;
-use Quanta\Container\ParameterFactoryMap;
+use Quanta\Container\ParsedFactoryMap;
 use Quanta\Container\MergedProcessingPass;
 use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Parsing\ParserInterface;
@@ -90,7 +90,7 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
 
         $configuration = $result->sanitized();
 
-        $maps[] = new ParameterFactoryMap($this->parser, $configuration['parameters']);
+        $maps[] = new ParsedFactoryMap($this->parser, $configuration['parameters']);
         $maps[] = new FactoryMap(array_map([Alias::class, 'instance'], $configuration['aliases']));
         $maps[] = new FactoryMap(array_map([Invokable::class, 'instance'], $configuration['invokables']));
         $maps[] = new FactoryMap($configuration['factories']);

@@ -2,7 +2,7 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\ParameterFactoryMap;
+use Quanta\Container\ParsedFactoryMap;
 use Quanta\Container\Parsing\ParserInterface;
 
 final class ParameterArray implements ConfigurationInterface
@@ -39,7 +39,7 @@ final class ParameterArray implements ConfigurationInterface
     public function unit(): ConfigurationUnitInterface
     {
         return new ConfigurationUnit(
-            new ParameterFactoryMap($this->parser, $this->parameters)
+            new ParsedFactoryMap($this->parser, $this->parameters)
         );
     }
 }
