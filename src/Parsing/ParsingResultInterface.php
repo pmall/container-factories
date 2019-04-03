@@ -4,14 +4,14 @@ namespace Quanta\Container\Parsing;
 
 use Quanta\Container\FactoryInterface;
 
-interface ParsedFactoryInterface
+interface ParsingResultInterface
 {
     /**
      * Return whether the parsing succeeded or not.
      *
      * @return bool
      */
-    public function success(): bool;
+    public function isParsed(): bool;
 
     /**
      * Return the parsed factory.

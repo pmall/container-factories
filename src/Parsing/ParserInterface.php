@@ -8,7 +8,7 @@ interface ParserInterface
      * Return a parsed factory from the given value.
      *
      * @param mixed $value
-     * @return \Quanta\Container\Parsing\ParsedFactoryInterface
+     * @return \Quanta\Container\Parsing\ParsingResultInterface
      */
-    public function __invoke($value): ParsedFactoryInterface;
+    public function __invoke($value): ParsingResultInterface;
 }

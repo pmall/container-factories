@@ -28,7 +28,7 @@ describe('EnvVarParser', function () {
 
                 $test = ($this->parser)([]);
 
-                expect($test)->toEqual(new ParsingFailure([]));
+                expect($test)->toEqual(new ParsingFailure);
 
             });
 
@@ -44,7 +44,7 @@ describe('EnvVarParser', function () {
 
                         $test = ($this->parser)('env()');
 
-                        expect($test)->toEqual(new ParsingFailure('env()'));
+                        expect($test)->toEqual(new ParsingFailure);
 
                     });
 
@@ -98,7 +98,7 @@ describe('EnvVarParser', function () {
 
                         $test = ($this->parser)('env(NAME, default, int, x)');
 
-                        expect($test)->toEqual(new ParsingFailure('env(NAME, default, int, x)'));
+                        expect($test)->toEqual(new ParsingFailure);
 
                     });
 
@@ -112,7 +112,7 @@ describe('EnvVarParser', function () {
 
                     $test = ($this->parser)('value');
 
-                    expect($test)->toEqual(new ParsingFailure('value'));
+                    expect($test)->toEqual(new ParsingFailure);
 
                 });
 

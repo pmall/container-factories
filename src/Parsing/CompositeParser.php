@@ -24,16 +24,16 @@ final class CompositeParser implements ParserInterface
     /**
      * @inheritdoc
      */
-    public function __invoke($value): ParsedFactoryInterface
+    public function __invoke($value): ParsingResultInterface
     {
         foreach ($this->parsers as $parser) {
             $parsed = $parser($value);
 
-            if ($parsed->success()) {
+            if ($parsed->isParsed()) {
                 return $parsed;
             }
         }
 
-        return new ParsingFailure($value);
+        return new ParsingFailure;
     }
 }

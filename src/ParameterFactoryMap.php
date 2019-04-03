@@ -37,10 +37,10 @@ final class ParameterFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        $parsed = array_map($this->parser, $this->values);
+        $results = array_map($this->parser, $this->values);
 
-        return array_map(function ($parsed) {
-            return $parsed->factory();
-        }, $parsed);
+        return array_map(function ($result) {
+            return $result->factory();
+        }, $results);
     }
 }

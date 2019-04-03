@@ -6,7 +6,7 @@ use Quanta\Container\FactoryInterface;
 use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\ParameterFactoryMap;
 use Quanta\Container\Parsing\ParserInterface;
-use Quanta\Container\Parsing\ParsedFactoryInterface;
+use Quanta\Container\Parsing\ParsingResultInterface;
 
 describe('ParameterFactoryMap', function () {
 
@@ -70,17 +70,17 @@ describe('ParameterFactoryMap', function () {
                 $factory2 = mock(FactoryInterface::class);
                 $factory3 = mock(FactoryInterface::class);
 
-                $parsed1 = mock(ParsedFactoryInterface::class);
-                $parsed2 = mock(ParsedFactoryInterface::class);
-                $parsed3 = mock(ParsedFactoryInterface::class);
+                $result1 = mock(ParsingResultInterface::class);
+                $result2 = mock(ParsingResultInterface::class);
+                $result3 = mock(ParsingResultInterface::class);
 
-                $parsed1->factory->returns($factory1);
-                $parsed2->factory->returns($factory2);
-                $parsed3->factory->returns($factory3);
+                $result1->factory->returns($factory1);
+                $result2->factory->returns($factory2);
+                $result3->factory->returns($factory3);
 
-                $this->parser->__invoke->with('parameter1')->returns($parsed1);
-                $this->parser->__invoke->with('parameter2')->returns($parsed2);
-                $this->parser->__invoke->with('parameter3')->returns($parsed3);
+                $this->parser->__invoke->with('parameter1')->returns($result1);
+                $this->parser->__invoke->with('parameter2')->returns($result2);
+                $this->parser->__invoke->with('parameter3')->returns($result3);
 
                 $test = $this->map->factories();
 

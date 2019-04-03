@@ -5,41 +5,41 @@ use function Eloquent\Phony\Kahlan\mock;
 use Quanta\Container\FactoryArray;
 use Quanta\Container\FactoryInterface;
 use Quanta\Container\Parsing\ParsedFactoryArray;
-use Quanta\Container\Parsing\ParsedFactoryInterface;
+use Quanta\Container\Parsing\ParsingResultInterface;
 
 describe('ParsedFactoryArray', function () {
 
     beforeEach(function () {
 
-        $this->parsed1 = mock(ParsedFactoryInterface::class);
-        $this->parsed2 = mock(ParsedFactoryInterface::class);
-        $this->parsed3 = mock(ParsedFactoryInterface::class);
+        $this->result1 = mock(ParsingResultInterface::class);
+        $this->result2 = mock(ParsingResultInterface::class);
+        $this->result3 = mock(ParsingResultInterface::class);
 
     });
 
-    context('when all the values of the array of parsed factories are implementations of ParsedFactoryInterface', function () {
+    context('when all the values of the array of parsed factories are implementations of ParsingResultInterface', function () {
 
         beforeEach(function () {
 
-            $this->parsed = new ParsedFactoryArray([
-                $this->parsed1->get(),
-                'key2' => $this->parsed2->get(),
-                $this->parsed3->get(),
+            $this->result = new ParsedFactoryArray([
+                $this->result1->get(),
+                'key2' => $this->result2->get(),
+                $this->result3->get(),
             ]);
 
         });
 
-        it('should implement ParsedFactoryInterface', function () {
+        it('should implement ParsingResultInterface', function () {
 
-            expect($this->parsed)->toBeAnInstanceOf(ParsedFactoryInterface::class);
+            expect($this->result)->toBeAnInstanceOf(ParsingResultInterface::class);
 
         });
 
-        describe('->success()', function () {
+        describe('->isParsed()', function () {
 
             it('should return true', function () {
 
-                $test = $this->parsed->success();
+                $test = $this->result->isParsed();
 
                 expect($test)->toBeTruthy();
 
@@ -55,11 +55,11 @@ describe('ParsedFactoryArray', function () {
                 $factory2 = mock(FactoryInterface::class);
                 $factory3 = mock(FactoryInterface::class);
 
-                $this->parsed1->factory->returns($factory1);
-                $this->parsed2->factory->returns($factory2);
-                $this->parsed3->factory->returns($factory3);
+                $this->result1->factory->returns($factory1);
+                $this->result2->factory->returns($factory2);
+                $this->result3->factory->returns($factory3);
 
-                $test = $this->parsed->factory();
+                $test = $this->result->factory();
 
                 expect($test)->toEqual(new FactoryArray([
                     $factory1->get(),
@@ -73,15 +73,15 @@ describe('ParsedFactoryArray', function () {
 
     });
 
-    context('when a value of the of the given array of parsed factories is not an implementation of ParsedFactoryInterface', function () {
+    context('when a value of the of the given array of parsed factories is not an implementation of ParsingResultInterface', function () {
 
         it('should throw an InvalidArgumentException', function () {
 
             $test = function () {
                 new ParsedFactoryArray([
-                    $this->parsed1->get(),
+                    $this->result1->get(),
                     'key2' => 1,
-                    $this->parsed3->get(),
+                    $this->result3->get(),
                 ]);
             };
 

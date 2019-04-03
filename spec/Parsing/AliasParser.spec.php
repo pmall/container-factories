@@ -28,7 +28,7 @@ describe('AliasParser', function () {
 
                 $test = ($this->parser)([]);
 
-                expect($test)->toEqual(new ParsingFailure([]));
+                expect($test)->toEqual(new ParsingFailure);
 
             });
 
@@ -54,7 +54,7 @@ describe('AliasParser', function () {
 
                     $test = ($this->parser)('value');
 
-                    expect($test)->toEqual(new ParsingFailure('value'));
+                    expect($test)->toEqual(new ParsingFailure);
 
                 });
 

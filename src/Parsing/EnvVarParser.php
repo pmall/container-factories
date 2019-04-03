@@ -9,7 +9,7 @@ final class EnvVarParser implements ParserInterface
     /**
      * @inheritdoc
      */
-    public function __invoke($value): ParsedFactoryInterface
+    public function __invoke($value): ParsingResultInterface
     {
         if (is_string($value)) {
             if (preg_match('/^env\((.+?)\)$/', $value, $matches)) {
@@ -20,13 +20,15 @@ final class EnvVarParser implements ParserInterface
                 $nb = count($xs);
 
                 if ($nb > 0 && $nb < 4) {
-                    return new ParsedFactory(new EnvVar(...$xs));
+                    return new ParsedFactory(
+                        new EnvVar(...$xs)
+                    );
                 }
             }
 
-            return new ParsingFailure($value);
+            return new ParsingFailure;
         }
 
-        return new ParsingFailure($value);
+        return new ParsingFailure;
     }
 }

@@ -4,7 +4,7 @@ namespace Quanta\Container\Parsing;
 
 use Quanta\Container\FactoryInterface;
 
-final class ParsedFactory implements ParsedFactoryInterface
+final class ParsedFactory implements ParsingResultInterface
 {
     /**
      * The parsed factory.
@@ -26,7 +26,7 @@ final class ParsedFactory implements ParsedFactoryInterface
     /**
      * @inheritdoc
      */
-    public function success(): bool
+    public function isParsed(): bool
     {
         return true;
     }

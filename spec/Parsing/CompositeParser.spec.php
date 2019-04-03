@@ -30,7 +30,7 @@ describe('CompositeParser', function () {
 
                 $test = ($this->parser)('value');
 
-                expect($test)->toEqual(new ParsingFailure('value'));
+                expect($test)->toEqual(new ParsingFailure);
 
             });
 
@@ -73,11 +73,11 @@ describe('CompositeParser', function () {
                     $factory1 = mock(FactoryInterface::class);
                     $factory2 = mock(FactoryInterface::class);
 
-                    $this->parser1->__invoke->with('value')->returns(new ParsingFailure('value'));
+                    $this->parser1->__invoke->with('value')->returns(new ParsingFailure);
                     $this->parser2->__invoke->with('value')->returns(new ParsedFactory($factory1->get()));
-                    $this->parser3->__invoke->with('value')->returns(new ParsingFailure('value'));
+                    $this->parser3->__invoke->with('value')->returns(new ParsingFailure);
                     $this->parser4->__invoke->with('value')->returns(new ParsedFactory($factory2->get()));
-                    $this->parser5->__invoke->with('value')->returns(new ParsingFailure('value'));
+                    $this->parser5->__invoke->with('value')->returns(new ParsingFailure);
 
                     $test = ($this->parser)('value');
 
@@ -91,15 +91,15 @@ describe('CompositeParser', function () {
 
                 it('should return a ParsingFailure', function () {
 
-                    $this->parser1->__invoke->with('value')->returns(new ParsingFailure('value'));
-                    $this->parser2->__invoke->with('value')->returns(new ParsingFailure('value'));
-                    $this->parser3->__invoke->with('value')->returns(new ParsingFailure('value'));
-                    $this->parser4->__invoke->with('value')->returns(new ParsingFailure('value'));
-                    $this->parser5->__invoke->with('value')->returns(new ParsingFailure('value'));
+                    $this->parser1->__invoke->with('value')->returns(new ParsingFailure);
+                    $this->parser2->__invoke->with('value')->returns(new ParsingFailure);
+                    $this->parser3->__invoke->with('value')->returns(new ParsingFailure);
+                    $this->parser4->__invoke->with('value')->returns(new ParsingFailure);
+                    $this->parser5->__invoke->with('value')->returns(new ParsingFailure);
 
                     $test = ($this->parser)('value');
 
-                    expect($test)->toEqual(new ParsingFailure('value'));
+                    expect($test)->toEqual(new ParsingFailure);
 
                 });
 

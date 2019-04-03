@@ -5,7 +5,7 @@ use function Eloquent\Phony\Kahlan\mock;
 use Quanta\Container\Parsing\ParserInterface;
 use Quanta\Container\Parsing\RecursiveParser;
 use Quanta\Container\Parsing\ParsedFactoryArray;
-use Quanta\Container\Parsing\ParsedFactoryInterface;
+use Quanta\Container\Parsing\ParsingResultInterface;
 
 describe('RecursiveParser', function () {
 
@@ -29,13 +29,13 @@ describe('RecursiveParser', function () {
 
             it('should return the result of the delegate parser', function () {
 
-                $parsed = mock(ParsedFactoryInterface::class);
+                $result = mock(ParsingResultInterface::class);
 
-                $this->delegate->__invoke->with('value')->returns($parsed);
+                $this->delegate->__invoke->with('value')->returns($result);
 
                 $test = ($this->parser)('value');
 
-                expect($test)->toBe($parsed->get());
+                expect($test)->toBe($result->get());
 
             });
 
@@ -45,20 +45,20 @@ describe('RecursiveParser', function () {
 
             it('should return the result of the delegate parser for the given array values as a parsed factory array', function () {
 
-                $parsed1 = mock(ParsedFactoryInterface::class);
-                $parsed2 = mock(ParsedFactoryInterface::class);
-                $parsed3 = mock(ParsedFactoryInterface::class);
+                $result1 = mock(ParsingResultInterface::class);
+                $result2 = mock(ParsingResultInterface::class);
+                $result3 = mock(ParsingResultInterface::class);
 
-                $this->delegate->__invoke->with('value1')->returns($parsed1);
-                $this->delegate->__invoke->with('value2')->returns($parsed2);
-                $this->delegate->__invoke->with('value3')->returns($parsed3);
+                $this->delegate->__invoke->with('value1')->returns($result1);
+                $this->delegate->__invoke->with('value2')->returns($result2);
+                $this->delegate->__invoke->with('value3')->returns($result3);
 
                 $test = ($this->parser)(['value1', 'key2' => 'value2', 'value3']);
 
                 expect($test)->toEqual(new ParsedFactoryArray([
-                    $parsed1->get(),
-                    'key2' => $parsed2->get(),
-                    $parsed3->get(),
+                    $result1->get(),
+                    'key2' => $result2->get(),
+                    $result3->get(),
                 ]));
 
             });

@@ -1,28 +1,27 @@
 <?php
 
-use Quanta\Container\Parameter;
 use Quanta\Container\Parsing\ParsingFailure;
-use Quanta\Container\Parsing\ParsedFactoryInterface;
+use Quanta\Container\Parsing\ParsingResultInterface;
 
 describe('ParsingFailure', function () {
 
     beforeEach(function () {
 
-        $this->parsed = new ParsingFailure('value');
+        $this->result = new ParsingFailure;
 
     });
 
-    it('should implement ParsedFactoryInterface', function () {
+    it('should implement ParsingResultInterface', function () {
 
-        expect($this->parsed)->toBeAnInstanceOf(ParsedFactoryInterface::class);
+        expect($this->result)->toBeAnInstanceOf(ParsingResultInterface::class);
 
     });
 
-    describe('->success()', function () {
+    describe('->isParsed()', function () {
 
         it('should return false', function () {
 
-            $test = $this->parsed->success();
+            $test = $this->result->isParsed();
 
             expect($test)->toBeFalsy();
 
@@ -32,11 +31,9 @@ describe('ParsingFailure', function () {
 
     describe('->factory()', function () {
 
-        it('should return a parameter from the value', function () {
+        it('should return throw a LogicException', function () {
 
-            $test = $this->parsed->factory();
-
-            expect($test)->toEqual(new Parameter('value'));
+            expect([$this->result, 'factory'])->toThrow(new LogicException);
 
         });
 

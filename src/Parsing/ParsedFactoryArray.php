@@ -5,24 +5,24 @@ namespace Quanta\Container\Parsing;
 use Quanta\Container\FactoryArray;
 use Quanta\Container\FactoryInterface;
 
-final class ParsedFactoryArray implements ParsedFactoryInterface
+final class ParsedFactoryArray implements ParsingResultInterface
 {
     /**
      * The array of parsed factories.
      *
-     * @var \Quanta\Container\Parsing\ParsedFactoryInterface[]
+     * @var \Quanta\Container\Parsing\ParsingResultInterface[]
      */
     private $parsed;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Parsing\ParsedFactoryInterface[] $parsed
+     * @param \Quanta\Container\Parsing\ParsingResultInterface[] $parsed
      * @throws \InvalidArgumentException
      */
     public function __construct(array $parsed)
     {
-        $result = \Quanta\ArrayTypeCheck::result($parsed, ParsedFactoryInterface::class);
+        $result = \Quanta\ArrayTypeCheck::result($parsed, ParsingResultInterface::class);
 
         if (! $result->isValid()) {
             throw new \InvalidArgumentException(
@@ -36,7 +36,7 @@ final class ParsedFactoryArray implements ParsedFactoryInterface
     /**
      * @inheritdoc
      */
-    public function success(): bool
+    public function isParsed(): bool
     {
         return true;
     }

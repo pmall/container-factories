@@ -2,10 +2,12 @@
 
 namespace Quanta\Container\Parsing;
 
-final class RecursiveParser implements ParserInterface
+use Quanta\Container\Parameter;
+
+final class FallbackParser implements ParserInterface
 {
     /**
-     * The parser to use recursively on array values.
+     * The parser.
      *
      * @var \Quanta\Container\Parsing\ParserInterface
      */
@@ -26,10 +28,10 @@ final class RecursiveParser implements ParserInterface
      */
     public function __invoke($value): ParsingResultInterface
     {
-        if (is_array($value)) {
-            return new ParsedFactoryArray(array_map($this->parser, $value));
-        }
+        $result = ($this->parser)($value);
 
-        return ($this->parser)($value);
+        return ! $result->isParsed()
+            ? new ParsedFactory(new Parameter($value))
+            : $result;
     }
 }
