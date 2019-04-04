@@ -13,6 +13,37 @@ interface TestInterface
     //
 }
 
+abstract class TestAbstractClass
+{
+    //
+}
+
+trait TestTrait
+{
+    //
+}
+
+final class TestClassWithNoConstructor
+{
+    //
+}
+
+final class TestClassWithNoParameter
+{
+    public function __construct()
+    {
+        //
+    }
+}
+
+final class TestClassWithParameters
+{
+    public function __construct($a, $b, $c, ...$d)
+    {
+        //
+    }
+}
+
 final class TestClass implements TestInterface
 {
     private $xs;
