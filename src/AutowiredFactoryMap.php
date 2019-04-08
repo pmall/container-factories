@@ -10,7 +10,7 @@ final class AutowiredFactoryMap implements FactoryMapInterface
     /**
      * The argument parser used to parse the class constructor parameters.
      *
-     * @var \Quanta\Container\Autowiring\AutowiredInstance
+     * @var \Quanta\Container\Autowiring\ArgumentParserInterface
      */
     private $parser;
 
@@ -24,8 +24,8 @@ final class AutowiredFactoryMap implements FactoryMapInterface
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Autowiring\AutowiredInstance    $parser
-     * @param array[]                                           $map
+     * @param \Quanta\Container\Autowiring\ArgumentParserInterface  $parser
+     * @param array[]                                               $map
      * @throws \InvalidArgumentException
      */
     public function __construct(ArgumentParserInterface $parser, array $map)
@@ -48,12 +48,11 @@ final class AutowiredFactoryMap implements FactoryMapInterface
     public function factories(): array
     {
         $classes = array_keys($this->map);
-        $options = array_values($this->map);
 
-        return array_combine($classes, array_map(function ($class, $options) {
+        return (array) array_combine($classes, array_map(function ($class, $options) {
             return new DefinitionProxy(
                 new AutowiredInstance($this->parser, $class, $options)
             );
-        }, $classes, $options));
+        }, $classes, $this->map));
     }
 }
