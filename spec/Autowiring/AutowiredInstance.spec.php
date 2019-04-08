@@ -4,7 +4,7 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\Instance;
 use Quanta\Container\FactoryInterface;
-use Quanta\Container\FactoryDefinitionInterface;
+use Quanta\Container\DefinitionInterface;
 use Quanta\Container\Parsing\ParsingResultInterface;
 use Quanta\Container\Autowiring\AutowiredInstance;
 use Quanta\Container\Autowiring\ArgumentParserInterface;
@@ -27,9 +27,9 @@ describe('AutowiredInstance', function () {
 
         });
 
-        it('should implement FactoryDefinitionInterface', function () {
+        it('should implement DefinitionInterface', function () {
 
-            expect($this->definition)->toBeAnInstanceOf(FactoryDefinitionInterface::class);
+            expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
 
         });
 
@@ -58,9 +58,9 @@ describe('AutowiredInstance', function () {
 
         });
 
-        it('should implement FactoryDefinitionInterface', function () {
+        it('should implement DefinitionInterface', function () {
 
-            expect($this->definition)->toBeAnInstanceOf(FactoryDefinitionInterface::class);
+            expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
 
         });
 
@@ -89,9 +89,9 @@ describe('AutowiredInstance', function () {
 
         });
 
-        it('should implement FactoryDefinitionInterface', function () {
+        it('should implement DefinitionInterface', function () {
 
-            expect($this->definition)->toBeAnInstanceOf(FactoryDefinitionInterface::class);
+            expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
 
         });
 
@@ -120,9 +120,9 @@ describe('AutowiredInstance', function () {
 
         });
 
-        it('should implement FactoryDefinitionInterface', function () {
+        it('should implement DefinitionInterface', function () {
 
-            expect($this->definition)->toBeAnInstanceOf(FactoryDefinitionInterface::class);
+            expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
 
         });
 
@@ -153,9 +153,9 @@ describe('AutowiredInstance', function () {
 
             });
 
-            it('should implement FactoryDefinitionInterface', function () {
+            it('should implement DefinitionInterface', function () {
 
-                expect($this->definition)->toBeAnInstanceOf(FactoryDefinitionInterface::class);
+                expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
 
             });
 
@@ -186,9 +186,9 @@ describe('AutowiredInstance', function () {
 
                 });
 
-                it('should implement FactoryDefinitionInterface', function () {
+                it('should implement DefinitionInterface', function () {
 
-                    expect($this->definition)->toBeAnInstanceOf(FactoryDefinitionInterface::class);
+                    expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
 
                 });
 
@@ -217,9 +217,9 @@ describe('AutowiredInstance', function () {
 
                 });
 
-                it('should implement FactoryDefinitionInterface', function () {
+                it('should implement DefinitionInterface', function () {
 
-                    expect($this->definition)->toBeAnInstanceOf(FactoryDefinitionInterface::class);
+                    expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
 
                 });
 

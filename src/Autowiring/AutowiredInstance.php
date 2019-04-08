@@ -4,9 +4,9 @@ namespace Quanta\Container\Autowiring;
 
 use Quanta\Container\Instance;
 use Quanta\Container\FactoryInterface;
-use Quanta\Container\FactoryDefinitionInterface;
+use Quanta\Container\DefinitionInterface;
 
-final class AutowiredInstance implements FactoryDefinitionInterface
+final class AutowiredInstance implements DefinitionInterface
 {
     /**
      * The parser used to parse constructor parameter reflections as factories.

@@ -2,7 +2,7 @@
 
 namespace Quanta\Container;
 
-interface FactoryDefinitionInterface
+interface DefinitionInterface
 {
     /**
      * Return a container factory.
