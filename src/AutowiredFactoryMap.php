@@ -47,12 +47,14 @@ final class AutowiredFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        $classes = array_keys($this->map);
+        $factories = [];
 
-        return (array) array_combine($classes, array_map(function ($class, $options) {
-            return new DefinitionProxy(
+        foreach ($this->map as $class => $options) {
+            $factories[$class] = new DefinitionProxy(
                 new AutowiredInstance($this->parser, $class, $options)
             );
-        }, $classes, $this->map));
+        }
+
+        return $factories;
     }
 }

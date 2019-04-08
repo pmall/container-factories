@@ -26,10 +26,8 @@ final class MergedConfiguration implements ConfigurationInterface
      */
     public function unit(): ConfigurationUnitInterface
     {
-        return new MergedConfigurationUnit(
-            ...array_map(function ($configuration) {
-                return $configuration->unit();
-            }, $this->configurations)
-        );
+        return new MergedConfigurationUnit(...array_map(function ($configuration) {
+            return $configuration->unit();
+        }, $this->configurations));
     }
 }

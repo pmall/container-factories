@@ -37,10 +37,8 @@ final class ParsedFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        $results = array_map($this->parser, $this->values);
-
-        return array_map(function ($result) {
-            return $result->factory();
-        }, $results);
+        return array_map(function ($value) {
+            return ($this->parser)($value)->factory();
+        }, $this->values);
     }
 }

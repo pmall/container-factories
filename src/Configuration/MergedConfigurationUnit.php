@@ -31,11 +31,9 @@ final class MergedConfigurationUnit implements ConfigurationUnitInterface
      */
     public function map(): FactoryMapInterface
     {
-        return new MergedFactoryMap(
-            ...array_map(function ($unit) {
-                return $unit->map();
-            }, $this->units)
-        );
+        return new MergedFactoryMap(...array_map(function ($unit) {
+            return $unit->map();
+        }, $this->units));
     }
 
     /**
@@ -43,10 +41,8 @@ final class MergedConfigurationUnit implements ConfigurationUnitInterface
      */
     public function pass(): ProcessingPassInterface
     {
-        return new MergedProcessingPass(
-            ...array_map(function ($unit) {
-                return $unit->pass();
-            }, $this->units)
-        );
+        return new MergedProcessingPass(...array_map(function ($unit) {
+            return $unit->pass();
+        }, $this->units));
     }
 }
