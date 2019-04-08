@@ -17,14 +17,7 @@ describe('ArgumentParser', function () {
 
         $this->delegate = mock(ParserInterface::class);
 
-        $this->parser = new ArgumentParser($this->delegate->get(), [
-            '$parameter1' => 'value1',
-            '$parameter2' => 'value2',
-            '$parameter3' => 'value3',
-            Test\SomeClass1::class => 'value4',
-            Test\SomeClass2::class => 'value5',
-            Test\SomeClass3::class => 'value6',
-        ]);
+        $this->parser = new ArgumentParser($this->delegate->get());
 
     });
 
@@ -37,6 +30,15 @@ describe('ArgumentParser', function () {
     describe('->__invoke()', function () {
 
         beforeEach(function () {
+
+            $this->options = [
+                '$parameter1' => 'value1',
+                '$parameter2' => 'value2',
+                '$parameter3' => 'value3',
+                Test\SomeClass1::class => 'value4',
+                Test\SomeClass2::class => 'value5',
+                Test\SomeClass3::class => 'value6',
+            ];
 
             $this->parameter = mock(ReflectionParameter::class);
 
@@ -60,7 +62,7 @@ describe('ArgumentParser', function () {
 
                     $this->delegate->__invoke->with('value2')->returns($result);
 
-                    $test = ($this->parser)($this->parameter->get());
+                    $test = ($this->parser)($this->parameter->get(), $this->options);
 
                     expect($test)->toBe($result->get());
 
@@ -92,7 +94,7 @@ describe('ArgumentParser', function () {
 
                                 $this->delegate->__invoke->with('value5')->returns($result);
 
-                                $test = ($this->parser)($this->parameter->get());
+                                $test = ($this->parser)($this->parameter->get(), $this->options);
 
                                 expect($test)->toBe($result->get());
 
@@ -114,7 +116,7 @@ describe('ArgumentParser', function () {
 
                                     $this->parameter->allowsNull->returns(true);
 
-                                    $test = ($this->parser)($this->parameter->get());
+                                    $test = ($this->parser)($this->parameter->get(), $this->options);
 
                                     expect($test)->toEqual(new ParsedFactory(
                                         new Alias(Test\SomeClass::class, true)
@@ -130,7 +132,7 @@ describe('ArgumentParser', function () {
 
                                     $this->parameter->allowsNull->returns(false);
 
-                                    $test = ($this->parser)($this->parameter->get());
+                                    $test = ($this->parser)($this->parameter->get(), $this->options);
 
                                     expect($test)->toEqual(new ParsedFactory(
                                         new Alias(Test\SomeClass::class, false)
@@ -159,7 +161,7 @@ describe('ArgumentParser', function () {
                                 $this->parameter->isDefaultValueAvailable->returns(true);
                                 $this->parameter->getDefaultValue->returns('default');
 
-                                $test = ($this->parser)($this->parameter->get());
+                                $test = ($this->parser)($this->parameter->get(), $this->options);
 
                                 expect($test)->toEqual(new ParsedFactory(new Parameter('default')));
 
@@ -181,7 +183,7 @@ describe('ArgumentParser', function () {
 
                                     $this->parameter->allowsNull->returns(true);
 
-                                    $test = ($this->parser)($this->parameter->get());
+                                    $test = ($this->parser)($this->parameter->get(), $this->options);
 
                                     expect($test)->toEqual(new ParsedFactory(new Parameter(null)));
 
@@ -195,7 +197,7 @@ describe('ArgumentParser', function () {
 
                                     $this->parameter->allowsNull->returns(false);
 
-                                    $test = ($this->parser)($this->parameter->get());
+                                    $test = ($this->parser)($this->parameter->get(), $this->options);
 
                                     expect($test)->toEqual(new ParsingFailure);
 
@@ -224,7 +226,7 @@ describe('ArgumentParser', function () {
                             $this->parameter->isDefaultValueAvailable->returns(true);
                             $this->parameter->getDefaultValue->returns('default');
 
-                            $test = ($this->parser)($this->parameter->get());
+                            $test = ($this->parser)($this->parameter->get(), $this->options);
 
                             expect($test)->toEqual(new ParsedFactory(new Parameter('default')));
 
@@ -246,7 +248,7 @@ describe('ArgumentParser', function () {
 
                                 $this->parameter->allowsNull->returns(true);
 
-                                $test = ($this->parser)($this->parameter->get());
+                                $test = ($this->parser)($this->parameter->get(), $this->options);
 
                                 expect($test)->toEqual(new ParsedFactory(new Parameter(null)));
 
@@ -260,7 +262,7 @@ describe('ArgumentParser', function () {
 
                                 $this->parameter->allowsNull->returns(false);
 
-                                $test = ($this->parser)($this->parameter->get());
+                                $test = ($this->parser)($this->parameter->get(), $this->options);
 
                                 expect($test)->toEqual(new ParsingFailure);
 
@@ -282,7 +284,7 @@ describe('ArgumentParser', function () {
 
                 $this->parameter->isVariadic->returns(true);
 
-                $test = ($this->parser)($this->parameter->get());
+                $test = ($this->parser)($this->parameter->get(), $this->options);
 
                 expect($test)->toEqual(new ParsingFailure);
 

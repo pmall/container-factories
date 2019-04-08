@@ -23,15 +23,24 @@ final class AutowiredInstance implements DefinitionInterface
     private $class;
 
     /**
+     * The autowiring options.
+     *
+     * @var array
+     */
+    private $options;
+
+    /**
      * Constructor.
      *
      * @param \Quanta\Container\Autowiring\ArgumentParserInterface  $parser
      * @param string                                                $class
+     * @param array                                                 $options
      */
-    public function __construct(ArgumentParserInterface $parser, string $class)
+    public function __construct(ArgumentParserInterface $parser, string $class, array $options = [])
     {
         $this->parser = $parser;
         $this->class = $class;
+        $this->options = $options;
     }
 
     /**
@@ -45,7 +54,7 @@ final class AutowiredInstance implements DefinitionInterface
         $parameters = $this->parameters();
 
         foreach ($parameters as $parameter) {
-            $result = ($this->parser)($parameter);
+            $result = ($this->parser)($parameter, $this->options);
 
             $result->isParsed()
                 ? $factories[] = $result->factory()

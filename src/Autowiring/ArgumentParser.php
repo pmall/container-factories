@@ -19,30 +19,19 @@ final class ArgumentParser implements ArgumentParserInterface
     private $parser;
 
     /**
-     * The associative array of paranemter name or class name to value pairs.
-     *
-     * Parameter names starts with $, other keys are considered as class names.
-     *
-     * @var array
-     */
-    private $options;
-
-    /**
      * Constructor.
      *
      * @param \Quanta\Container\Parsing\ParserInterface $parser
-     * @param array                                     $options
      */
-    public function __construct(ParserInterface $parser, array $options)
+    public function __construct(ParserInterface $parser)
     {
         $this->parser = $parser;
-        $this->options = $options;
     }
 
     /**
      * @inheritdoc
      */
-    public function __invoke(\ReflectionParameter $parameter): ParsingResultInterface
+    public function __invoke(\ReflectionParameter $parameter, array $options): ParsingResultInterface
     {
         if ($parameter->isVariadic()) {
             return new ParsingFailure;
@@ -50,8 +39,8 @@ final class ArgumentParser implements ArgumentParserInterface
 
         $name = '$' . $parameter->getName();
 
-        if (key_exists($name, $this->options)) {
-            return ($this->parser)($this->options[$name]);
+        if (key_exists($name, $options)) {
+            return ($this->parser)($options[$name]);
         }
 
         $type = $parameter->getType();
@@ -59,8 +48,8 @@ final class ArgumentParser implements ArgumentParserInterface
         if (! is_null($type) && ! $type->isBuiltIn()) {
             $class = $type->getName();
 
-            return key_exists($class, $this->options)
-                ? ($this->parser)($this->options[$class])
+            return key_exists($class, $options)
+                ? ($this->parser)($options[$class])
                 : new ParsedFactory(
                     new Alias($class, $parameter->allowsNull())
                 );
