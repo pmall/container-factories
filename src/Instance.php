@@ -26,18 +26,6 @@ final class Instance implements FactoryInterface
     private $factories;
 
     /**
-     * Return a new Instance from the given class name and factories.
-     *
-     * @param string $class
-     * @param \Quanta\Container\FactoryInterface ...$factories
-     * @return \Quanta\Container\Instance
-     */
-    public static function instance(string $class, FactoryInterface ...$factories): self
-    {
-        return new self($class, ...$factories);
-    }
-
-    /**
      * Constructor.
      *
      * @param string                                $class

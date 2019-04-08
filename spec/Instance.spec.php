@@ -11,46 +11,6 @@ use Quanta\Container\Compilation\CompilableInterface;
 
 require_once __DIR__ . '/.test/classes.php';
 
-describe('Instance::instance()', function () {
-
-    context('when no factory is given', function () {
-
-        it('should return a new Instance with the given class name and no factory', function () {
-
-            $test = Instance::instance(Test\TestClass::class);
-
-            expect($test)->toEqual(new Instance(Test\TestClass::class));
-
-        });
-
-    });
-
-    context('when factories are given', function () {
-
-        it('should return a new Instance with the given class name and factories', function () {
-
-            $factory1 = mock(FactoryInterface::class);
-            $factory2 = mock(FactoryInterface::class);
-            $factory3 = mock(FactoryInterface::class);
-
-            $test = Instance::instance(Test\TestClass::class, ...[
-                $factory1->get(),
-                $factory2->get(),
-                $factory3->get(),
-            ]);
-
-            expect($test)->toEqual(new Instance(Test\TestClass::class, ...[
-                $factory1->get(),
-                $factory2->get(),
-                $factory3->get(),
-            ]));
-
-        });
-
-    });
-
-});
-
 describe('Instance', function () {
 
     context('when there is no factories', function () {

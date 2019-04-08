@@ -43,20 +43,6 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
     private $source;
 
     /**
-     * Return a new ArrayConfigurationUnit from the given parser, configuration
-     * array and source.
-     *
-     * @param \Quanta\Container\Parsing\ParserInterface $parser
-     * @param array                                     $configuration
-     * @param string                                    $source
-     * @return \Quanta\Container\Configuration\ArrayConfigurationUnit
-     */
-    public static function instance(ParserInterface $parser, array $configuration, string $source = ''): self
-    {
-        return new self($parser, $configuration, $source);
-    }
-
-    /**
      * Constructor.
      *
      * @param \Quanta\Container\Parsing\ParserInterface $parser
@@ -90,12 +76,12 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
 
         $configuration = $result->sanitized();
 
-        $maps[] = new ParsedFactoryMap($this->parser, $configuration['parameters']);
-        $maps[] = new FactoryMap(array_map([Alias::class, 'instance'], $configuration['aliases']));
-        $maps[] = new FactoryMap(array_map([Invokable::class, 'instance'], $configuration['invokables']));
-        $maps[] = new FactoryMap($configuration['factories']);
-
-        return new MergedFactoryMap(...$maps);
+        return new MergedFactoryMap(...[
+            $this->parameters($configuration['parameters']),
+            $this->aliases($configuration['aliases']),
+            $this->invokables($configuration['invokables']),
+            $this->factories($configuration['factories']),
+        ]);
     }
 
     /**
@@ -118,50 +104,103 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
 
         $configuration = $result->sanitized();
 
-        $passes[] = array_map([$this, 'taggingPass'], ...[
-            array_keys($configuration['tags']),
-            $configuration['tags'],
-        ]);
-
-        $passes[] = array_map([$this, 'reverseTaggingPass'], ...[
-            array_keys($configuration['mappers']),
-            $configuration['mappers'],
-        ]);
-
-        $passes[] = array_map([ExtensionPass::class, 'instance'], ...[
-            array_keys($configuration['extensions']),
-            $configuration['extensions'],
-        ]);
-
-        $passes[] = array_values($configuration['passes']);
-
-        return new MergedProcessingPass(...array_merge(...$passes));
+        return new MergedProcessingPass(...array_merge(...[
+            $this->taggingPasses($configuration['tags']),
+            $this->reverseTaggingPasses($configuration['mappers']),
+            $this->extensionPasses($configuration['extensions']),
+            array_values($configuration['passes']),
+        ]));
     }
 
     /**
-     * Return a tagging pass associating the given id to the entries with the
-     * given ids (manual tagging).
+     * Return a parsed factory map from the given array of parameters.
      *
-     * @param string    $id
-     * @param string[]  $ids
-     * @return \Quanta\Container\TaggingPass
+     * @param array $parameters
+     * @return \Quanta\Container\FactoryMapInterface
      */
-    private function taggingPass(string $id, array $ids): TaggingPass
+    private function parameters(array $parameters): FactoryMapInterface
     {
-        return new TaggingPass($id, new Tagging\Entries(...array_values($ids)));
+        return new ParsedFactoryMap($this->parser, $parameters);
     }
 
     /**
-     * Return a tagging pass associating the given id to the entries with a
-     * subclass of the given class as id (reverse tagging).
+     * Return a factory map containing aliases from the given array of ids.
      *
-     * @param string $id
-     * @param string $class
-     * @return \Quanta\Container\TaggingPass
+     * @param string[] $ids
+     * @return \Quanta\Container\FactoryMapInterface
      */
-    private function reverseTaggingPass(string $id, string $class): TaggingPass
+    private function aliases(array $ids): FactoryMapInterface
     {
-        return new TaggingPass($id, new Tagging\Implementations($class));
+        return new FactoryMap(array_map(function ($id) {
+            return new Alias($id);
+        }, $ids));
+    }
+
+    /**
+     * Return a factory map containing invokables from the given array of class
+     * names.
+     *
+     * @param string[] $classes
+     * @return \Quanta\Container\FactoryMapInterface
+     */
+    private function invokables(array $classes): FactoryMapInterface
+    {
+        return new FactoryMap(array_map(function ($class) {
+            return new Invokable($class);
+        }, $classes));
+    }
+
+    /**
+     * Return a factory map from the given array of factories.
+     *
+     * @param callable[] $factories
+     * @return \Quanta\Container\FactoryMapInterface
+     */
+    private function factories(array $factories): FactoryMapInterface
+    {
+        return new FactoryMap($factories);
+    }
+
+    /**
+     * Return an array of tagging passes from the given associative array of tag
+     * to array of ids (manual tagging).
+     *
+     * @param array[] $tags
+     * @return \Quanta\Container\TaggingPass[]
+     */
+    private function taggingPasses(array $tags): array
+    {
+        return array_map(function ($id, $ids) {
+            return new TaggingPass($id, new Tagging\Entries(...array_values($ids)));
+        }, array_keys($tags), $tags);
+    }
+
+    /**
+     * Return an array of tagging passes from the given associative array of tag
+     * to interface name (reverse tagging).
+     *
+     * @param string[] $tags
+     * @return \Quanta\Container\TaggingPass[]
+     */
+    private function reverseTaggingPasses(array $tags): array
+    {
+        return array_map(function ($id, $class) {
+            return new TaggingPass($id, new Tagging\Implementations($class));
+        }, array_keys($tags), $tags);
+    }
+
+    /**
+     * Return an array of extension passes from the given associative array of
+     * id to extension.
+     *
+     * @param callable[] $extensions
+     * @return \Quanta\Container\ExtensionPass[]
+     */
+    private function extensionPasses(array $extensions): array
+    {
+        return array_map(function ($id, $extension) {
+            return new ExtensionPass($id, $extension);
+        }, array_keys($extensions), $extensions);
     }
 
     /**

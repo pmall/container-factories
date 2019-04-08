@@ -11,56 +11,6 @@ use Quanta\Container\Compilation\CompilableInterface;
 
 require_once __DIR__ . '/.test/classes.php';
 
-describe('FactoryArray::instance()', function () {
-
-    beforeEach(function () {
-
-        $this->factory1 = mock(FactoryInterface::class);
-        $this->factory2 = mock(FactoryInterface::class);
-        $this->factory3 = mock(FactoryInterface::class);
-
-    });
-
-    context('when all the values of the given array of factories are implementations of FactoryInterface', function () {
-
-        it('should return a new FactoryArray with the given array of factories', function () {
-
-            $test = FactoryArray::instance([
-                'id1' => $this->factory1->get(),
-                'id2' => $this->factory2->get(),
-                'id3' => $this->factory3->get(),
-            ]);
-
-            expect($test)->toEqual(new FactoryArray([
-                'id1' => $this->factory1->get(),
-                'id2' => $this->factory2->get(),
-                'id3' => $this->factory3->get(),
-            ]));
-
-        });
-
-    });
-
-    context('when a value of the of the given array of factories is not an implementation of FactoryInterface', function () {
-
-        it('should throw an invalid argument exception', function () {
-
-            $test = function () {
-                FactoryArray::instance([
-                    'id1' => $this->factory1->get(),
-                    'id2' => 2,
-                    'id3' => $this->factory3->get(),
-                ]);
-            };
-
-            expect($test)->toThrow(new InvalidArgumentException);
-
-        });
-
-    });
-
-});
-
 describe('FactoryArray', function () {
 
     beforeEach(function () {

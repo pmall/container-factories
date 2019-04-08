@@ -18,17 +18,6 @@ final class Tag implements FactoryInterface
     private $ids;
 
     /**
-     * Return a new Tag from the given ids.
-     *
-     * @param string ...$ids
-     * @return \Quanta\Container\Tag
-     */
-    public static function instance(string ...$ids): self
-    {
-        return new self(...$ids);
-    }
-
-    /**
      * Constructor.
      *
      * @param string ...$ids

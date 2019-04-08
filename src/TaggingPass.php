@@ -19,18 +19,6 @@ final class TaggingPass implements ProcessingPassInterface
     private $predicate;
 
     /**
-     * Return a new TaggingPass from the given id and predicate.
-     *
-     * @param string    $id
-     * @param callable  $predicate
-     * @return \Quanta\Container\TaggingPass
-     */
-    public static function instance(string $id, callable $predicate): self
-    {
-        return new self($id, $predicate);
-    }
-
-    /**
      * Constructor.
      *
      * @param string    $id

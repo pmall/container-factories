@@ -4,20 +4,6 @@ use Quanta\Container\Extension;
 use Quanta\Container\ExtensionPass;
 use Quanta\Container\ProcessingPassInterface;
 
-describe('ExtensionPass::instance()', function () {
-
-    it('should return a new ExtensionPass with the given id and extension', function () {
-
-        $extension = function () {};
-
-        $test = ExtensionPass::instance('id', $extension);
-
-        expect($test)->toEqual(new ExtensionPass('id', $extension));
-
-    });
-
-});
-
 describe('ExtensionPass', function () {
 
     beforeEach(function () {

@@ -27,18 +27,6 @@ final class Alias implements FactoryInterface
     private $nullable;
 
     /**
-     * Return a new Alias from the given id and nullable.
-     *
-     * @param string    $id
-     * @param bool      $nullable
-     * @return \Quanta\Container\Alias
-     */
-    public static function instance(string $id, bool $nullable = false): self
-    {
-        return new self($id, $nullable);
-    }
-
-    /**
      * Constructor.
      *
      * @param string    $id

@@ -17,26 +17,6 @@ final class FactoryArray implements FactoryInterface
     private $factories;
 
     /**
-     * Return a new FactoryArray from the given array of factories.
-     *
-     * @param \Quanta\Container\FactoryInterface[] $factories
-     * @return \Quanta\Container\FactoryArray
-     * @throws \InvalidArgumentException
-     */
-    public static function instance(array $factories): self
-    {
-        $result = \Quanta\ArrayTypeCheck::result($factories, FactoryInterface::class);
-
-        if (! $result->isValid()) {
-            throw new \InvalidArgumentException(
-                $result->message()->static(self::class, 'instance', 1)
-            );
-        }
-
-        return new self($factories);
-    }
-
-    /**
      * Constructor.
      *
      * @param \Quanta\Container\FactoryInterface[] $factories

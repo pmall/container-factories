@@ -17,17 +17,6 @@ final class Parameter implements FactoryInterface
     private $value;
 
     /**
-     * Return a new Parameter from the given value.
-     *
-     * @param mixed $value
-     * @return \Quanta\Container\Parameter
-     */
-    public static function instance($value): self
-    {
-        return new self($value);
-    }
-
-    /**
      * Constructor.
      *
      * @param mixed $value

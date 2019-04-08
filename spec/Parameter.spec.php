@@ -9,18 +9,6 @@ use Quanta\Container\FactoryInterface;
 use Quanta\Container\Parsing\ParserInterface;
 use Quanta\Container\Compilation\Compiler;
 
-describe('Parameter::instance()', function () {
-
-    it('should return a new Parameter with the given id', function () {
-
-        $test = Parameter::instance('value');
-
-        expect($test)->toEqual(new Parameter('value'));
-
-    });
-
-});
-
 describe('Factory', function () {
 
     beforeEach(function () {

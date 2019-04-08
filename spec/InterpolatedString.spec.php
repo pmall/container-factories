@@ -8,34 +8,6 @@ use Quanta\Container\FactoryInterface;
 use Quanta\Container\InterpolatedString;
 use Quanta\Container\Compilation\Compiler;
 
-describe('InterpolatedString::instance()', function () {
-
-    context('when no identifier is given', function () {
-
-        it('should return a new InterpolatedString with the given format and no identifier', function () {
-
-            $test = InterpolatedString::instance('a:b:c');
-
-            expect($test)->toEqual(new InterpolatedString('a:b:c'));
-
-        });
-
-    });
-
-    context('when at least one identifier is given', function () {
-
-        it('should return a new InterpolatedString with the given format and identifiers', function () {
-
-            $test = InterpolatedString::instance('a:%s:b:%s:c:%s', 'id1', 'id2', 'id3');
-
-            expect($test)->toEqual(new InterpolatedString('a:%s:b:%s:c:%s', 'id1', 'id2', 'id3'));
-
-        });
-
-    });
-
-});
-
 describe('InterpolatedString', function () {
 
     context('when there is no identifier', function () {

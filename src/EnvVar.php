@@ -38,19 +38,6 @@ final class EnvVar implements FactoryInterface
     private $type;
 
     /**
-     * Return a new EnvVar from the given name, default value and type.
-     *
-     * @param string $name
-     * @param string $default
-     * @param string $type
-     * @return \Quanta\Container\EnvVar
-     */
-    public static function instance(string $name, string $default = '', string $type = 'string'): self
-    {
-        return new self($name, $default, $type);
-    }
-
-    /**
      * Constructor.
      *
      * @param string $name

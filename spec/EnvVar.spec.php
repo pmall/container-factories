@@ -8,50 +8,6 @@ use Quanta\Container\EnvVar;
 use Quanta\Container\FactoryInterface;
 use Quanta\Container\Compilation\Compiler;
 
-describe('EnvVar::instance()', function () {
-
-    context('when no default value is given', function () {
-
-        it('should return a new EnvVar with an empty string as default value and string as type', function () {
-
-            $test = EnvVar::instance('QUANTA_TEST');
-
-            expect($test)->toEqual(new EnvVar('QUANTA_TEST', '', 'string'));
-
-        });
-
-    });
-
-    context('when a default value is given', function () {
-
-        context('when no type is given', function () {
-
-            it('should return a new EnvVar with the given default value and string as type', function () {
-
-                $test = EnvVar::instance('QUANTA_TEST', '2');
-
-                expect($test)->toEqual(new EnvVar('QUANTA_TEST', '2', 'string'));
-
-            });
-
-        });
-
-        context('when a type is given', function () {
-
-            it('should return a new EnvVar with the given default value and type', function () {
-
-                $test = EnvVar::instance('QUANTA_TEST', '2', 'int');
-
-                expect($test)->toEqual(new EnvVar('QUANTA_TEST', '2', 'int'));
-
-            });
-
-        });
-
-    });
-
-});
-
 describe('EnvVar', function () {
 
     context('when there is no default value', function () {

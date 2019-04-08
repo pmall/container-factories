@@ -8,18 +8,6 @@ use Quanta\Container\Tag;
 use Quanta\Container\FactoryInterface;
 use Quanta\Container\Compilation\Compiler;
 
-describe('Tag::instance()', function () {
-
-    it('should return a new Tag with the given ids', function () {
-
-        $test = Tag::instance('id1', 'id2', 'id3');
-
-        expect($test)->toEqual(new Tag('id1', 'id2', 'id3'));
-
-    });
-
-});
-
 describe('Tag', function () {
 
     context('when there is no id', function () {

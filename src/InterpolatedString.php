@@ -26,19 +26,6 @@ final class InterpolatedString implements FactoryInterface
     private $ids;
 
     /**
-     * Return a new InterpolatedString from the given sprintf format and
-     * container entry ids.
-     *
-     * @param string $format
-     * @param string ...$ids
-     * @return \Quanta\Container\InterpolatedString
-     */
-    public static function instance(string $format, string ...$ids): self
-    {
-        return new self($format, ...$ids);
-    }
-
-    /**
      * Constructor.
      *
      * @param string $format

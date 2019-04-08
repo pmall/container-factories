@@ -11,21 +11,6 @@ use Quanta\Container\Compilation\Compiler;
 use Quanta\Container\Compilation\Template;
 use Quanta\Container\Compilation\CompilableFactory;
 
-describe('Extension::instance()', function () {
-
-    it('should return a new Extension with the given factory and extension', function () {
-
-        $factory = function () {};
-        $extension = function () {};
-
-        $test = Extension::instance($factory, $extension);
-
-        expect($test)->toEqual(new Extension($factory, $extension));
-
-    });
-
-});
-
 describe('Extension', function () {
 
     beforeEach(function () {

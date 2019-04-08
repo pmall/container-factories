@@ -9,34 +9,6 @@ use Quanta\Container\Alias;
 use Quanta\Container\FactoryInterface;
 use Quanta\Container\Compilation\Compiler;
 
-describe('Alias::instance()', function () {
-
-    context('when no nullable boolean is given', function () {
-
-        it('should return a new Alias with the given id and nullable set to false', function () {
-
-            $test = Alias::instance('id');
-
-            expect($test)->toEqual(new Alias('id', false));
-
-        });
-
-    });
-
-    context('when a nullable boolean is given', function () {
-
-        it('should return a new Alias with the given id and nullable boolean', function () {
-
-            $test = Alias::instance('id', true);
-
-            expect($test)->toEqual(new Alias('id', true));
-
-        });
-
-    });
-
-});
-
 describe('Alias', function () {
 
     context('when there is no nullable boolean', function () {

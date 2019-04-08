@@ -19,18 +19,6 @@ final class ExtensionPass implements ProcessingPassInterface
     private $extension;
 
     /**
-     * Return a new ExtensionPass from the given id and extension.
-     *
-     * @param string    $id
-     * @param callable  $extension
-     * @return \Quanta\Container\ExtensionPass
-     */
-    public static function instance(string $id, callable $extension): self
-    {
-        return new self($id, $extension);
-    }
-
-    /**
      * Constructor.
      *
      * @param string    $id

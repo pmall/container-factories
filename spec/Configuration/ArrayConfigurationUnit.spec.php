@@ -16,48 +16,6 @@ use Quanta\Container\Parsing\ParserInterface;
 use Quanta\Container\Configuration\ArrayConfigurationUnit;
 use Quanta\Container\Configuration\ConfigurationUnitInterface;
 
-describe('ArrayConfigurationUnit::instance()', function () {
-
-    beforeEach(function () {
-
-        $this->parser = mock(ParserInterface::class);
-
-    });
-
-    context('when no source is given', function () {
-
-        it('should return a new ArrayConfigurationUnit with the given parser, configuration array and an empty source', function () {
-
-            $test = ArrayConfigurationUnit::instance($this->parser->get(), [
-                'key' => 'value',
-            ]);
-
-            expect($test)->toEqual(new ArrayConfigurationUnit($this->parser->get(), [
-                'key' => 'value',
-            ], ''));
-
-        });
-
-    });
-
-    context('when a source is given', function () {
-
-        it('should return a new ArrayConfigurationUnit with the given parser, configuration array and source', function () {
-
-            $test = ArrayConfigurationUnit::instance($this->parser->get(), [
-                'key' => 'value',
-            ], 'source');
-
-            expect($test)->toEqual(new ArrayConfigurationUnit($this->parser->get(), [
-                'key' => 'value',
-            ], 'source'));
-
-        });
-
-    });
-
-});
-
 describe('ArrayConfigurationUnit', function () {
 
     beforeEach(function () {
