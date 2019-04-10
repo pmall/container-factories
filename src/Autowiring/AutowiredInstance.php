@@ -48,17 +48,17 @@ final class AutowiredInstance implements DefinitionInterface
      */
     public function factory(): FactoryInterface
     {
-        $unbound = [];
         $factories = [];
+        $unbound = [];
 
-        $parameters = $this->parameters();
-
-        foreach ($parameters as $parameter) {
+        foreach ($this->parameters() as $parameter) {
             $result = ($this->parser)($parameter, $this->options);
 
-            $result->isParsed()
-                ? $factories[] = $result->factory()
-                : $unbound[] = $parameter;
+            if ($result->isParsed()) {
+                $factories[] = $result->factory();
+            } elseif (! $parameter->isOptional()) {
+                $unbound[] = $parameter;
+            }
         }
 
         if (count($unbound) == 0) {
@@ -99,10 +99,6 @@ final class AutowiredInstance implements DefinitionInterface
 
         $constructor = $reflection->getConstructor();
 
-        $parameters = is_null($constructor) ? [] : $constructor->getParameters();
-
-        return array_filter($parameters, function ($parameter) {
-            return ! $parameter->isVariadic();
-        });
+        return is_null($constructor) ? [] : $constructor->getParameters();
     }
 }
