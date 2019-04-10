@@ -86,17 +86,41 @@ describe('ArgumentParser', function () {
 
                         context('when the class name is in the option array', function () {
 
-                            it('should parse the associated value', function () {
-
-                                $result = mock(ParsingResultInterface::class);
+                            beforeEach(function () {
 
                                 $this->type->getName->returns(Test\SomeClass2::class);
 
-                                $this->delegate->__invoke->with('value5')->returns($result);
+                            });
 
-                                $test = ($this->parser)($this->parameter->get(), $this->options);
+                            context('when the given parameter allows null', function () {
 
-                                expect($test)->toBe($result->get());
+                                it('should parse the class alias as a non nullable alias', function () {
+
+                                    $this->parameter->allowsNull->returns(true);
+
+                                    $test = ($this->parser)($this->parameter->get(), $this->options);
+
+                                    expect($test)->toEqual(new ParsedFactory(
+                                        new Alias('value5', false)
+                                    ));
+
+                                });
+
+                            });
+
+                            context('when the given parameter does not allow null', function () {
+
+                                it('should parse the class alias as a non nullable alias', function () {
+
+                                    $this->parameter->allowsNull->returns(false);
+
+                                    $test = ($this->parser)($this->parameter->get(), $this->options);
+
+                                    expect($test)->toEqual(new ParsedFactory(
+                                        new Alias('value5', false)
+                                    ));
+
+                                });
 
                             });
 

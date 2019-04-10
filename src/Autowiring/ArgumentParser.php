@@ -49,10 +49,8 @@ final class ArgumentParser implements ArgumentParserInterface
             $class = $type->getName();
 
             return key_exists($class, $options)
-                ? ($this->parser)($options[$class])
-                : new ParsedFactory(
-                    new Alias($class, $parameter->allowsNull())
-                );
+                ? new ParsedFactory(new Alias($options[$class], false))
+                : new ParsedFactory(new Alias($class, $parameter->allowsNull()));
         }
 
         if ($parameter->isDefaultValueAvailable()) {
