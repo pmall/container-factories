@@ -3,7 +3,7 @@
 use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\AutowiredFactoryMap;
-use Quanta\Container\Autowiring\ArgumentParserInterface;
+use Quanta\Container\Parsing\ParameterParserInterface;
 use Quanta\Container\Configuration\ConfigurationUnit;
 use Quanta\Container\Configuration\ConfigurationInterface;
 use Quanta\Container\Configuration\AutowiringConfiguration;
@@ -12,7 +12,7 @@ describe('AutowiringConfiguration', function () {
 
     beforeEach(function () {
 
-        $this->parser = mock(ArgumentParserInterface::class);
+        $this->parser = mock(ParameterParserInterface::class);
 
     });
 

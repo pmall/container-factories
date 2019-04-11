@@ -1,7 +1,7 @@
 <?php
 
 use Quanta\Container\Parsing\ParsingFailure;
-use Quanta\Container\Parsing\ParsingResultInterface;
+use Quanta\Container\Parsing\ParsedFactoryInterface;
 
 describe('ParsingFailure', function () {
 
@@ -11,9 +11,9 @@ describe('ParsingFailure', function () {
 
     });
 
-    it('should implement ParsingResultInterface', function () {
+    it('should implement ParsedFactoryInterface', function () {
 
-        expect($this->result)->toBeAnInstanceOf(ParsingResultInterface::class);
+        expect($this->result)->toBeAnInstanceOf(ParsedFactoryInterface::class);
 
     });
 

@@ -4,18 +4,18 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\Instance;
 use Quanta\Container\FactoryInterface;
+use Quanta\Container\AutowiredInstance;
 use Quanta\Container\DefinitionInterface;
-use Quanta\Container\Parsing\ParsingResultInterface;
-use Quanta\Container\Autowiring\AutowiredInstance;
-use Quanta\Container\Autowiring\ArgumentParserInterface;
+use Quanta\Container\Parsing\ParsedFactoryInterface;
+use Quanta\Container\Parsing\ParameterParserInterface;
 
-require_once __DIR__ . '/../.test/classes.php';
+require_once __DIR__ . '/.test/classes.php';
 
 describe('AutowiredInstance', function () {
 
     beforeEach(function () {
 
-        $this->parser = mock(ArgumentParserInterface::class);
+        $this->parser = mock(ParameterParserInterface::class);
 
     });
 
@@ -269,9 +269,9 @@ describe('AutowiredInstance', function () {
                             $this->factory2 = mock(FactoryInterface::class);
                             $this->factory3 = mock(FactoryInterface::class);
 
-                            $this->parsed1 = mock(ParsingResultInterface::class);
-                            $this->parsed2 = mock(ParsingResultInterface::class);
-                            $this->parsed3 = mock(ParsingResultInterface::class);
+                            $this->parsed1 = mock(ParsedFactoryInterface::class);
+                            $this->parsed2 = mock(ParsedFactoryInterface::class);
+                            $this->parsed3 = mock(ParsedFactoryInterface::class);
 
                             $this->parser->__invoke
                                 ->with($this->parameters[0], $this->options)

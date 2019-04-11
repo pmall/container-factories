@@ -2,15 +2,15 @@
 
 namespace Quanta\Container\Configuration;
 
+use Quanta\Container\ValueParser;
 use Quanta\Container\ParsedFactoryMap;
-use Quanta\Container\Parsing\ParserInterface;
 
 final class ParameterArray implements ConfigurationInterface
 {
     /**
      * The parser used to produce factories from parameters.
      *
-     * @var \Quanta\Container\Parsing\ParserInterface
+     * @var \Quanta\Container\ValueParser
      */
     private $parser;
 
@@ -24,10 +24,10 @@ final class ParameterArray implements ConfigurationInterface
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Parsing\ParserInterface $parser
-     * @param array                                     $parameters
+     * @param \Quanta\Container\ValueParser $parser
+     * @param array                         $parameters
      */
-    public function __construct(ParserInterface $parser, array $parameters)
+    public function __construct(ValueParser $parser, array $parameters)
     {
         $this->parser = $parser;
         $this->parameters = $parameters;

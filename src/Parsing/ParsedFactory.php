@@ -4,7 +4,7 @@ namespace Quanta\Container\Parsing;
 
 use Quanta\Container\FactoryInterface;
 
-final class ParsedFactory implements ParsingResultInterface
+final class ParsedFactory implements ParsedFactoryInterface
 {
     /**
      * The parsed factory.

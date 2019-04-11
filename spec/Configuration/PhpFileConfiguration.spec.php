@@ -1,8 +1,6 @@
 <?php
 
-use function Eloquent\Phony\Kahlan\mock;
-
-use Quanta\Container\Parsing\ParserInterface;
+use Quanta\Container\ValueParser;
 use Quanta\Container\Configuration\PhpFileConfiguration;
 use Quanta\Container\Configuration\ConfigurationInterface;
 use Quanta\Container\Configuration\ArrayConfigurationUnit;
@@ -12,7 +10,7 @@ describe('PhpFileConfiguration', function () {
 
     beforeEach(function () {
 
-        $this->parser = mock(ParserInterface::class);
+        $this->parser = new ValueParser;
 
     });
 
@@ -20,7 +18,7 @@ describe('PhpFileConfiguration', function () {
 
         beforeEach(function () {
 
-            $this->configuration = new PhpFileConfiguration($this->parser->get());
+            $this->configuration = new PhpFileConfiguration($this->parser);
 
         });
 
@@ -50,7 +48,7 @@ describe('PhpFileConfiguration', function () {
 
             beforeEach(function () {
 
-                $this->configuration = new PhpFileConfiguration($this->parser->get(), ...[
+                $this->configuration = new PhpFileConfiguration($this->parser, ...[
                     __DIR__ . '/../.test/config1/test*.valid.php',
                     __DIR__ . '/../.test/config2/test*.valid.php',
                 ]);
@@ -71,16 +69,16 @@ describe('PhpFileConfiguration', function () {
 
                     expect($test)->toEqual(
                         new MergedConfigurationUnit(...[
-                            new ArrayConfigurationUnit($this->parser->get(), [
+                            new ArrayConfigurationUnit($this->parser, [
                                 'key11' => 'value11',
                             ], realpath(__DIR__ . '/../.test/config1/test1.valid.php')),
-                            new ArrayConfigurationUnit($this->parser->get(), [
+                            new ArrayConfigurationUnit($this->parser, [
                                 'key13' => 'value13',
                             ], realpath(__DIR__ . '/../.test/config1/test3.valid.php')),
-                            new ArrayConfigurationUnit($this->parser->get(), [
+                            new ArrayConfigurationUnit($this->parser, [
                                 'key21' => 'value21',
                             ], realpath(__DIR__ . '/../.test/config2/test1.valid.php')),
-                            new ArrayConfigurationUnit($this->parser->get(), [
+                            new ArrayConfigurationUnit($this->parser, [
                                 'key23' => 'value23',
                             ], realpath(__DIR__ . '/../.test/config2/test3.valid.php')),
                         ])
@@ -96,7 +94,7 @@ describe('PhpFileConfiguration', function () {
 
             beforeEach(function () {
 
-                $this->configuration = new PhpFileConfiguration($this->parser->get(), ...[
+                $this->configuration = new PhpFileConfiguration($this->parser, ...[
                     __DIR__ . '/../.test/config1/test*.php',
                     __DIR__ . '/../.test/config2/test*.php',
                 ]);

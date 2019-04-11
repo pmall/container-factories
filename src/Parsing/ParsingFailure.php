@@ -4,7 +4,7 @@ namespace Quanta\Container\Parsing;
 
 use Quanta\Container\FactoryInterface;
 
-final class ParsingFailure implements ParsingResultInterface
+final class ParsingFailure implements ParsedFactoryInterface
 {
     /**
      * @inheritdoc

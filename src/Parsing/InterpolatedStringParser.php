@@ -4,23 +4,19 @@ namespace Quanta\Container\Parsing;
 
 use Quanta\Container\InterpolatedString;
 
-final class InterpolatedStringParser implements ParserInterface
+final class InterpolatedStringParser implements StringParserInterface
 {
     /**
      * @inheritdoc
      */
-    public function __invoke($value): ParsingResultInterface
+    public function __invoke(string $value): ParsedFactoryInterface
     {
-        if (is_string($value)) {
-            if (preg_match_all('/%\{(.+?)\}/', $value, $matches)) {
-                $format = (string) preg_replace('/%\{(.+?)\}/', '%s', $value);
+        if (preg_match_all('/%\{(.+?)\}/', $value, $matches)) {
+            $format = (string) preg_replace('/%\{(.+?)\}/', '%s', $value);
 
-                return new ParsedFactory(
-                    new InterpolatedString($format, ...$matches[1])
-                );
-            }
-
-            return new ParsingFailure;
+            return new ParsedFactory(
+                new InterpolatedString($format, ...$matches[1])
+            );
         }
 
         return new ParsingFailure;

@@ -1,10 +1,8 @@
 <?php
 
-use function Eloquent\Phony\Kahlan\mock;
-
 use Quanta\Container\FactoryMap;
+use Quanta\Container\ValueParser;
 use Quanta\Container\ParsedFactoryMap;
-use Quanta\Container\Parsing\ParserInterface;
 use Quanta\Container\Configuration\ParameterArray;
 use Quanta\Container\Configuration\ConfigurationUnit;
 use Quanta\Container\Configuration\ConfigurationInterface;
@@ -13,7 +11,7 @@ describe('ParameterArray', function () {
 
     beforeEach(function () {
 
-        $this->parser = mock(ParserInterface::class);
+        $this->parser = new ValueParser;
 
     });
 
@@ -21,7 +19,7 @@ describe('ParameterArray', function () {
 
         beforeEach(function () {
 
-            $this->configuration = new ParameterArray($this->parser->get(), []);
+            $this->configuration = new ParameterArray($this->parser, []);
 
         });
 
@@ -38,7 +36,7 @@ describe('ParameterArray', function () {
                 $test = $this->configuration->unit();
 
                 expect($test)->toEqual(new ConfigurationUnit(
-                    new ParsedFactoryMap($this->parser->get(), [])
+                    new ParsedFactoryMap($this->parser, [])
                 ));
 
             });
@@ -51,7 +49,7 @@ describe('ParameterArray', function () {
 
         beforeEach(function () {
 
-            $this->configuration = new ParameterArray($this->parser->get(), [
+            $this->configuration = new ParameterArray($this->parser, [
                 'id1' => 'parameter1',
                 'id2' => 'parameter2',
                 'id3' => 'parameter3',
@@ -72,7 +70,7 @@ describe('ParameterArray', function () {
                 $test = $this->configuration->unit();
 
                 expect($test)->toEqual(new ConfigurationUnit(
-                    new ParsedFactoryMap($this->parser->get(), [
+                    new ParsedFactoryMap($this->parser, [
                         'id1' => 'parameter1',
                         'id2' => 'parameter2',
                         'id3' => 'parameter3',

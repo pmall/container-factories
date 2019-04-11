@@ -4,21 +4,15 @@ namespace Quanta\Container\Parsing;
 
 use Quanta\Container\Alias;
 
-final class AliasParser implements ParserInterface
+final class AliasParser implements StringParserInterface
 {
     /**
      * @inheritdoc
      */
-    public function __invoke($value): ParsingResultInterface
+    public function __invoke(string $value): ParsedFactoryInterface
     {
-        if (is_string($value)) {
-            if (preg_match('/^@(.+?)$/', $value, $matches)) {
-                return new ParsedFactory(
-                    new Alias($matches[1])
-                );
-            }
-
-            return new ParsingFailure;
+        if (preg_match('/^@(.+?)$/', $value, $matches)) {
+            return new ParsedFactory(new Alias($matches[1]));
         }
 
         return new ParsingFailure;

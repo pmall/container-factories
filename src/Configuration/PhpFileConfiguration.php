@@ -2,14 +2,14 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\Parsing\ParserInterface;
+use Quanta\Container\ValueParser;
 
 final class PhpFileConfiguration implements ConfigurationInterface
 {
     /**
      * The parser used to produce factories from parameters.
      *
-     * @var \Quanta\Container\Parsing\ParserInterface
+     * @var \Quanta\Container\ValueParser
      */
     private $parser;
 
@@ -23,10 +23,10 @@ final class PhpFileConfiguration implements ConfigurationInterface
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Parsing\ParserInterface $parser
-     * @param string                                    ...$patterns
+     * @param \Quanta\Container\ValueParser $parser
+     * @param string                        ...$patterns
      */
-    public function __construct(ParserInterface $parser, string ...$patterns)
+    public function __construct(ValueParser $parser, string ...$patterns)
     {
         $this->parser = $parser;
         $this->patterns = $patterns;

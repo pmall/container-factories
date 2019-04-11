@@ -2,14 +2,12 @@
 
 namespace Quanta\Container;
 
-use Quanta\Container\Parsing\ParserInterface;
-
 final class ParsedFactoryMap implements FactoryMapInterface
 {
     /**
      * The parser used to produce factories from the values.
      *
-     * @var \Quanta\Container\Parsing\ParserInterface
+     * @var \Quanta\Container\ValueParser
      */
     private $parser;
 
@@ -23,10 +21,10 @@ final class ParsedFactoryMap implements FactoryMapInterface
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Parsing\ParserInterface $parser
-     * @param array                                     $values
+     * @param \Quanta\Container\ValueParser $parser
+     * @param array                         $values
      */
-    public function __construct(ParserInterface $parser, array $values)
+    public function __construct(ValueParser $parser, array $values)
     {
         $this->parser = $parser;
         $this->values = $values;
@@ -37,8 +35,6 @@ final class ParsedFactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        return array_map(function ($value) {
-            return ($this->parser)($value)->factory();
-        }, $this->values);
+        return array_map($this->parser, $this->values);
     }
 }

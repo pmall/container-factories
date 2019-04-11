@@ -4,26 +4,26 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\Alias;
 use Quanta\Container\Parameter;
+use Quanta\Container\ValueParser;
 use Quanta\Container\Parsing\ParsedFactory;
 use Quanta\Container\Parsing\ParsingFailure;
 use Quanta\Container\Parsing\ParserInterface;
-use Quanta\Container\Parsing\ParsingResultInterface;
-use Quanta\Container\Autowiring\ArgumentParser;
-use Quanta\Container\Autowiring\ArgumentParserInterface;
+use Quanta\Container\Parsing\ParameterParser;
+use Quanta\Container\Parsing\ParameterParserInterface;
 
-describe('ArgumentParser', function () {
+describe('ParameterParser', function () {
 
     beforeEach(function () {
 
-        $this->delegate = mock(ParserInterface::class);
+        $this->delegate = new ValueParser;
 
-        $this->parser = new ArgumentParser($this->delegate->get());
+        $this->parser = new ParameterParser($this->delegate);
 
     });
 
-    it('should implement ArgumentParserInterface', function () {
+    it('should implement ParameterParserInterface', function () {
 
-        expect($this->parser)->toBeAnInstanceOf(ArgumentParserInterface::class);
+        expect($this->parser)->toBeAnInstanceOf(ParameterParserInterface::class);
 
     });
 
@@ -56,15 +56,13 @@ describe('ArgumentParser', function () {
 
                 it('should parse the associated value', function () {
 
-                    $result = mock(ParsingResultInterface::class);
-
                     $this->parameter->getName->returns('parameter2');
-
-                    $this->delegate->__invoke->with('value2')->returns($result);
 
                     $test = ($this->parser)($this->parameter->get(), $this->options);
 
-                    expect($test)->toBe($result->get());
+                    expect($test)->toEqual(new ParsedFactory(
+                        ($this->delegate)('value2')
+                    ));
 
                 });
 

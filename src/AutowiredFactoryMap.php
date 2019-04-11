@@ -2,15 +2,14 @@
 
 namespace Quanta\Container;
 
-use Quanta\Container\Autowiring\AutowiredInstance;
-use Quanta\Container\Autowiring\ArgumentParserInterface;
+use Quanta\Container\Parsing\ParameterParserInterface;
 
 final class AutowiredFactoryMap implements FactoryMapInterface
 {
     /**
-     * The argument parser used to parse the class constructor parameters.
+     * The parser used to produce factories from reflection parameters.
      *
-     * @var \Quanta\Container\Autowiring\ArgumentParserInterface
+     * @var \Quanta\Container\Parsing\ParameterParserInterface
      */
     private $parser;
 
@@ -24,11 +23,11 @@ final class AutowiredFactoryMap implements FactoryMapInterface
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Autowiring\ArgumentParserInterface  $parser
+     * @param \Quanta\Container\Parsing\ParameterParserInterface    $parser
      * @param array[]                                               $map
      * @throws \InvalidArgumentException
      */
-    public function __construct(ArgumentParserInterface $parser, array $map)
+    public function __construct(ParameterParserInterface $parser, array $map)
     {
         $result = \Quanta\ArrayTypeCheck::result($map, 'array');
 

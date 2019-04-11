@@ -8,6 +8,7 @@ use Quanta\Container\Tagging;
 use Quanta\Container\Invokable;
 use Quanta\Container\Extension;
 use Quanta\Container\FactoryMap;
+use Quanta\Container\ValueParser;
 use Quanta\Container\TaggingPass;
 use Quanta\Container\ExtensionPass;
 use Quanta\Container\MergedFactoryMap;
@@ -15,14 +16,13 @@ use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\ParsedFactoryMap;
 use Quanta\Container\MergedProcessingPass;
 use Quanta\Container\ProcessingPassInterface;
-use Quanta\Container\Parsing\ParserInterface;
 
 final class ArrayConfigurationUnit implements ConfigurationUnitInterface
 {
     /**
      * The parser used to produce factories from parameters.
      *
-     * @var \Quanta\Container\Parsing\ParserInterface
+     * @var \Quanta\Container\ValueParser
      */
     private $parser;
 
@@ -45,11 +45,11 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Parsing\ParserInterface $parser
-     * @param array                                     $configuration
-     * @param string                                    $source
+     * @param \Quanta\Container\ValueParser $parser
+     * @param array                         $configuration
+     * @param string                        $source
      */
-    public function __construct(ParserInterface $parser, array $configuration, string $source = '')
+    public function __construct(ValueParser $parser, array $configuration, string $source = '')
     {
         $this->parser = $parser;
         $this->configuration = $configuration;

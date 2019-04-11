@@ -3,16 +3,16 @@
 use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\DefinitionProxy;
+use Quanta\Container\AutowiredInstance;
 use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\AutowiredFactoryMap;
-use Quanta\Container\Autowiring\AutowiredInstance;
-use Quanta\Container\Autowiring\ArgumentParserInterface;
+use Quanta\Container\Parsing\ParameterParserInterface;
 
 describe('AutowiredFactoryMap', function () {
 
     beforeEach(function () {
 
-        $this->parser = mock(ArgumentParserInterface::class);
+        $this->parser = mock(ParameterParserInterface::class);
 
     });
 

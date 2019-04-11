@@ -4,7 +4,7 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\FactoryInterface;
 use Quanta\Container\Parsing\ParsedFactory;
-use Quanta\Container\Parsing\ParsingResultInterface;
+use Quanta\Container\Parsing\ParsedFactoryInterface;
 
 describe('ParsedFactory', function () {
 
@@ -16,9 +16,9 @@ describe('ParsedFactory', function () {
 
     });
 
-    it('should implement ParsingResultInterface', function () {
+    it('should implement ParsedFactoryInterface', function () {
 
-        expect($this->result)->toBeAnInstanceOf(ParsingResultInterface::class);
+        expect($this->result)->toBeAnInstanceOf(ParsedFactoryInterface::class);
 
     });
 

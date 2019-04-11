@@ -4,7 +4,7 @@ namespace Quanta\Container\Parsing;
 
 use Quanta\Container\FactoryInterface;
 
-interface ParsingResultInterface
+interface ParsedFactoryInterface
 {
     /**
      * Return whether the parsing succeeded or not.

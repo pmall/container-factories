@@ -1,17 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Autowiring;
+namespace Quanta\Container;
 
 use Quanta\Container\Instance;
 use Quanta\Container\FactoryInterface;
 use Quanta\Container\DefinitionInterface;
+use Quanta\Container\Parsing\ParameterParserInterface;
 
 final class AutowiredInstance implements DefinitionInterface
 {
     /**
      * The parser used to parse constructor parameter reflections as factories.
      *
-     * @var \Quanta\Container\Autowiring\ArgumentParserInterface
+     * @var \Quanta\Container\Parsing\ParameterParserInterface
      */
     private $parser;
 
@@ -32,11 +33,11 @@ final class AutowiredInstance implements DefinitionInterface
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Autowiring\ArgumentParserInterface  $parser
+     * @param \Quanta\Container\Parsing\ParameterParserInterface    $parser
      * @param string                                                $class
      * @param array                                                 $options
      */
-    public function __construct(ArgumentParserInterface $parser, string $class, array $options = [])
+    public function __construct(ParameterParserInterface $parser, string $class, array $options = [])
     {
         $this->parser = $parser;
         $this->class = $class;

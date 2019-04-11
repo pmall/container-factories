@@ -1,29 +1,26 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Autowiring;
+namespace Quanta\Container\Parsing;
 
 use Quanta\Container\Alias;
 use Quanta\Container\Parameter;
-use Quanta\Container\Parsing\ParsedFactory;
-use Quanta\Container\Parsing\ParsingFailure;
-use Quanta\Container\Parsing\ParserInterface;
-use Quanta\Container\Parsing\ParsingResultInterface;
+use Quanta\Container\ValueParser;
 
-final class ArgumentParser implements ArgumentParserInterface
+final class ParameterParser implements ParameterParserInterface
 {
     /**
      * The parser producing factories from option values.
      *
-     * @var \Quanta\Container\Parsing\ParserInterface
+     * @var \Quanta\Container\ValueParser
      */
     private $parser;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Parsing\ParserInterface $parser
+     * @param \Quanta\Container\ValueParser $parser
      */
-    public function __construct(ParserInterface $parser)
+    public function __construct(ValueParser $parser)
     {
         $this->parser = $parser;
     }
@@ -31,7 +28,7 @@ final class ArgumentParser implements ArgumentParserInterface
     /**
      * @inheritdoc
      */
-    public function __invoke(\ReflectionParameter $parameter, array $options): ParsingResultInterface
+    public function __invoke(\ReflectionParameter $parameter, array $options): ParsedFactoryInterface
     {
         if ($parameter->isVariadic()) {
             return new ParsingFailure;
@@ -40,7 +37,7 @@ final class ArgumentParser implements ArgumentParserInterface
         $name = '$' . $parameter->getName();
 
         if (key_exists($name, $options)) {
-            return ($this->parser)($options[$name]);
+            return new ParsedFactory(($this->parser)($options[$name]));
         }
 
         $type = $parameter->getType();
