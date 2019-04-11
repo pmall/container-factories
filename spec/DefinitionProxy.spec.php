@@ -7,7 +7,6 @@ use Psr\Container\ContainerInterface;
 use Quanta\Container\DefinitionProxy;
 use Quanta\Container\FactoryInterface;
 use Quanta\Container\DefinitionInterface;
-use Quanta\Container\Compilation\CompilableInterface;
 
 describe('DefinitionProxy', function () {
 
@@ -45,21 +44,23 @@ describe('DefinitionProxy', function () {
 
     });
 
-    describe('->compilable()', function () {
+    describe('->compiled()', function () {
 
         it('should proxy the factory provided by the definition', function () {
 
-            $factory = mock(FactoryInterface::class);
+            $compiler = function () {};
 
-            $compilable = mock(CompilableInterface::class);
+            $factory = mock(FactoryInterface::class);
 
             $this->definition->factory->returns($factory);
 
-            $factory->compilable->with('container')->returns($compilable);
+            $factory->compiled
+                ->with('container', Kahlan\Arg::toBe($compiler))
+                ->returns('value');
 
-            $test = $this->factory->compilable('container');
+            $test = $this->factory->compiled('container', $compiler);
 
-            expect($test)->toBe($compilable->get());
+            expect($test)->toEqual('value');
 
         });
 

@@ -10,6 +10,8 @@ use Quanta\Container\Parsing\ParsedFactory;
 use Quanta\Container\Parsing\ParsingFailure;
 use Quanta\Container\Parsing\StringParserInterface;
 
+require_once __DIR__ . '/.test/classes.php';
+
 describe('ValueParser', function () {
 
     context('when there is no string parser', function () {
@@ -24,22 +26,40 @@ describe('ValueParser', function () {
 
             context('when the given value is an array', function () {
 
-                it('should return a factory array', function () {
+                context('when the array is a callable', function () {
 
-                    $test = ($this->parser)(['value11', 'key12' => 'value12', 'value13', [
-                        'value21', 'key22' => 'value22', 'value23']
-                    ]);
+                    it('should return a parameter', function () {
 
-                    expect($test)->toEqual(new FactoryArray([
-                        new Parameter('value11'),
-                        'key12' => new Parameter('value12'),
-                        new Parameter('value13'),
-                        new FactoryArray([
-                            new Parameter('value21'),
-                            'key22' => new Parameter('value22'),
-                            new Parameter('value23'),
-                        ])
-                    ]));
+                        $test = ($this->parser)([Test\TestFactory::class, 'createStatic']);
+
+                        expect($test)->toEqual(new Parameter(
+                            [Test\TestFactory::class, 'createStatic']
+                        ));
+
+                    });
+
+                });
+
+                context('when the array is not a callable', function () {
+
+                    it('should return a factory array', function () {
+
+                        $test = ($this->parser)(['value11', 'key12' => 'value12', 'value13', [
+                            'value21', 'key22' => 'value22', 'value23']
+                        ]);
+
+                        expect($test)->toEqual(new FactoryArray([
+                            new Parameter('value11'),
+                            'key12' => new Parameter('value12'),
+                            new Parameter('value13'),
+                            new FactoryArray([
+                                new Parameter('value21'),
+                                'key22' => new Parameter('value22'),
+                                new Parameter('value23'),
+                            ])
+                        ]));
+
+                    });
 
                 });
 
@@ -81,51 +101,69 @@ describe('ValueParser', function () {
 
             context('when the given value is an array', function () {
 
-                it('should return a factory array', function () {
+                context('when the array is a callable', function () {
 
-                    $factory1 = mock(FactoryInterface::class);
-                    $factory2 = mock(FactoryInterface::class);
-                    $factory3 = mock(FactoryInterface::class);
-                    $factory4 = mock(FactoryInterface::class);
+                    it('should return a parameter', function () {
 
-                    $this->delegate1->__invoke
-                        ->with('value13')
-                        ->returns(new ParsingFailure);
+                        $test = ($this->parser)([Test\TestFactory::class, 'createStatic']);
 
-                    $this->delegate2->__invoke
-                        ->with('value13')
-                        ->returns(new ParsedFactory($factory1->get()));
+                        expect($test)->toEqual(new Parameter(
+                            [Test\TestFactory::class, 'createStatic']
+                        ));
 
-                    $this->delegate3->__invoke
-                        ->with('value13')
-                        ->returns(new ParsedFactory($factory2->get()));
+                    });
 
-                    $this->delegate1->__invoke
-                        ->with('value22')
-                        ->returns(new ParsingFailure);
+                });
 
-                    $this->delegate2->__invoke
-                        ->with('value22')
-                        ->returns(new ParsingFailure);
+                context('when the array is not a callable', function () {
 
-                    $this->delegate3->__invoke
-                        ->with('value22')
-                        ->returns(new ParsedFactory($factory4->get()));
+                    it('should return a factory array', function () {
 
-                    $test = ($this->parser)([11, 'key12' => 12, 'value13', [
-                        21, 'key22' => 'value22', 23]
-                    ]);
+                        $factory1 = mock(FactoryInterface::class);
+                        $factory2 = mock(FactoryInterface::class);
+                        $factory3 = mock(FactoryInterface::class);
+                        $factory4 = mock(FactoryInterface::class);
 
-                    expect($test)->toEqual(new FactoryArray([
-                        new Parameter(11),
-                        'key12' => new Parameter(12),
-                        $factory1->get(),
-                        new FactoryArray([
-                            new Parameter(21),
-                            'key22' => $factory4->get(),
-                            new Parameter(23),
-                        ])
-                    ]));
+                        $this->delegate1->__invoke
+                            ->with('value13')
+                            ->returns(new ParsingFailure);
+
+                        $this->delegate2->__invoke
+                            ->with('value13')
+                            ->returns(new ParsedFactory($factory1->get()));
+
+                        $this->delegate3->__invoke
+                            ->with('value13')
+                            ->returns(new ParsedFactory($factory2->get()));
+
+                        $this->delegate1->__invoke
+                            ->with('value22')
+                            ->returns(new ParsingFailure);
+
+                        $this->delegate2->__invoke
+                            ->with('value22')
+                            ->returns(new ParsingFailure);
+
+                        $this->delegate3->__invoke
+                            ->with('value22')
+                            ->returns(new ParsedFactory($factory4->get()));
+
+                        $test = ($this->parser)([11, 'key12' => 12, 'value13', [
+                            21, 'key22' => 'value22', 23]
+                        ]);
+
+                        expect($test)->toEqual(new FactoryArray([
+                            new Parameter(11),
+                            'key12' => new Parameter(12),
+                            $factory1->get(),
+                            new FactoryArray([
+                                new Parameter(21),
+                                'key22' => $factory4->get(),
+                                new Parameter(23),
+                            ])
+                        ]));
+
+                    });
 
                 });
 

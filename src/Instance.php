@@ -4,10 +4,7 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\Template;
 use Quanta\Container\Compilation\IndentedString;
-use Quanta\Container\Compilation\CompiledString;
-use Quanta\Container\Compilation\CompilableInterface;
 
 final class Instance implements FactoryInterface
 {
@@ -50,23 +47,18 @@ final class Instance implements FactoryInterface
     /**
      * @inheritdoc
      */
-    public function compilable(string $container): CompilableInterface
+    public function compiled(string $container, callable $compiler): string
     {
         if (count($this->factories) == 0) {
-            return new CompiledString(sprintf('new %s', $this->class));
+            return sprintf('new %s', $this->class);
         }
 
-        $placeholders = array_pad([], count($this->factories), '%s');
-
-        $tpl = vsprintf('new %s(%s%s%s)', [
-            $this->class,
-            PHP_EOL,
-            new IndentedString(implode(',' . PHP_EOL, $placeholders)),
-            PHP_EOL,
+        return implode(PHP_EOL, [
+            sprintf('new %s(', $this->class),
+            new IndentedString(implode(',' . PHP_EOL, array_map(function ($factory) use ($container, $compiler) {
+                return $factory->compiled($container, $compiler);
+            }, $this->factories))),
+            ')',
         ]);
-
-        return new Template($tpl, ...array_map(function ($factory) use ($container) {
-            return $factory->compilable($container);
-        }, $this->factories));
     }
 }

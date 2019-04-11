@@ -28,7 +28,7 @@ final class ValueParser
      */
     public function __invoke($value): FactoryInterface
     {
-        if (is_array($value)) {
+        if (is_array($value) && ! is_callable($value)) {
             return new FactoryArray(array_map($this, $value));
         }
 

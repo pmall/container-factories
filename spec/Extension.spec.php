@@ -7,9 +7,6 @@ use Psr\Container\ContainerInterface;
 
 use Quanta\Container\Extension;
 use Quanta\Container\FactoryInterface;
-use Quanta\Container\Compilation\Compiler;
-use Quanta\Container\Compilation\Template;
-use Quanta\Container\Compilation\CompilableFactory;
 
 describe('Extension', function () {
 
@@ -45,23 +42,18 @@ describe('Extension', function () {
 
     });
 
-    describe('->compilable()', function () {
+    describe('->compiled()', function () {
 
-        it('should return a compilable version of the extension', function () {
+        it('should return a compiled version of the extension', function () {
 
-            $compiler = Compiler::testing([
-                'factory1' => $this->factory1,
-                'factory2' => $this->factory2,
-            ]);
+            $compiler = stub();
 
-            $test = $this->factory->compilable('container');
+            $compiler->with($this->factory1)->returns('factory1');
+            $compiler->with($this->factory2)->returns('factory2');
 
-            expect($test)->toEqual(new Template('(%s)($container, (%s)($container))', ...[
-                new CompilableFactory($this->factory2),
-                new CompilableFactory($this->factory1),
-            ]));
+            $test = $this->factory->compiled('container', $compiler);
 
-            expect($compiler($test))->toEqual('(factory2)($container, (factory1)($container))');
+            expect($test)->toEqual('(factory2)($container, (factory1)($container))');
 
         });
 

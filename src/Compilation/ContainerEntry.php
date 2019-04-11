@@ -2,7 +2,7 @@
 
 namespace Quanta\Container\Compilation;
 
-final class ContainerEntry implements CompilableInterface
+final class ContainerEntry
 {
     /**
      * The container variable name.
@@ -31,10 +31,12 @@ final class ContainerEntry implements CompilableInterface
     }
 
     /**
-     * @inheritdoc
+     * Return a string representation of the container entry.
+     *
+     * @return string
      */
-    public function compiled(Compiler $compiler): string
+    public function __toString()
     {
-        return sprintf('$%s->get(%s)', $this->container, $compiler($this->id));
+        return sprintf('$%s->get(\'%s\')', $this->container, $this->id);
     }
 }

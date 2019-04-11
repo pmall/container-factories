@@ -4,8 +4,7 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\Compilable;
-use Quanta\Container\Compilation\CompilableInterface;
+use Quanta\Container\Compilation\IndentedString;
 
 final class FactoryArray implements FactoryInterface
 {
@@ -48,10 +47,21 @@ final class FactoryArray implements FactoryInterface
     /**
      * @inheritdoc
      */
-    public function compilable(string $container): CompilableInterface
+    public function compiled(string $container, callable $compiler): string
     {
-        return new Compilable(array_map(function ($factory) use ($container) {
-            return $factory->compilable($container);
-        }, $this->factories));
+        if (count($this->factories) == 0) {
+            return '[]';
+        }
+
+        return implode(PHP_EOL, [
+            '[',
+            new IndentedString(implode(PHP_EOL, array_map(function ($key, $factory) use ($container, $compiler) {
+                return vsprintf('%s => %s,', [
+                    is_int($key) ? $key : '\'' . $key . '\'',
+                    $factory->compiled($container, $compiler),
+                ]);
+            }, array_keys($this->factories), $this->factories))),
+            ']',
+        ]);
     }
 }

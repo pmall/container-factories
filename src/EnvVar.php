@@ -4,9 +4,7 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\Template;
 use Quanta\Container\Compilation\IndentedString;
-use Quanta\Container\Compilation\CompilableInterface;
 
 final class EnvVar implements FactoryInterface
 {
@@ -68,19 +66,17 @@ final class EnvVar implements FactoryInterface
     /**
      * @inheritdoc
      */
-    public function compilable(string $container): CompilableInterface
+    public function compiled(string $container, callable $compiler): string
     {
-        $tpl = vsprintf('(function () {%s%s%s})()', [
-            PHP_EOL,
+        return implode(PHP_EOL, [
+            '(function () {',
             new IndentedString(implode(PHP_EOL, [
-                '$value = getenv(%s);',
-                'if ($value === false) $value = %s;',
-                'settype($value, %s);',
+                sprintf('$value = getenv(\'%s\');', $this->name),
+                sprintf('if ($value === false) $value = \'%s\';', $this->default),
+                sprintf('settype($value, \'%s\');', $this->type),
                 'return $value;',
             ])),
-            PHP_EOL,
+            '})()',
         ]);
-
-        return new Template($tpl, $this->name, $this->default, $this->type);
     }
 }

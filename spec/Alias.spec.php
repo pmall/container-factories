@@ -7,7 +7,6 @@ use Psr\Container\NotFoundExceptionInterface;
 
 use Quanta\Container\Alias;
 use Quanta\Container\FactoryInterface;
-use Quanta\Container\Compilation\Compiler;
 
 describe('Alias', function () {
 
@@ -55,15 +54,13 @@ describe('Alias', function () {
 
             });
 
-            describe('->compilable()', function () {
+            describe('->compiled()', function () {
 
-                it('should return a compilable version of the alias', function () {
+                it('should return a compiled version of the alias', function () {
 
-                    $compiler = Compiler::testing();
+                    $test = $this->factory->compiled('container', function () {});
 
-                    $test = $this->factory->compilable('container');
-
-                    expect($compiler($test))->toEqual('$container->get(\'id\')');
+                    expect($test)->toEqual('$container->get(\'id\')');
 
                 });
 
@@ -172,15 +169,13 @@ describe('Alias', function () {
 
             });
 
-            describe('->compilable()', function () {
+            describe('->compiled()', function () {
 
-                it('should return a compilable version of the nullable alias', function () {
+                it('should return a compiled version of the nullable alias', function () {
 
-                    $compiler = Compiler::testing();
+                    $test = $this->factory->compiled('container', function () {});
 
-                    $test = $this->factory->compilable('container');
-
-                    expect($compiler($test))->toEqual(implode(PHP_EOL, [
+                    expect($test)->toEqual(implode(PHP_EOL, [
                         '(function ($container) {',
                         '    if ($container->has(\'id\')) {',
                         '        try { return $container->get(\'id\'); }',

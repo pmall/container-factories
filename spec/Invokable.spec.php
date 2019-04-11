@@ -6,7 +6,6 @@ use Psr\Container\ContainerInterface;
 
 use Quanta\Container\Invokable;
 use Quanta\Container\FactoryInterface;
-use Quanta\Container\Compilation\Compiler;
 
 require_once __DIR__ . '/.test/classes.php';
 
@@ -40,15 +39,13 @@ describe('Invokable', function () {
 
     });
 
-    describe('->compilable()', function () {
+    describe('->compiled()', function () {
 
-        it('should return a compilable version of the invokable', function () {
+        it('should return a compiled version of the invokable', function () {
 
-            $compiler = Compiler::testing();
+            $test = $this->factory->compiled('container', function () {});
 
-            $test = $this->factory->compilable('container');
-
-            expect($compiler($test))->toEqual('(new Test\TestInvokable)($container)');
+            expect($test)->toEqual('(new Test\TestInvokable)($container)');
 
         });
 

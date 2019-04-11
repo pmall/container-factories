@@ -4,8 +4,6 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\CompilableInterface;
-
 final class DefinitionProxy implements FactoryInterface
 {
     /**
@@ -38,10 +36,10 @@ final class DefinitionProxy implements FactoryInterface
     /**
      * @inheritdoc
      */
-    public function compilable(string $container): CompilableInterface
+    public function compiled(string $container, callable $compiler): string
     {
         $factory = $this->definition->factory();
 
-        return $factory->compilable($container);
+        return $factory->compiled($container, $compiler);
     }
 }

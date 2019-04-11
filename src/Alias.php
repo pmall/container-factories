@@ -5,10 +5,8 @@ namespace Quanta\Container;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-use Quanta\Container\Compilation\Template;
 use Quanta\Container\Compilation\IndentedString;
 use Quanta\Container\Compilation\ContainerEntry;
-use Quanta\Container\Compilation\CompilableInterface;
 
 final class Alias implements FactoryInterface
 {
@@ -62,32 +60,24 @@ final class Alias implements FactoryInterface
     /**
      * @inheritdoc
      */
-    public function compilable(string $container): CompilableInterface
+    public function compiled(string $container, callable $compiler): string
     {
         if (! $this->nullable) {
-            return new ContainerEntry($container, $this->id);
+            return (string) new ContainerEntry($container, $this->id);
         }
 
-        $tpl = vsprintf('(function ($container) {%s%s%s})($%s)', [
-            PHP_EOL,
+        return implode(PHP_EOL, [
+            '(function ($container) {',
             new IndentedString(implode(PHP_EOL, [
-                'if ($container->has(%s)) {',
+                sprintf('if ($container->has(\'%s\')) {', $this->id),
                 new IndentedString(implode(PHP_EOL, [
-                    'try { return %s; }',
-                    vsprintf('catch (%s $e) { return null; }', [
-                        NotFoundExceptionInterface::class,
-                    ]),
+                    sprintf('try { return %s; }', new ContainerEntry($container, $this->id)),
+                    sprintf('catch (%s $e) { return null; }', NotFoundExceptionInterface::class),
                 ])),
                 '}',
                 'return null;',
             ])),
-            PHP_EOL,
-            $container,
-        ]);
-
-        return new Template($tpl, ...[
-            $this->id,
-            new ContainerEntry('container', $this->id),
+            sprintf('})($%s)', $container),
         ]);
     }
 }

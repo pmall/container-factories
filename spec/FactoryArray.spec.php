@@ -6,30 +6,16 @@ use Psr\Container\ContainerInterface;
 
 use Quanta\Container\FactoryArray;
 use Quanta\Container\FactoryInterface;
-use Quanta\Container\Compilation\Compiler;
-use Quanta\Container\Compilation\CompilableInterface;
 
 require_once __DIR__ . '/.test/classes.php';
 
 describe('FactoryArray', function () {
 
-    beforeEach(function () {
-
-        $this->factory1 = mock(FactoryInterface::class);
-        $this->factory2 = mock(FactoryInterface::class);
-        $this->factory3 = mock(FactoryInterface::class);
-
-    });
-
-    context('when all the values of the array of factories are implementations of FactoryInterface', function () {
+    context('when the factory array is empty', function () {
 
         beforeEach(function () {
 
-            $this->factory = new FactoryArray([
-                'id1' => $this->factory1->get(),
-                'id2' => $this->factory2->get(),
-                'id3' => $this->factory3->get(),
-            ]);
+            $this->factory = new FactoryArray([]);
 
         });
 
@@ -41,49 +27,25 @@ describe('FactoryArray', function () {
 
         describe('->__invoke()', function () {
 
-            it('should return an array of the factories values', function () {
+            it('should return an empty array', function () {
 
                 $container = mock(ContainerInterface::class);
 
-                $this->factory1->__invoke->with($container)->returns('value1');
-                $this->factory2->__invoke->with($container)->returns('value2');
-                $this->factory3->__invoke->with($container)->returns('value3');
-
                 $test = ($this->factory)($container->get());
 
-                expect($test)->toEqual([
-                    'id1' => 'value1',
-                    'id2' => 'value2',
-                    'id3' => 'value3',
-                ]);
+                expect($test)->toEqual([]);
 
             });
 
         });
 
-        describe('->compilable()', function () {
+        describe('->compiled()', function () {
 
-            it('should return a compilable version of the factory array', function () {
+            it('should return []', function () {
 
-                $compilable1 = mock(CompilableInterface::class);
-                $compilable2 = mock(CompilableInterface::class);
-                $compilable3 = mock(CompilableInterface::class);
+                $test = $this->factory->compiled('container', function () {});
 
-                $compiler = Compiler::testing([
-                    'precompiled' => [
-                        'id1' => $compilable1->get(),
-                        'id2' => $compilable2->get(),
-                        'id3' => $compilable3->get(),
-                    ]
-                ]);
-
-                $this->factory1->compilable->with('container')->returns($compilable1);
-                $this->factory2->compilable->with('container')->returns($compilable2);
-                $this->factory3->compilable->with('container')->returns($compilable3);
-
-                $test = $this->factory->compilable('container');
-
-                expect($compiler($test))->toEqual('precompiled');
+                expect($test)->toEqual('[]');
 
             });
 
@@ -91,19 +53,111 @@ describe('FactoryArray', function () {
 
     });
 
-    context('when a value of the of the array of factories is not an implementation of FactoryInterface', function () {
+    context('when the factory array is not empty', function () {
 
-        it('should throw an InvalidArgumentException', function () {
+        beforeEach(function () {
 
-            $test = function () {
-                new FactoryArray([
-                    'id1' => $this->factory1->get(),
-                    'id2' => 2,
-                    'id3' => $this->factory3->get(),
+            $this->factory1 = mock(FactoryInterface::class);
+            $this->factory2 = mock(FactoryInterface::class);
+            $this->factory3 = mock(FactoryInterface::class);
+
+        });
+
+        context('when all the values of the array of factories are implementations of FactoryInterface', function () {
+
+            beforeEach(function () {
+
+                $this->factory = new FactoryArray([
+                    $this->factory1->get(),
+                    'key2' => $this->factory2->get(),
+                    10 => $this->factory3->get(),
                 ]);
-            };
 
-            expect($test)->toThrow(new InvalidArgumentException);
+            });
+
+            it('should implement FactoryInterface', function () {
+
+                expect($this->factory)->toBeAnInstanceOf(FactoryInterface::class);
+
+            });
+
+            describe('->__invoke()', function () {
+
+                it('should return an array of the factories values', function () {
+
+                    $container = mock(ContainerInterface::class);
+
+                    $this->factory1->__invoke->with($container)->returns('value1');
+                    $this->factory2->__invoke->with($container)->returns('value2');
+                    $this->factory3->__invoke->with($container)->returns('value3');
+
+                    $test = ($this->factory)($container->get());
+
+                    expect($test)->toEqual([
+                        0 => 'value1',
+                        'key2' => 'value2',
+                        10 => 'value3',
+                    ]);
+
+                });
+
+            });
+
+            describe('->compiled()', function () {
+
+                it('should return a compiled version of the factory array', function () {
+
+                    $compiler = function () {};
+
+                    $this->factory1->compiled
+                        ->with('container', Kahlan\Arg::toBe($compiler))
+                        ->returns(implode(PHP_EOL, ['value11', 'value12', 'value13']));
+
+                    $this->factory2->compiled
+                        ->with('container', Kahlan\Arg::toBe($compiler))
+                        ->returns(implode(PHP_EOL, ['value21', 'value22', 'value23']));
+
+                    $this->factory3->compiled
+                        ->with('container', Kahlan\Arg::toBe($compiler))
+                        ->returns(implode(PHP_EOL, ['value31', 'value32', 'value33']));
+
+                    $test = $this->factory->compiled('container', $compiler);
+
+                    expect($test)->toEqual(implode(PHP_EOL, [
+                        '[',
+                        '    0 => value11',
+                        '    value12',
+                        '    value13,',
+                        '    \'key2\' => value21',
+                        '    value22',
+                        '    value23,',
+                        '    10 => value31',
+                        '    value32',
+                        '    value33,',
+                        ']',
+                    ]));
+
+                });
+
+            });
+
+        });
+
+        context('when a value of the of the array of factories is not an implementation of FactoryInterface', function () {
+
+            it('should throw an InvalidArgumentException', function () {
+
+                $test = function () {
+                    new FactoryArray([
+                        $this->factory1->get(),
+                        'id2' => 2,
+                        10 => $this->factory3->get(),
+                    ]);
+                };
+
+                expect($test)->toThrow(new InvalidArgumentException);
+
+            });
 
         });
 

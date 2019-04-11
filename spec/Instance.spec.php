@@ -6,8 +6,6 @@ use Psr\Container\ContainerInterface;
 
 use Quanta\Container\Instance;
 use Quanta\Container\FactoryInterface;
-use Quanta\Container\Compilation\Compiler;
-use Quanta\Container\Compilation\CompilableInterface;
 
 require_once __DIR__ . '/.test/classes.php';
 
@@ -41,15 +39,13 @@ describe('Instance', function () {
 
         });
 
-        describe('->compilable()', function () {
+        describe('->compiled()', function () {
 
-            it('should return a compilable version of the instance with no argument', function () {
+            it('should return a compiled version of the instance with no argument', function () {
 
-                $compiler = Compiler::testing();
+                $test = $this->factory->compiled('container', function () {});
 
-                $test = $this->factory->compilable('container');
-
-                expect($compiler($test))->toEqual('new Test\TestClass');
+                expect($test)->toEqual('new Test\TestClass');
 
             });
 
@@ -97,31 +93,37 @@ describe('Instance', function () {
 
         });
 
-        describe('->compilable()', function () {
+        describe('->compiled()', function () {
 
-            it('should return a compilable version of the instance with arguments', function () {
+            it('should return a compiled version of the instance with arguments', function () {
 
-                $compilable1 = mock(CompilableInterface::class);
-                $compilable2 = mock(CompilableInterface::class);
-                $compilable3 = mock(CompilableInterface::class);
+                $compiler = function () {};
 
-                $compiler = Compiler::testing([
-                    'precompiled1' => $compilable1->get(),
-                    'precompiled2' => $compilable2->get(),
-                    'precompiled3' => $compilable3->get(),
-                ]);
+                $this->factory1->compiled
+                    ->with('container', Kahlan\Arg::toBe($compiler))
+                    ->returns(implode(PHP_EOL, ['value11', 'value12', 'value13']));
 
-                $this->factory1->compilable->with('container')->returns($compilable1);
-                $this->factory2->compilable->with('container')->returns($compilable2);
-                $this->factory3->compilable->with('container')->returns($compilable3);
+                $this->factory2->compiled
+                    ->with('container', Kahlan\Arg::toBe($compiler))
+                    ->returns(implode(PHP_EOL, ['value21', 'value22', 'value23']));
 
-                $test = $this->factory->compilable('container');
+                $this->factory3->compiled
+                    ->with('container', Kahlan\Arg::toBe($compiler))
+                    ->returns(implode(PHP_EOL, ['value31', 'value32', 'value33']));
 
-                expect($compiler($test))->toEqual(implode(PHP_EOL, [
+                $test = $this->factory->compiled('container', $compiler);
+
+                expect($test)->toEqual(implode(PHP_EOL, [
                     'new Test\TestClass(',
-                    '    precompiled1,',
-                    '    precompiled2,',
-                    '    precompiled3',
+                    '    value11',
+                    '    value12',
+                    '    value13,',
+                    '    value21',
+                    '    value22',
+                    '    value23,',
+                    '    value31',
+                    '    value32',
+                    '    value33',
                     ')',
                 ]));
 

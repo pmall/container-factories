@@ -4,9 +4,8 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\Compilable;
-use Quanta\Container\Compilation\ContainerEntry;
-use Quanta\Container\Compilation\CompilableInterface;
+use Quanta\Container\Compilation\IndentedString;
+use Quanta\Container\Compilation\ContainerEntryCollection;
 
 final class Tag implements FactoryInterface
 {
@@ -38,10 +37,8 @@ final class Tag implements FactoryInterface
     /**
      * @inheritdoc
      */
-    public function compilable(string $container): CompilableInterface
+    public function compiled(string $container, callable $compiler): string
     {
-        return new Compilable(array_map(function ($id) use ($container) {
-            return new ContainerEntry($container, $id);
-        }, $this->ids));
+        return (string) new ContainerEntryCollection($container, ...$this->ids);
     }
 }

@@ -4,9 +4,6 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\CompiledString;
-use Quanta\Container\Compilation\CompilableInterface;
-
 final class Invokable implements FactoryInterface
 {
     /**
@@ -37,8 +34,8 @@ final class Invokable implements FactoryInterface
     /**
      * @inheritdoc
      */
-    public function compilable(string $container): CompilableInterface
+    public function compiled(string $container, callable $compiler): string
     {
-        return new CompiledString(sprintf('(new %s)($%s)', $this->class, $container));
+        return sprintf('(new %s)($%s)', $this->class, $container);
     }
 }

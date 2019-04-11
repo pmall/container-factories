@@ -4,10 +4,7 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\Template;
-use Quanta\Container\Compilation\Compilable;
-use Quanta\Container\Compilation\ContainerEntry;
-use Quanta\Container\Compilation\CompilableInterface;
+use Quanta\Container\Compilation\ContainerEntryCollection;
 
 final class InterpolatedString implements FactoryInterface
 {
@@ -48,14 +45,14 @@ final class InterpolatedString implements FactoryInterface
     /**
      * @inheritdoc
      */
-    public function compilable(string $container): CompilableInterface
+    public function compiled(string $container, callable $compiler): string
     {
         if (count($this->ids) == 0) {
-            return new Compilable($this->format);
+            return sprintf('\'%s\'', $this->format);
         }
 
-        return new Template('vsprintf(%s, %s)', $this->format, array_map(function ($id) use ($container) {
-            return new ContainerEntry($container, $id);
-        }, $this->ids));
+        return sprintf('vsprintf(\'%s\', %s)', $this->format, ...[
+            new ContainerEntryCollection($container, ...$this->ids),
+        ]);
     }
 }

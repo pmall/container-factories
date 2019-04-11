@@ -4,8 +4,6 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\CompilableInterface;
-
 interface FactoryInterface
 {
     /**
@@ -17,12 +15,13 @@ interface FactoryInterface
     public function __invoke(ContainerInterface $container);
 
     /**
-     * Return a compilable value representing the value produced by the factory.
+     * Return a string representation of the value produced by the factory.
      *
-     * The container variable name to use is given as argument.
+     * The produced string must represent a single expression.
      *
-     * @param string $container
-     * @return \Quanta\Container\Compilation\CompilableInterface
+     * @param string    $container  the container variable name
+     * @param callable  $compiler   the compiler for recursive compilation
+     * @return string
      */
-    public function compilable(string $container): CompilableInterface;
+    public function compiled(string $container, callable $compiler): string;
 }

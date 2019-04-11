@@ -6,7 +6,6 @@ use Psr\Container\ContainerInterface;
 
 use Quanta\Container\EnvVar;
 use Quanta\Container\FactoryInterface;
-use Quanta\Container\Compilation\Compiler;
 
 describe('EnvVar', function () {
 
@@ -88,15 +87,13 @@ describe('EnvVar', function () {
 
             });
 
-            describe('->compilable()', function () {
+            describe('->compiled()', function () {
 
-                it('should return a compilable version of the env var', function () {
+                it('should return a compiled version of the env var', function () {
 
-                    $compiler = Compiler::testing();
+                    $test = $this->factory->compiled('container', function () {});
 
-                    $test = $this->factory->compilable('container');
-
-                    expect($compiler($test))->toEqual(implode(PHP_EOL, [
+                    expect($test)->toEqual(implode(PHP_EOL, [
                     '(function () {',
                     '    $value = getenv(\'QUANTA_TEST\');',
                     '    if ($value === false) $value = \'2\';',

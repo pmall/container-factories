@@ -6,7 +6,6 @@ use Psr\Container\ContainerInterface;
 
 use Quanta\Container\FactoryInterface;
 use Quanta\Container\InterpolatedString;
-use Quanta\Container\Compilation\Compiler;
 
 describe('InterpolatedString', function () {
 
@@ -38,15 +37,13 @@ describe('InterpolatedString', function () {
 
         });
 
-        describe('->compilable()', function () {
+        describe('->compiled()', function () {
 
-            it('should return a compilable version of the interpolated string', function () {
+            it('should return a compiled version of the interpolated string', function () {
 
-                $compiler = Compiler::testing();
+                $test = $this->factory->compiled('container', function () {});
 
-                $test = $this->factory->compilable('container');
-
-                expect($compiler($test))->toEqual('\'a:b:c\'');
+                expect($test)->toEqual('\'a:b:c\'');
 
             });
 
@@ -86,15 +83,13 @@ describe('InterpolatedString', function () {
 
         });
 
-        describe('->compilable()', function () {
+        describe('->compiled()', function () {
 
-            it('should return a compilable version of the interpolated string', function () {
+            it('should return a compiled version of the interpolated string', function () {
 
-                $compiler = Compiler::testing();
+                $test = $this->factory->compiled('container', function () {});
 
-                $test = $this->factory->compilable('container');
-
-                expect($compiler($test))->toEqual(implode(PHP_EOL, [
+                expect($test)->toEqual(implode(PHP_EOL, [
                     'vsprintf(\'a:%s:c:%s:e:%s\', [',
                     '    $container->get(\'id1\'),',
                     '    $container->get(\'id2\'),',
