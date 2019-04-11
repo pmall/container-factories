@@ -3,7 +3,6 @@
 use function Eloquent\Phony\Kahlan\mock;
 
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 use Quanta\Container\Alias;
 use Quanta\Container\FactoryInterface;
@@ -106,62 +105,14 @@ describe('Alias', function () {
 
                 context('when the container contains id', function () {
 
-                    beforeEach(function () {
+                    it('should return the container entry', function () {
 
                         $this->container->has->with('id')->returns(true);
+                        $this->container->get->with('id')->returns('value');
 
-                    });
+                        $test = ($this->factory)($this->container->get());
 
-                    context('when the container does not throw an exception', function () {
-
-                        it('should return the container entry', function () {
-
-                            $this->container->get->with('id')->returns('value');
-
-                            $test = ($this->factory)($this->container->get());
-
-                            expect($test)->toEqual('value');
-
-                        });
-
-                    });
-
-                    context('when the container does throw an exception', function () {
-
-                        context('when the exception is a NotFoundExceptionInterface', function () {
-
-                            it('should return null', function () {
-
-                                $this->container->get->with('id')->throws(mock([
-                                    Throwable::class,
-                                    NotFoundExceptionInterface::class,
-                                ]));
-
-                                $test = ($this->factory)($this->container->get());
-
-                                expect($test)->toBeNull();
-
-                            });
-
-                        });
-
-                        context('when the exception is not a NotFoundExceptionInterface', function () {
-
-                            it('should rethrow the exception', function () {
-
-                                $exception = mock(Throwable::class);
-
-                                $this->container->get->with('id')->throws($exception);
-
-                                $test = function () {
-                                    ($this->factory)($this->container->get());
-                                };
-
-                                expect($test)->toThrow($exception->get());
-
-                            });
-
-                        });
+                        expect($test)->toEqual('value');
 
                     });
 
@@ -175,15 +126,7 @@ describe('Alias', function () {
 
                     $test = $this->factory->compiled('container', function () {});
 
-                    expect($test)->toEqual(implode(PHP_EOL, [
-                        '(function ($container) {',
-                        '    if ($container->has(\'id\')) {',
-                        '        try { return $container->get(\'id\'); }',
-                        '        catch (Psr\Container\NotFoundExceptionInterface $e) { return null; }',
-                        '    }',
-                        '    return null;',
-                        '})($container)',
-                    ]));
+                    expect($test)->toEqual('$container->has(\'id\') ? $container->get(\'id\') : null');
 
                 });
 

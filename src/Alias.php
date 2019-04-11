@@ -3,9 +3,7 @@
 namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
-use Quanta\Container\Compilation\IndentedString;
 use Quanta\Container\Compilation\ContainerEntry;
 
 final class Alias implements FactoryInterface
@@ -45,16 +43,7 @@ final class Alias implements FactoryInterface
             return null;
         }
 
-        try {
-            return $container->get($this->id);
-        }
-
-        catch (NotFoundExceptionInterface $e) {
-            if ($this->nullable) {
-                return null;
-            }
-            throw $e;
-        }
+        return $container->get($this->id);
     }
 
     /**
@@ -66,18 +55,10 @@ final class Alias implements FactoryInterface
             return (string) new ContainerEntry($container, $this->id);
         }
 
-        return implode(PHP_EOL, [
-            '(function ($container) {',
-            new IndentedString(implode(PHP_EOL, [
-                sprintf('if ($container->has(\'%s\')) {', $this->id),
-                new IndentedString(implode(PHP_EOL, [
-                    sprintf('try { return %s; }', new ContainerEntry($container, $this->id)),
-                    sprintf('catch (%s $e) { return null; }', NotFoundExceptionInterface::class),
-                ])),
-                '}',
-                'return null;',
-            ])),
-            sprintf('})($%s)', $container),
+        return vsprintf('$%s->has(\'%s\') ? %s : null', [
+            $container,
+            $this->id,
+            new ContainerEntry($container, $this->id),
         ]);
     }
 }
