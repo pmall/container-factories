@@ -2,7 +2,7 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\EmptyFactoryMap;
+use Quanta\Container\FactoryMap;
 use Quanta\Container\ProcessingPassInterface;
 
 final class ProcessingPassCollection implements ConfigurationInterface
@@ -29,6 +29,6 @@ final class ProcessingPassCollection implements ConfigurationInterface
      */
     public function unit(): ConfigurationUnitInterface
     {
-        return new ConfigurationUnit(new EmptyFactoryMap, ...$this->passes);
+        return new ConfigurationUnit(new FactoryMap([]), ...$this->passes);
     }
 }
