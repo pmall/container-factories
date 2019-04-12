@@ -4,8 +4,6 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\ContainerEntryCollection;
-
 final class InterpolatedString implements FactoryInterface
 {
     /**
@@ -52,7 +50,7 @@ final class InterpolatedString implements FactoryInterface
         }
 
         return sprintf('vsprintf(\'%s\', %s)', $this->format, ...[
-            new ContainerEntryCollection($container, ...$this->ids),
+            new Formatting\ContainerEntryCollection($container, ...$this->ids),
         ]);
     }
 }

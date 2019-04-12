@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Compilation;
+namespace Quanta\Container\Formatting;
 
 final class ContainerEntry
 {

@@ -4,8 +4,6 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\ContainerEntry;
-
 final class Alias implements FactoryInterface
 {
     /**
@@ -52,13 +50,13 @@ final class Alias implements FactoryInterface
     public function compiled(string $container, callable $compiler): string
     {
         if (! $this->nullable) {
-            return (string) new ContainerEntry($container, $this->id);
+            return (string) new Formatting\ContainerEntry($container, $this->id);
         }
 
         return vsprintf('$%s->has(\'%s\') ? %s : null', [
             $container,
             $this->id,
-            new ContainerEntry($container, $this->id),
+            new Formatting\ContainerEntry($container, $this->id),
         ]);
     }
 }

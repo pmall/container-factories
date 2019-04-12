@@ -4,8 +4,6 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\ObjectCompilationErrorMessage;
-
 final class Parameter implements FactoryInterface
 {
     /**
@@ -69,7 +67,7 @@ final class Parameter implements FactoryInterface
 
         if (is_object($this->value)) {
             throw new \LogicException(
-                (string) new ObjectCompilationErrorMessage($this->value)
+                (string) new Formatting\ObjectCompilationErrorMessage($this->value)
             );
         }
 

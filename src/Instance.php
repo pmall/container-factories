@@ -4,8 +4,6 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\IndentedString;
-
 final class Instance implements FactoryInterface
 {
     /**
@@ -55,7 +53,7 @@ final class Instance implements FactoryInterface
 
         return implode(PHP_EOL, [
             sprintf('new %s(', $this->class),
-            new IndentedString(implode(',' . PHP_EOL, array_map(function ($factory) use ($container, $compiler) {
+            new Formatting\IndentedString(implode(',' . PHP_EOL, array_map(function ($factory) use ($container, $compiler) {
                 return $factory->compiled($container, $compiler);
             }, $this->factories))),
             ')',

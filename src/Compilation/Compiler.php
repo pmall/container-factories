@@ -5,6 +5,8 @@ namespace Quanta\Container\Compilation;
 use Psr\Container\ContainerInterface;
 
 use Quanta\Container\FactoryInterface;
+use Quanta\Container\Formatting\IndentedString;
+use Quanta\Container\Formatting\ObjectCompilationErrorMessage;
 
 final class Compiler
 {

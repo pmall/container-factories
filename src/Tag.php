@@ -4,9 +4,6 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\IndentedString;
-use Quanta\Container\Compilation\ContainerEntryCollection;
-
 final class Tag implements FactoryInterface
 {
     /**
@@ -39,6 +36,6 @@ final class Tag implements FactoryInterface
      */
     public function compiled(string $container, callable $compiler): string
     {
-        return (string) new ContainerEntryCollection($container, ...$this->ids);
+        return (string) new Formatting\ContainerEntryCollection($container, ...$this->ids);
     }
 }

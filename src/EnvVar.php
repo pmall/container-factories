@@ -4,8 +4,6 @@ namespace Quanta\Container;
 
 use Psr\Container\ContainerInterface;
 
-use Quanta\Container\Compilation\IndentedString;
-
 final class EnvVar implements FactoryInterface
 {
     /**
@@ -70,7 +68,7 @@ final class EnvVar implements FactoryInterface
     {
         return implode(PHP_EOL, [
             '(function () {',
-            new IndentedString(implode(PHP_EOL, [
+            new Formatting\IndentedString(implode(PHP_EOL, [
                 sprintf('$value = getenv(\'%s\');', $this->name),
                 sprintf('if ($value === false) $value = \'%s\';', $this->default),
                 sprintf('settype($value, \'%s\');', $this->type),
