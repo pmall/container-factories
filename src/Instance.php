@@ -51,12 +51,11 @@ final class Instance implements FactoryInterface
             return sprintf('new %s', $this->class);
         }
 
-        return implode(PHP_EOL, [
-            sprintf('new %s(', $this->class),
-            new Formatting\IndentedString(implode(',' . PHP_EOL, array_map(function ($factory) use ($container, $compiler) {
+        return vsprintf('new %s%s', [
+            $this->class,
+            new Formatting\StringArgList(...array_map(function ($factory) use ($container, $compiler) {
                 return $factory->compiled($container, $compiler);
-            }, $this->factories))),
-            ')',
+            }, $this->factories)),
         ]);
     }
 }

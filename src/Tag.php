@@ -36,6 +36,6 @@ final class Tag implements FactoryInterface
      */
     public function compiled(string $container, callable $compiler): string
     {
-        return (string) new Formatting\ContainerEntryCollection($container, ...$this->ids);
+        return (string) new Formatting\ContainerEntryArray($container, ...$this->ids);
     }
 }

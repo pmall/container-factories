@@ -19,15 +19,24 @@ final class ContainerEntry
     private $id;
 
     /**
+     * Whether to return null when the container does not contains id.
+     *
+     * @var bool
+     */
+    private $nullable;
+
+    /**
      * Constructor.
      *
-     * @param string $container
-     * @param string $id
+     * @param string    $container
+     * @param string    $id
+     * @param bool      $nullable
      */
-    public function __construct(string $container, string $id)
+    public function __construct(string $container, string $id, bool $nullable = false)
     {
         $this->container = $container;
         $this->id = $id;
+        $this->nullable = $nullable;
     }
 
     /**
@@ -37,6 +46,16 @@ final class ContainerEntry
      */
     public function __toString()
     {
-        return sprintf('$%s->get(\'%s\')', $this->container, $this->id);
+        $entry = sprintf('$%s->get(%s)', $this->container, new Quoted($this->id));
+
+        if (! $this->nullable) {
+            return $entry;
+        }
+
+        return vsprintf('$%s->has(%s) ? %s : null', [
+            $this->container,
+            new Quoted($this->id),
+            $entry,
+        ]);
     }
 }

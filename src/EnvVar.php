@@ -69,9 +69,9 @@ final class EnvVar implements FactoryInterface
         return implode(PHP_EOL, [
             '(function () {',
             new Formatting\IndentedString(implode(PHP_EOL, [
-                sprintf('$value = getenv(\'%s\');', $this->name),
-                sprintf('if ($value === false) $value = \'%s\';', $this->default),
-                sprintf('settype($value, \'%s\');', $this->type),
+                sprintf('$value = getenv(%s);', new Formatting\Quoted($this->name)),
+                sprintf('if ($value === false) $value = %s;', new Formatting\Quoted($this->default)),
+                sprintf('settype($value, %s);', new Formatting\Quoted($this->type)),
                 'return $value;',
             ])),
             '})()',

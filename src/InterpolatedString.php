@@ -46,11 +46,12 @@ final class InterpolatedString implements FactoryInterface
     public function compiled(string $container, callable $compiler): string
     {
         if (count($this->ids) == 0) {
-            return sprintf('\'%s\'', $this->format);
+            return (string) new Formatting\Quoted($this->format);
         }
 
-        return sprintf('vsprintf(\'%s\', %s)', $this->format, ...[
-            new Formatting\ContainerEntryCollection($container, ...$this->ids),
+        return vsprintf('vsprintf(%s, %s)', [
+            new Formatting\Quoted($this->format),
+            new Formatting\ContainerEntryArray($container, ...$this->ids),
         ]);
     }
 }

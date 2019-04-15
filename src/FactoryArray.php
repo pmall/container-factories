@@ -47,19 +47,8 @@ final class FactoryArray implements FactoryInterface
      */
     public function compiled(string $container, callable $compiler): string
     {
-        if (count($this->factories) == 0) {
-            return '[]';
-        }
-
-        return implode(PHP_EOL, [
-            '[',
-            new Formatting\IndentedString(implode(PHP_EOL, array_map(function ($key, $factory) use ($container, $compiler) {
-                return vsprintf('%s => %s,', [
-                    is_int($key) ? $key : '\'' . $key . '\'',
-                    $factory->compiled($container, $compiler),
-                ]);
-            }, array_keys($this->factories), $this->factories))),
-            ']',
-        ]);
+        return (string) new Formatting\StringArray(array_map(function ($factory) use ($container, $compiler) {
+            return $factory->compiled($container, $compiler);
+        }, $this->factories));
     }
 }

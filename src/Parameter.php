@@ -62,7 +62,7 @@ final class Parameter implements FactoryInterface
         }
 
         if (is_string($this->value)) {
-            return '\'' . $this->value . '\'';
+            return (string) new Formatting\Quoted($this->value);
         }
 
         if (is_object($this->value)) {

@@ -2,7 +2,7 @@
 
 namespace Quanta\Container\Formatting;
 
-final class ContainerEntryCollection
+final class ContainerEntryArray
 {
     /**
      * The container variable name.
@@ -37,16 +37,8 @@ final class ContainerEntryCollection
      */
     public function __toString()
     {
-        if (count($this->ids) == 0) {
-            return '[]';
-        }
-
-        return implode(PHP_EOL, [
-            '[',
-            new IndentedString(implode(PHP_EOL, array_map(function ($id) {
-                return (string) new ContainerEntry($this->container, $id) . ',';
-            }, $this->ids))),
-            ']',
-        ]);
+        return (string) new StringArray(array_map(function ($id) {
+            return new ContainerEntry($this->container, $id);
+        }, $this->ids));
     }
 }
