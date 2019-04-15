@@ -12,7 +12,7 @@ final class StringArgList
     private $strs;
 
     /**
-     * Construct.
+     * Constructor.
      *
      * @param string[] ...$strs
      */

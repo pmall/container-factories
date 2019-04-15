@@ -14,7 +14,7 @@ final class ValueParser
     private $parsers;
 
     /**
-     * Construct.
+     * Constructor.
      *
      * @param \Quanta\Container\Parsing\StringParserInterface ...$parsers
      */

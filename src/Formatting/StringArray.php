@@ -12,7 +12,7 @@ final class StringArray
     private $strs;
 
     /**
-     * Construct.
+     * Constructor.
      *
      * @param string[] $strs
      */

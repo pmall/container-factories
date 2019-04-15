@@ -12,7 +12,7 @@ final class Quoted
     private $str;
 
     /**
-     * Construct.
+     * Constructor.
      *
      * @param string $str
      */
