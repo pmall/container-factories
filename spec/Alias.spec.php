@@ -126,7 +126,11 @@ describe('Alias', function () {
 
                     $test = $this->factory->compiled('container', function () {});
 
-                    expect($test)->toEqual('$container->has(\'id\') ? $container->get(\'id\') : null');
+                    expect($test)->toEqual(implode(PHP_EOL, [
+                        '$container->has(\'id\')',
+                        '    ? $container->get(\'id\')',
+                        '    : null',
+                    ]));
 
                 });
 

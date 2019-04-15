@@ -52,10 +52,10 @@ final class ContainerEntry
             return $entry;
         }
 
-        return vsprintf('$%s->has(%s) ? %s : null', [
-            $this->container,
-            new Quoted($this->id),
-            $entry,
+        return implode(PHP_EOL, [
+            sprintf('$%s->has(%s)', $this->container, new Quoted($this->id)),
+            new IndentedString('? ' . $entry),
+            new IndentedString(': null'),
         ]);
     }
 }
