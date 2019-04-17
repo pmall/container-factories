@@ -2,8 +2,6 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\MergedFactoryMap;
-use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\MergedProcessingPass;
 use Quanta\Container\ProcessingPassInterface;
 
@@ -29,10 +27,10 @@ final class MergedConfigurationUnit implements ConfigurationUnitInterface
     /**
      * @inheritdoc
      */
-    public function map(): FactoryMapInterface
+    public function factories(): array
     {
-        return new MergedFactoryMap(...array_map(function ($unit) {
-            return $unit->map();
+        return array_merge([], ...array_map(function ($unit) {
+            return $unit->factories();
         }, $this->units));
     }
 

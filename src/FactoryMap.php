@@ -2,32 +2,25 @@
 
 namespace Quanta\Container;
 
+use Quanta\Container\Configuration\ConfigurationInterface;
+
 final class FactoryMap implements FactoryMapInterface
 {
     /**
-     * The associative array of factories.
+     * The configuration.
      *
-     * @var callable[]
+     * @var \Quanta\Container\Configuration\ConfigurationInterface
      */
-    private $factories;
+    private $configuration;
 
     /**
      * Constructor.
      *
-     * @param callable[] $factories
-     * @throws \InvalidArgumentException
+     * @param \Quanta\Container\Configuration\ConfigurationInterface $configuration
      */
-    public function __construct(array $factories)
+    public function __construct(ConfigurationInterface $configuration)
     {
-        $result = \Quanta\ArrayTypeCheck::result($factories, 'callable');
-
-        if (! $result->isValid()) {
-            throw new \InvalidArgumentException(
-                $result->message()->constructor($this, 1)
-            );
-        }
-
-        $this->factories = $factories;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -35,6 +28,60 @@ final class FactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        return $this->factories;
+        $unit = $this->configuration->unit();
+
+        $factories = $unit->factories();
+        $pass = $unit->pass();
+
+        $ids = array_keys($factories);
+
+        $factories+= $this->aliases($pass, ...$ids);
+        $factories+= $this->tags($pass, ...$ids);
+
+        foreach ($factories as $id => $factory) {
+            $factories[$id] = $pass->processed($id, $factory);
+        }
+
+        return $factories;
+    }
+
+    /**
+     * Return an array of aliases provided by the given configuration pass for
+     * the given ids.
+     *
+     * @param \Quanta\Container\ProcessingPassInterface $pass
+     * @param string                                    ...$ids
+     * @return array
+     */
+    private function aliases(ProcessingPassInterface $pass, string ...$ids): array
+    {
+        $factories = [];
+
+        foreach ($ids as $id) {
+            foreach ($pass->aliases($id) as $alias) {
+                $factories[$alias] = new Alias($id);
+            }
+        }
+
+        return $factories;
+    }
+
+    /**
+     * Return an array of tags provided by the given configuration pass for the
+     * given ids.
+     *
+     * @param \Quanta\Container\ProcessingPassInterface $pass
+     * @param string                                    ...$ids
+     * @return array
+     */
+    private function tags(ProcessingPassInterface $pass, string ...$ids): array
+    {
+        $factories = [];
+
+        foreach ($pass->tags(...$ids) as $tag => $ids) {
+            $factories[$tag] = new Tag(...$ids);
+        }
+
+        return $factories;
     }
 }

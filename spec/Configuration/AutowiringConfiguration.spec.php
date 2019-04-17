@@ -2,7 +2,6 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\FactoryMap;
 use Quanta\Container\DefinitionProxy;
 use Quanta\Container\AutowiredInstance;
 use Quanta\Container\Parsing\ParameterParserInterface;
@@ -58,9 +57,7 @@ describe('AutowiringConfiguration', function () {
 
                         $test = $this->configuration->unit();
 
-                        expect($test)->toEqual(new ConfigurationUnit(
-                            new FactoryMap([])
-                        ));
+                        expect($test)->toEqual(new ConfigurationUnit([]));
 
                     });
 
@@ -92,9 +89,7 @@ describe('AutowiringConfiguration', function () {
 
                         $test = $this->configuration->unit();
 
-                        expect($test)->toEqual(new ConfigurationUnit(
-                            new FactoryMap([])
-                        ));
+                        expect($test)->toEqual(new ConfigurationUnit([]));
 
                     });
 
@@ -128,9 +123,7 @@ describe('AutowiringConfiguration', function () {
 
                         $test = $this->configuration->unit();
 
-                        expect($test)->toEqual(new ConfigurationUnit(
-                            new FactoryMap([])
-                        ));
+                        expect($test)->toEqual(new ConfigurationUnit([]));
 
                     });
 
@@ -204,28 +197,26 @@ describe('AutowiringConfiguration', function () {
 
                             $test = $this->configuration->unit();
 
-                            expect($test)->toEqual(new ConfigurationUnit(
-                                new FactoryMap([
-                                    Test\SomeClass1::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass1::class)
-                                    ),
-                                    Test\SomeClass2::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass2::class)
-                                    ),
-                                    Test\SomeClass3::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass3::class)
-                                    ),
-                                    Test\Ns1\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\Ns1\SomeClass::class)
-                                    ),
-                                    Test\Ns2\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\Ns2\SomeClass::class)
-                                    ),
-                                    Test\Ns3\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class)
-                                    ),
-                                ])
-                            ));
+                            expect($test)->toEqual(new ConfigurationUnit([
+                                Test\SomeClass1::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\SomeClass1::class)
+                                ),
+                                Test\SomeClass2::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\SomeClass2::class)
+                                ),
+                                Test\SomeClass3::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\SomeClass3::class)
+                                ),
+                                Test\Ns1\SomeClass::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\Ns1\SomeClass::class)
+                                ),
+                                Test\Ns2\SomeClass::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\Ns2\SomeClass::class)
+                                ),
+                                Test\Ns3\SomeClass::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class)
+                                ),
+                            ]));
 
                         });
 
@@ -257,28 +248,26 @@ describe('AutowiringConfiguration', function () {
 
                             $test = $this->configuration->unit();
 
-                            expect($test)->toEqual(new ConfigurationUnit(
-                                new FactoryMap([
-                                    Test\SomeClass1::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass1::class)
-                                    ),
-                                    Test\SomeClass2::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass2::class)
-                                    ),
-                                    Test\SomeClass3::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass3::class)
-                                    ),
-                                    Test\Ns1\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\Ns1\SomeClass::class)
-                                    ),
-                                    Test\Ns2\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\Ns2\SomeClass::class)
-                                    ),
-                                    Test\Ns3\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class)
-                                    ),
-                                ])
-                            ));
+                            expect($test)->toEqual(new ConfigurationUnit([
+                                Test\SomeClass1::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\SomeClass1::class)
+                                ),
+                                Test\SomeClass2::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\SomeClass2::class)
+                                ),
+                                Test\SomeClass3::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\SomeClass3::class)
+                                ),
+                                Test\Ns1\SomeClass::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\Ns1\SomeClass::class)
+                                ),
+                                Test\Ns2\SomeClass::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\Ns2\SomeClass::class)
+                                ),
+                                Test\Ns3\SomeClass::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class)
+                                ),
+                            ]));
 
                         });
 
@@ -318,28 +307,26 @@ describe('AutowiringConfiguration', function () {
 
                             $test = $this->configuration->unit();
 
-                            expect($test)->toEqual(new ConfigurationUnit(
-                                new FactoryMap([
-                                    Test\SomeClass1::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass1::class)
-                                    ),
-                                    Test\SomeClass2::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass2::class)
-                                    ),
-                                    Test\SomeClass3::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass3::class)
-                                    ),
-                                    Test\Ns1\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\Ns1\SomeClass::class)
-                                    ),
-                                    Test\Ns2\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\Ns2\SomeClass::class)
-                                    ),
-                                    Test\Ns3\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class)
-                                    ),
-                                ])
-                            ));
+                            expect($test)->toEqual(new ConfigurationUnit([
+                                Test\SomeClass1::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\SomeClass1::class)
+                                ),
+                                Test\SomeClass2::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\SomeClass2::class)
+                                ),
+                                Test\SomeClass3::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\SomeClass3::class)
+                                ),
+                                Test\Ns1\SomeClass::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\Ns1\SomeClass::class)
+                                ),
+                                Test\Ns2\SomeClass::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\Ns2\SomeClass::class)
+                                ),
+                                Test\Ns3\SomeClass::class => new DefinitionProxy(
+                                    new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class)
+                                ),
+                            ]));
 
                         });
 
@@ -408,48 +395,46 @@ describe('AutowiringConfiguration', function () {
 
                                 $test = $this->configuration->unit();
 
-                                expect($test)->toEqual(new ConfigurationUnit(
-                                    new FactoryMap([
-                                        Test\SomeClass1::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\SomeClass1::class, [
-                                                '$parameter1' => 'value11',
-                                            ])
-                                        ),
-                                        Test\SomeClass2::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\SomeClass2::class, [
-                                                '$parameter1' => 'value11',
-                                                '$parameter2' => 'value22',
-                                                '$parameter3' => 'value23',
-                                            ])
-                                        ),
-                                        Test\SomeClass3::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\SomeClass3::class, [
-                                                '$parameter1' => 'value31',
-                                                '$parameter2' => 'value32',
-                                                '$parameter3' => 'value33',
-                                            ])
-                                        ),
-                                        Test\Ns1\SomeClass::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\Ns1\SomeClass::class, [
-                                                '$parameter1' => 'value41',
-                                            ])
-                                        ),
-                                        Test\Ns2\SomeClass::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\Ns2\SomeClass::class, [
-                                                '$parameter1' => 'value41',
-                                                '$parameter2' => 'value52',
-                                                '$parameter3' => 'value53',
-                                            ])
-                                        ),
-                                        Test\Ns3\SomeClass::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class, [
-                                                '$parameter1' => 'value61',
-                                                '$parameter2' => 'value62',
-                                                '$parameter3' => 'value63',
-                                            ])
-                                        ),
-                                    ])
-                                ));
+                                expect($test)->toEqual(new ConfigurationUnit([
+                                    Test\SomeClass1::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(), Test\SomeClass1::class, [
+                                            '$parameter1' => 'value11',
+                                        ])
+                                    ),
+                                    Test\SomeClass2::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(), Test\SomeClass2::class, [
+                                            '$parameter1' => 'value11',
+                                            '$parameter2' => 'value22',
+                                            '$parameter3' => 'value23',
+                                        ])
+                                    ),
+                                    Test\SomeClass3::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(), Test\SomeClass3::class, [
+                                            '$parameter1' => 'value31',
+                                            '$parameter2' => 'value32',
+                                            '$parameter3' => 'value33',
+                                        ])
+                                    ),
+                                    Test\Ns1\SomeClass::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(),Test\Ns1\SomeClass::class, [
+                                            '$parameter1' => 'value41',
+                                        ])
+                                    ),
+                                    Test\Ns2\SomeClass::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(),Test\Ns2\SomeClass::class, [
+                                            '$parameter1' => 'value41',
+                                            '$parameter2' => 'value52',
+                                            '$parameter3' => 'value53',
+                                        ])
+                                    ),
+                                    Test\Ns3\SomeClass::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(),Test\Ns3\SomeClass::class, [
+                                            '$parameter1' => 'value61',
+                                            '$parameter2' => 'value62',
+                                            '$parameter3' => 'value63',
+                                        ])
+                                    ),
+                                ]));
 
                             });
 
@@ -481,48 +466,46 @@ describe('AutowiringConfiguration', function () {
 
                                 $test = $this->configuration->unit();
 
-                                expect($test)->toEqual(new ConfigurationUnit(
-                                    new FactoryMap([
-                                        Test\SomeClass1::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\SomeClass1::class, [
-                                                '$parameter1' => 'value11',
-                                            ])
-                                        ),
-                                        Test\SomeClass2::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\SomeClass2::class, [
-                                                '$parameter1' => 'value11',
-                                                '$parameter2' => 'value22',
-                                                '$parameter3' => 'value23',
-                                            ])
-                                        ),
-                                        Test\SomeClass3::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\SomeClass3::class, [
-                                                '$parameter1' => 'value31',
-                                                '$parameter2' => 'value32',
-                                                '$parameter3' => 'value33',
-                                            ])
-                                        ),
-                                        Test\Ns1\SomeClass::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\Ns1\SomeClass::class, [
-                                                '$parameter1' => 'value41',
-                                            ])
-                                        ),
-                                        Test\Ns2\SomeClass::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\Ns2\SomeClass::class, [
-                                                '$parameter1' => 'value41',
-                                                '$parameter2' => 'value52',
-                                                '$parameter3' => 'value53',
-                                            ])
-                                        ),
-                                        Test\Ns3\SomeClass::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class, [
-                                                '$parameter1' => 'value61',
-                                                '$parameter2' => 'value62',
-                                                '$parameter3' => 'value63',
-                                            ])
-                                        ),
-                                    ])
-                                ));
+                                expect($test)->toEqual(new ConfigurationUnit([
+                                    Test\SomeClass1::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(), Test\SomeClass1::class, [
+                                            '$parameter1' => 'value11',
+                                        ])
+                                    ),
+                                    Test\SomeClass2::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(), Test\SomeClass2::class, [
+                                            '$parameter1' => 'value11',
+                                            '$parameter2' => 'value22',
+                                            '$parameter3' => 'value23',
+                                        ])
+                                    ),
+                                    Test\SomeClass3::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(), Test\SomeClass3::class, [
+                                            '$parameter1' => 'value31',
+                                            '$parameter2' => 'value32',
+                                            '$parameter3' => 'value33',
+                                        ])
+                                    ),
+                                    Test\Ns1\SomeClass::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(),Test\Ns1\SomeClass::class, [
+                                            '$parameter1' => 'value41',
+                                        ])
+                                    ),
+                                    Test\Ns2\SomeClass::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(),Test\Ns2\SomeClass::class, [
+                                            '$parameter1' => 'value41',
+                                            '$parameter2' => 'value52',
+                                            '$parameter3' => 'value53',
+                                        ])
+                                    ),
+                                    Test\Ns3\SomeClass::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(),Test\Ns3\SomeClass::class, [
+                                            '$parameter1' => 'value61',
+                                            '$parameter2' => 'value62',
+                                            '$parameter3' => 'value63',
+                                        ])
+                                    ),
+                                ]));
 
                             });
 
@@ -562,48 +545,46 @@ describe('AutowiringConfiguration', function () {
 
                                 $test = $this->configuration->unit();
 
-                                expect($test)->toEqual(new ConfigurationUnit(
-                                    new FactoryMap([
-                                        Test\SomeClass1::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\SomeClass1::class, [
-                                                '$parameter1' => 'value11',
-                                            ])
-                                        ),
-                                        Test\SomeClass2::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\SomeClass2::class, [
-                                                '$parameter1' => 'value11',
-                                                '$parameter2' => 'value22',
-                                                '$parameter3' => 'value23',
-                                            ])
-                                        ),
-                                        Test\SomeClass3::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\SomeClass3::class, [
-                                                '$parameter1' => 'value31',
-                                                '$parameter2' => 'value32',
-                                                '$parameter3' => 'value33',
-                                            ])
-                                        ),
-                                        Test\Ns1\SomeClass::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\Ns1\SomeClass::class, [
-                                                '$parameter1' => 'value41',
-                                            ])
-                                        ),
-                                        Test\Ns2\SomeClass::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\Ns2\SomeClass::class, [
-                                                '$parameter1' => 'value41',
-                                                '$parameter2' => 'value52',
-                                                '$parameter3' => 'value53',
-                                            ])
-                                        ),
-                                        Test\Ns3\SomeClass::class => new DefinitionProxy(
-                                            new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class, [
-                                                '$parameter1' => 'value61',
-                                                '$parameter2' => 'value62',
-                                                '$parameter3' => 'value63',
-                                            ])
-                                        ),
-                                    ])
-                                ));
+                                expect($test)->toEqual(new ConfigurationUnit([
+                                    Test\SomeClass1::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(), Test\SomeClass1::class, [
+                                            '$parameter1' => 'value11',
+                                        ])
+                                    ),
+                                    Test\SomeClass2::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(), Test\SomeClass2::class, [
+                                            '$parameter1' => 'value11',
+                                            '$parameter2' => 'value22',
+                                            '$parameter3' => 'value23',
+                                        ])
+                                    ),
+                                    Test\SomeClass3::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(), Test\SomeClass3::class, [
+                                            '$parameter1' => 'value31',
+                                            '$parameter2' => 'value32',
+                                            '$parameter3' => 'value33',
+                                        ])
+                                    ),
+                                    Test\Ns1\SomeClass::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(),Test\Ns1\SomeClass::class, [
+                                            '$parameter1' => 'value41',
+                                        ])
+                                    ),
+                                    Test\Ns2\SomeClass::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(),Test\Ns2\SomeClass::class, [
+                                            '$parameter1' => 'value41',
+                                            '$parameter2' => 'value52',
+                                            '$parameter3' => 'value53',
+                                        ])
+                                    ),
+                                    Test\Ns3\SomeClass::class => new DefinitionProxy(
+                                        new AutowiredInstance($this->parser->get(),Test\Ns3\SomeClass::class, [
+                                            '$parameter1' => 'value61',
+                                            '$parameter2' => 'value62',
+                                            '$parameter3' => 'value63',
+                                        ])
+                                    ),
+                                ]));
 
                             });
 

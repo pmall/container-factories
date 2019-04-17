@@ -2,35 +2,23 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\FactoryMapInterface;
-use Quanta\Container\ProcessingPassInterface;
-
 final class Configuration implements ConfigurationInterface
 {
     /**
-     * The factory map.
+     * The configuration unit.
      *
-     * @var \Quanta\Container\FactoryMapInterface
+     * @var \Quanta\Container\Configuration\ConfigurationUnitInterface
      */
-    private $map;
-
-    /**
-     * The array of processing passes.
-     *
-     * @var \Quanta\Container\ProcessingPassInterface[]
-     */
-    private $passes;
+    private $unit;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\FactoryMapInterface     $map
-     * @param \Quanta\Container\ProcessingPassInterface ...$passes
+     * @param \Quanta\Container\Configuration\ConfigurationUnitInterface $unit
      */
-    public function __construct(FactoryMapInterface $map, ProcessingPassInterface ...$passes)
+    public function __construct(ConfigurationUnitInterface $unit)
     {
-        $this->map = $map;
-        $this->passes = $passes;
+        $this->unit = $unit;
     }
 
     /**
@@ -38,6 +26,6 @@ final class Configuration implements ConfigurationInterface
      */
     public function unit(): ConfigurationUnitInterface
     {
-        return new ConfigurationUnit($this->map, ...$this->passes);
+        return $this->unit;
     }
 }

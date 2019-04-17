@@ -2,18 +2,17 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\MergedProcessingPass;
 use Quanta\Container\ProcessingPassInterface;
 
 final class ConfigurationUnit implements ConfigurationUnitInterface
 {
     /**
-     * The factory map.
+     * The associative array of factories.
      *
-     * @var \Quanta\Container\FactoryMapInterface
+     * @var callable[]
      */
-    private $map;
+    private $factories;
 
     /**
      * The array of processing passes.
@@ -25,21 +24,30 @@ final class ConfigurationUnit implements ConfigurationUnitInterface
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\FactoryMapInterface     $map
+     * @param callable[]                                $factories
      * @param \Quanta\Container\ProcessingPassInterface ...$passes
+     * @throws \InvalidArgumentException
      */
-    public function __construct(FactoryMapInterface $map, ProcessingPassInterface ...$passes)
+    public function __construct(array $factories, ProcessingPassInterface ...$passes)
     {
-        $this->map = $map;
+        $result = \Quanta\ArrayTypeCheck::result($factories, 'callable');
+
+        if (! $result->isValid()) {
+            throw new \InvalidArgumentException(
+                $result->message()->constructor($this, 1)
+            );
+        }
+
+        $this->factories = $factories;
         $this->passes = $passes;
     }
 
     /**
      * @inheritdoc
      */
-    public function map(): FactoryMapInterface
+    public function factories(): array
     {
-        return $this->map;
+        return $this->factories;
     }
 
     /**

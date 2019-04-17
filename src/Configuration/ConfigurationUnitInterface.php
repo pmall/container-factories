@@ -2,17 +2,16 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\ProcessingPassInterface;
 
 interface ConfigurationUnitInterface
 {
     /**
-     * Return a factory map.
+     * Return an associative array of factories.
      *
-     * @return \Quanta\Container\FactoryMapInterface
+     * @return callable[]
      */
-    public function map(): FactoryMapInterface;
+    public function factories(): array;
 
     /**
      * Return a processing pass.

@@ -2,8 +2,6 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\MergedFactoryMap;
-use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\MergedProcessingPass;
 use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Configuration\MergedConfigurationUnit;
@@ -25,13 +23,13 @@ describe('MergedConfigurationUnit', function () {
 
         });
 
-        describe('->map()', function () {
+        describe('->factories()', function () {
 
-            it('should return an empty merged factory map', function () {
+            it('should return an empty array', function () {
 
-                $test = $this->unit->map();
+                $test = $this->unit->factories();
 
-                expect($test)->toEqual(new MergedFactoryMap);
+                expect($test)->toEqual([]);
 
             });
 
@@ -73,25 +71,35 @@ describe('MergedConfigurationUnit', function () {
 
         });
 
-        describe('->map()', function () {
+        describe('->factories()', function () {
 
-            it('should merge the factory maps provided by the configuration units', function () {
+            it('should return a merged associative array of factories', function () {
 
-                $map1 = mock(FactoryMapInterface::class);
-                $map2 = mock(FactoryMapInterface::class);
-                $map3 = mock(FactoryMapInterface::class);
+                $this->unit1->factories->returns([
+                    'id1' => $factory11 = function () {},
+                    'id2' => $factory12 = function () {},
+                    'id3' => $factory13 = function () {},
+                ]);
+                $this->unit2->factories->returns([
+                    'id2' => $factory22 = function () {},
+                    'id3' => $factory23 = function () {},
+                    'id4' => $factory24 = function () {},
+                ]);
+                $this->unit3->factories->returns([
+                    'id3' => $factory33 = function () {},
+                    'id4' => $factory34 = function () {},
+                    'id5' => $factory35 = function () {},
+                ]);
 
-                $this->unit1->map->returns($map1);
-                $this->unit2->map->returns($map2);
-                $this->unit3->map->returns($map3);
+                $test = $this->unit->factories();
 
-                $test = $this->unit->map();
-
-                expect($test)->toEqual(new MergedFactoryMap(...[
-                    $map1->get(),
-                    $map2->get(),
-                    $map3->get(),
-                ]));
+                expect($test)->toEqual([
+                    'id1' => $factory11,
+                    'id2' => $factory22,
+                    'id3' => $factory33,
+                    'id4' => $factory34,
+                    'id5' => $factory35,
+                ]);
 
             });
 
@@ -99,7 +107,7 @@ describe('MergedConfigurationUnit', function () {
 
         describe('->pass()', function () {
 
-            it('should merge the processing passes provided by the configuration units', function () {
+            it('should return a merged processing pass', function () {
 
                 $pass1 = mock(ProcessingPassInterface::class);
                 $pass2 = mock(ProcessingPassInterface::class);

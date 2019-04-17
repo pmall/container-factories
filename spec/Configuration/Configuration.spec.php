@@ -2,83 +2,33 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\FactoryMapInterface;
-use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Configuration\Configuration;
-use Quanta\Container\Configuration\ConfigurationUnit;
 use Quanta\Container\Configuration\ConfigurationInterface;
+use Quanta\Container\Configuration\ConfigurationUnitInterface;
 
 describe('Configuration', function () {
 
     beforeEach(function () {
 
-        $this->map = mock(FactoryMapInterface::class);
+        $this->unit = mock(ConfigurationUnitInterface::class);
+
+        $this->configuration = new Configuration($this->unit->get());
 
     });
 
-    context('when there is no processing pass', function () {
+    it('should implement ConfigurationInterface', function () {
 
-        beforeEach(function () {
-
-            $this->configuration = new Configuration($this->map->get());
-
-        });
-
-        it('should implement ConfigurationInterface', function () {
-
-            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
-
-        });
-
-        describe('->unit()', function () {
-
-            it('should return a configuration unit with no processing pass', function () {
-
-                $test = $this->configuration->unit();
-
-                expect($test)->toEqual(new ConfigurationUnit($this->map->get()));
-
-            });
-
-        });
+        expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
 
     });
 
-    context('when there is at least one processing pass', function () {
+    describe('->unit()', function () {
 
-        beforeEach(function () {
+        it('should return the configuration unit', function () {
 
-            $this->pass1 = mock(ProcessingPassInterface::class);
-            $this->pass2 = mock(ProcessingPassInterface::class);
-            $this->pass3 = mock(ProcessingPassInterface::class);
+            $test = $this->configuration->unit();
 
-            $this->configuration = new Configuration($this->map->get(), ...[
-                $this->pass1->get(),
-                $this->pass2->get(),
-                $this->pass3->get(),
-            ]);
-
-        });
-
-        it('should implement ConfigurationInterface', function () {
-
-            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
-
-        });
-
-        describe('->unit()', function () {
-
-            it('should return a configuration unit with the processing passes', function () {
-
-                $test = $this->configuration->unit();
-
-                expect($test)->toEqual(new ConfigurationUnit($this->map->get(), ...[
-                    $this->pass1->get(),
-                    $this->pass2->get(),
-                    $this->pass3->get()
-                ]));
-
-            });
+            expect($test)->toEqual($this->unit->get());
 
         });
 

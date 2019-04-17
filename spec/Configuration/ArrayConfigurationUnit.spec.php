@@ -5,11 +5,9 @@ use function Eloquent\Phony\Kahlan\mock;
 use Quanta\Container\Alias;
 use Quanta\Container\Tagging;
 use Quanta\Container\Invokable;
-use Quanta\Container\FactoryMap;
 use Quanta\Container\ValueParser;
 use Quanta\Container\TaggingPass;
 use Quanta\Container\ExtensionPass;
-use Quanta\Container\MergedFactoryMap;
 use Quanta\Container\MergedProcessingPass;
 use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Configuration\ArrayConfigurationUnit;
@@ -34,19 +32,19 @@ describe('ArrayConfigurationUnit', function () {
                     'id3' => 'parameter3',
                 ],
                 'aliases' => [
-                    'id1' => 'alias1',
-                    'id2' => 'alias2',
-                    'id3' => 'alias3',
+                    'id2' => 'alias1',
+                    'id3' => 'alias2',
+                    'id4' => 'alias3',
                 ],
                 'invokables' => [
-                    'id1' => Test\SomeInvokable1::class,
-                    'id2' => Test\SomeInvokable2::class,
-                    'id3' => Test\SomeInvokable3::class,
+                    'id3' => Test\SomeInvokable1::class,
+                    'id4' => Test\SomeInvokable2::class,
+                    'id5' => Test\SomeInvokable3::class,
                 ],
                 'factories' => [
-                    'id1' => $this->factory1 = function () {},
-                    'id2' => $this->factory2 = function () {},
-                    'id3' => $this->factory3 = function () {},
+                    'id4' => $this->factory1 = function () {},
+                    'id5' => $this->factory2 = function () {},
+                    'id6' => $this->factory3 = function () {},
                 ],
                 'tags' => [
                     'id1' => ['tag11', 'no error' => 'tag12', 'tag13'],
@@ -79,34 +77,20 @@ describe('ArrayConfigurationUnit', function () {
 
         });
 
-        describe('->map()', function () {
+        describe('->factories()', function () {
 
-            it('should return a factory map', function () {
+            it('should return an associative array of factories', function () {
 
-                $test = $this->unit->map();
+                $test = $this->unit->factories();
 
-                expect($test)->toEqual(new MergedFactoryMap(...[
-                    new FactoryMap([
-                        'id1' => ($this->parser)('parameter1'),
-                        'id2' => ($this->parser)('parameter2'),
-                        'id3' => ($this->parser)('parameter3'),
-                    ]),
-                    new FactoryMap([
-                        'id1' => new Alias('alias1'),
-                        'id2' => new Alias('alias2'),
-                        'id3' => new Alias('alias3'),
-                    ]),
-                    new FactoryMap([
-                        'id1' => new Invokable(Test\SomeInvokable1::class),
-                        'id2' => new Invokable(Test\SomeInvokable2::class),
-                        'id3' => new Invokable(Test\SomeInvokable3::class),
-                    ]),
-                    new FactoryMap([
-                        'id1' => $this->factory1,
-                        'id2' => $this->factory2,
-                        'id3' => $this->factory3,
-                    ]),
-                ]));
+                expect($test)->toEqual([
+                    'id1' => ($this->parser)('parameter1'),
+                    'id2' => new Alias('alias1'),
+                    'id3' => new Invokable(Test\SomeInvokable1::class),
+                    'id4' => $this->factory1,
+                    'id5' => $this->factory2,
+                    'id6' => $this->factory3,
+                ]);
 
             });
 
@@ -141,7 +125,7 @@ describe('ArrayConfigurationUnit', function () {
 
     context('when the configuration array is not valid', function () {
 
-        describe('->map()', function () {
+        describe('->factories()', function () {
 
             context('when the parameter key is not an array', function () {
 
@@ -153,7 +137,7 @@ describe('ArrayConfigurationUnit', function () {
                             'parameters' => 1,
                         ]);
 
-                        expect([$unit, 'map'])->toThrow(new UnexpectedValueException);
+                        expect([$unit, 'factories'])->toThrow(new UnexpectedValueException);
 
                     });
 
@@ -169,7 +153,7 @@ describe('ArrayConfigurationUnit', function () {
 
                         $test = '';
 
-                        try { $unit->map(); }
+                        try { $unit->factories(); }
 
                         catch (UnexpectedValueException $e) {
                             $test = $e->getMessage();
@@ -193,7 +177,7 @@ describe('ArrayConfigurationUnit', function () {
                             'aliases' => 1,
                         ]);
 
-                        expect([$unit, 'map'])->toThrow(new UnexpectedValueException);
+                        expect([$unit, 'factories'])->toThrow(new UnexpectedValueException);
 
                     });
 
@@ -209,7 +193,7 @@ describe('ArrayConfigurationUnit', function () {
 
                         $test = '';
 
-                        try { $unit->map(); }
+                        try { $unit->factories(); }
 
                         catch (UnexpectedValueException $e) {
                             $test = $e->getMessage();
@@ -237,7 +221,7 @@ describe('ArrayConfigurationUnit', function () {
                             ],
                         ]);
 
-                        expect([$unit, 'map'])->toThrow(new UnexpectedValueException);
+                        expect([$unit, 'factories'])->toThrow(new UnexpectedValueException);
 
                     });
 
@@ -257,7 +241,7 @@ describe('ArrayConfigurationUnit', function () {
 
                         $test = '';
 
-                        try { $unit->map(); }
+                        try { $unit->factories(); }
 
                         catch (UnexpectedValueException $e) {
                             $test = $e->getMessage();
@@ -281,7 +265,7 @@ describe('ArrayConfigurationUnit', function () {
                             'invokables' => 1,
                         ]);
 
-                        expect([$unit, 'map'])->toThrow(new UnexpectedValueException);
+                        expect([$unit, 'factories'])->toThrow(new UnexpectedValueException);
 
                     });
 
@@ -297,7 +281,7 @@ describe('ArrayConfigurationUnit', function () {
 
                         $test = '';
 
-                        try { $unit->map(); }
+                        try { $unit->factories(); }
 
                         catch (UnexpectedValueException $e) {
                             $test = $e->getMessage();
@@ -325,7 +309,7 @@ describe('ArrayConfigurationUnit', function () {
                             ],
                         ]);
 
-                        expect([$unit, 'map'])->toThrow(new UnexpectedValueException);
+                        expect([$unit, 'factories'])->toThrow(new UnexpectedValueException);
 
                     });
 
@@ -345,7 +329,7 @@ describe('ArrayConfigurationUnit', function () {
 
                         $test = '';
 
-                        try { $unit->map(); }
+                        try { $unit->factories(); }
 
                         catch (UnexpectedValueException $e) {
                             $test = $e->getMessage();
@@ -369,7 +353,7 @@ describe('ArrayConfigurationUnit', function () {
                             'factories' => 1,
                         ]);
 
-                        expect([$unit, 'map'])->toThrow(new UnexpectedValueException);
+                        expect([$unit, 'factories'])->toThrow(new UnexpectedValueException);
 
                     });
 
@@ -385,7 +369,7 @@ describe('ArrayConfigurationUnit', function () {
 
                         $test = '';
 
-                        try { $unit->map(); }
+                        try { $unit->factories(); }
 
                         catch (UnexpectedValueException $e) {
                             $test = $e->getMessage();
@@ -413,7 +397,7 @@ describe('ArrayConfigurationUnit', function () {
                             ],
                         ]);
 
-                        expect([$unit, 'map'])->toThrow(new UnexpectedValueException);
+                        expect([$unit, 'factories'])->toThrow(new UnexpectedValueException);
 
                     });
 
@@ -433,7 +417,7 @@ describe('ArrayConfigurationUnit', function () {
 
                         $test = '';
 
-                        try { $unit->map(); }
+                        try { $unit->factories(); }
 
                         catch (UnexpectedValueException $e) {
                             $test = $e->getMessage();

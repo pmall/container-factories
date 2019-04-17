@@ -1,6 +1,5 @@
 <?php
 
-use Quanta\Container\FactoryMap;
 use Quanta\Container\ValueParser;
 use Quanta\Container\Configuration\ParameterArray;
 use Quanta\Container\Configuration\ConfigurationUnit;
@@ -34,9 +33,7 @@ describe('ParameterArray', function () {
 
                 $test = $this->configuration->unit();
 
-                expect($test)->toEqual(new ConfigurationUnit(
-                    new FactoryMap([])
-                ));
+                expect($test)->toEqual(new ConfigurationUnit([]));
 
             });
 
@@ -68,13 +65,11 @@ describe('ParameterArray', function () {
 
                 $test = $this->configuration->unit();
 
-                expect($test)->toEqual(new ConfigurationUnit(
-                    new FactoryMap([
-                        'id1' => ($this->parser)('parameter1'),
-                        'id2' => ($this->parser)('parameter2'),
-                        'id3' => ($this->parser)('parameter3'),
-                    ])
-                ));
+                expect($test)->toEqual(new ConfigurationUnit([
+                    'id1' => ($this->parser)('parameter1'),
+                    'id2' => ($this->parser)('parameter2'),
+                    'id3' => ($this->parser)('parameter3'),
+                ]));
 
             });
 

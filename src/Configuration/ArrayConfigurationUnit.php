@@ -7,12 +7,9 @@ use Quanta\Container\Alias;
 use Quanta\Container\Tagging;
 use Quanta\Container\Invokable;
 use Quanta\Container\Extension;
-use Quanta\Container\FactoryMap;
 use Quanta\Container\ValueParser;
 use Quanta\Container\TaggingPass;
 use Quanta\Container\ExtensionPass;
-use Quanta\Container\MergedFactoryMap;
-use Quanta\Container\FactoryMapInterface;
 use Quanta\Container\MergedProcessingPass;
 use Quanta\Container\ProcessingPassInterface;
 
@@ -58,7 +55,7 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
     /**
      * @inheritdoc
      */
-    public function map(): FactoryMapInterface
+    public function factories(): array
     {
         $result = \Quanta\ArrayTypeCheck::nested($this->configuration, [
             'parameters' => '*',
@@ -75,12 +72,16 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
 
         $configuration = $result->sanitized();
 
-        return new MergedFactoryMap(...[
-            $this->parameters($configuration['parameters']),
-            $this->aliases($configuration['aliases']),
-            $this->invokables($configuration['invokables']),
-            $this->factories($configuration['factories']),
-        ]);
+        return array_merge(
+            array_map($this->parser, $configuration['parameters']),
+            array_map(function ($id) {
+                return new Alias($id);
+            }, $configuration['aliases']),
+            array_map(function ($class) {
+                return new Invokable($class);
+            }, $configuration['invokables']),
+            $configuration['factories']
+        );
     }
 
     /**
@@ -103,61 +104,12 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
 
         $configuration = $result->sanitized();
 
-        return new MergedProcessingPass(...array_merge(...[
+        return new MergedProcessingPass(...array_merge(
             $this->taggingPasses($configuration['tags']),
             $this->reverseTaggingPasses($configuration['mappers']),
             $this->extensionPasses($configuration['extensions']),
-            array_values($configuration['passes']),
-        ]));
-    }
-
-    /**
-     * Return a parsed factory map from the given array of parameters.
-     *
-     * @param array $parameters
-     * @return \Quanta\Container\FactoryMapInterface
-     */
-    private function parameters(array $parameters): FactoryMapInterface
-    {
-        return new FactoryMap(array_map($this->parser, $parameters));
-    }
-
-    /**
-     * Return a factory map containing aliases from the given array of ids.
-     *
-     * @param string[] $ids
-     * @return \Quanta\Container\FactoryMapInterface
-     */
-    private function aliases(array $ids): FactoryMapInterface
-    {
-        return new FactoryMap(array_map(function ($id) {
-            return new Alias($id);
-        }, $ids));
-    }
-
-    /**
-     * Return a factory map containing invokables from the given array of class
-     * names.
-     *
-     * @param string[] $classes
-     * @return \Quanta\Container\FactoryMapInterface
-     */
-    private function invokables(array $classes): FactoryMapInterface
-    {
-        return new FactoryMap(array_map(function ($class) {
-            return new Invokable($class);
-        }, $classes));
-    }
-
-    /**
-     * Return a factory map from the given array of factories.
-     *
-     * @param callable[] $factories
-     * @return \Quanta\Container\FactoryMapInterface
-     */
-    private function factories(array $factories): FactoryMapInterface
-    {
-        return new FactoryMap($factories);
+            array_values($configuration['passes'])
+        ));
     }
 
     /**

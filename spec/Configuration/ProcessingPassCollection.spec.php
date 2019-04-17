@@ -2,7 +2,6 @@
 
 use function Eloquent\Phony\Kahlan\mock;
 
-use Quanta\Container\FactoryMap;
 use Quanta\Container\MergedProcessingPass;
 use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Configuration\ConfigurationUnit;
@@ -31,7 +30,7 @@ describe('ProcessingPassCollection', function () {
 
                 $test = $this->configuration->unit();
 
-                expect($test)->toEqual(new ConfigurationUnit(new FactoryMap([])));
+                expect($test)->toEqual(new ConfigurationUnit([]));
 
             });
 
@@ -67,7 +66,7 @@ describe('ProcessingPassCollection', function () {
 
                 $test = $this->configuration->unit();
 
-                expect($test)->toEqual(new ConfigurationUnit(new FactoryMap([]), ...[
+                expect($test)->toEqual(new ConfigurationUnit([], ...[
                     $this->pass1->get(),
                     $this->pass2->get(),
                     $this->pass3->get(),
