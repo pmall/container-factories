@@ -13,7 +13,6 @@ use Quanta\Container\TaggingPass;
 use Quanta\Container\ExtensionPass;
 use Quanta\Container\MergedFactoryMap;
 use Quanta\Container\FactoryMapInterface;
-use Quanta\Container\ParsedFactoryMap;
 use Quanta\Container\MergedProcessingPass;
 use Quanta\Container\ProcessingPassInterface;
 
@@ -120,7 +119,7 @@ final class ArrayConfigurationUnit implements ConfigurationUnitInterface
      */
     private function parameters(array $parameters): FactoryMapInterface
     {
-        return new ParsedFactoryMap($this->parser, $parameters);
+        return new FactoryMap(array_map($this->parser, $parameters));
     }
 
     /**

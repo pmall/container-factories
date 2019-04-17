@@ -9,7 +9,6 @@ use Quanta\Container\FactoryMap;
 use Quanta\Container\ValueParser;
 use Quanta\Container\TaggingPass;
 use Quanta\Container\ExtensionPass;
-use Quanta\Container\ParsedFactoryMap;
 use Quanta\Container\MergedFactoryMap;
 use Quanta\Container\MergedProcessingPass;
 use Quanta\Container\ProcessingPassInterface;
@@ -87,10 +86,10 @@ describe('ArrayConfigurationUnit', function () {
                 $test = $this->unit->map();
 
                 expect($test)->toEqual(new MergedFactoryMap(...[
-                    new ParsedFactoryMap($this->parser, [
-                        'id1' => 'parameter1',
-                        'id2' => 'parameter2',
-                        'id3' => 'parameter3',
+                    new FactoryMap([
+                        'id1' => ($this->parser)('parameter1'),
+                        'id2' => ($this->parser)('parameter2'),
+                        'id3' => ($this->parser)('parameter3'),
                     ]),
                     new FactoryMap([
                         'id1' => new Alias('alias1'),

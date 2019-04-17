@@ -2,7 +2,9 @@
 
 namespace Quanta\Container\Configuration;
 
-use Quanta\Container\AutowiredFactoryMap;
+use Quanta\Container\FactoryMap;
+use Quanta\Container\DefinitionProxy;
+use Quanta\Container\AutowiredInstance;
 use Quanta\Container\Parsing\ParameterParserInterface;
 
 final class AutowiringConfiguration implements ConfigurationInterface
@@ -75,8 +77,14 @@ final class AutowiringConfiguration implements ConfigurationInterface
             }
         }
 
+        $factories = array_map(function ($class, $options) {
+            return new DefinitionProxy(
+                new AutowiredInstance($this->parser, $class, $options)
+            );
+        }, $classes, $map);
+
         return new ConfigurationUnit(
-            new AutowiredFactoryMap($this->parser, $map)
+            new FactoryMap((array) array_combine($classes, $factories))
         );
     }
 }
