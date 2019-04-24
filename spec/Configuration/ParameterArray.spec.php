@@ -2,7 +2,6 @@
 
 use Quanta\Container\ValueParser;
 use Quanta\Container\Configuration\ParameterArray;
-use Quanta\Container\Configuration\ConfigurationUnit;
 use Quanta\Container\Configuration\ConfigurationInterface;
 
 describe('ParameterArray', function () {
@@ -27,13 +26,37 @@ describe('ParameterArray', function () {
 
         });
 
-        describe('->unit()', function () {
+        describe('->factories()', function () {
 
-            it('should return a configuration unit providing an empty parameter factory map', function () {
+            it('should return an empty array', function () {
 
-                $test = $this->configuration->unit();
+                $test = $this->configuration->factories();
 
-                expect($test)->toEqual(new ConfigurationUnit([]));
+                expect($test)->toEqual([]);
+
+            });
+
+        });
+
+        describe('->mappers()', function () {
+
+            it('should return an empty array', function () {
+
+                $test = $this->configuration->mappers();
+
+                expect($test)->toEqual([]);
+
+            });
+
+        });
+
+        describe('->extensions()', function () {
+
+            it('should return an empty array', function () {
+
+                $test = $this->configuration->extensions();
+
+                expect($test)->toEqual([]);
 
             });
 
@@ -59,17 +82,41 @@ describe('ParameterArray', function () {
 
         });
 
-        describe('->unit()', function () {
+        describe('->factories()', function () {
 
-            it('should return a configuration unit providing the parsed array of parameters', function () {
+            it('should return the parsed array of parameters', function () {
 
-                $test = $this->configuration->unit();
+                $test = $this->configuration->factories();
 
-                expect($test)->toEqual(new ConfigurationUnit([
+                expect($test)->toEqual([
                     'id1' => ($this->parser)('parameter1'),
                     'id2' => ($this->parser)('parameter2'),
                     'id3' => ($this->parser)('parameter3'),
-                ]));
+                ]);
+
+            });
+
+        });
+
+        describe('->mappers()', function () {
+
+            it('should return an empty array', function () {
+
+                $test = $this->configuration->mappers();
+
+                expect($test)->toEqual([]);
+
+            });
+
+        });
+
+        describe('->extensions()', function () {
+
+            it('should return an empty array', function () {
+
+                $test = $this->configuration->extensions();
+
+                expect($test)->toEqual([]);
 
             });
 

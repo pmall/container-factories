@@ -1,6 +1,6 @@
 <?php
 
-use Quanta\Container\Tagging\Entries;
+use Quanta\Container\Configuration\Tagging\Entries;
 
 describe('Entries', function () {
 

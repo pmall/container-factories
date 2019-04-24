@@ -2,25 +2,25 @@
 
 namespace Quanta\Container;
 
-use Quanta\Container\Configuration\ConfigurationInterface;
+use Quanta\Container\Configuration\ConfigurationSourceInterface;
 
 final class FactoryMap implements FactoryMapInterface
 {
     /**
      * The configuration.
      *
-     * @var \Quanta\Container\Configuration\ConfigurationInterface
+     * @var \Quanta\Container\Configuration\ConfigurationSourceInterface
      */
-    private $configuration;
+    private $source;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Configuration\ConfigurationInterface $configuration
+     * @param \Quanta\Container\Configuration\ConfigurationSourceInterface $source
      */
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(ConfigurationSourceInterface $source)
     {
-        $this->configuration = $configuration;
+        $this->source = $source;
     }
 
     /**
@@ -28,60 +28,48 @@ final class FactoryMap implements FactoryMapInterface
      */
     public function factories(): array
     {
-        $unit = $this->configuration->unit();
+        $configuration = $this->source->configuration();
 
-        $factories = $unit->factories();
-        $pass = $unit->pass();
+        $factories = $configuration->factories();
+        $mappers = $configuration->mappers();
+        $extensions = $configuration->extensions();
 
         $ids = array_keys($factories);
 
-        $factories+= $this->aliases($pass, ...$ids);
-        $factories+= $this->tags($pass, ...$ids);
+        $factories+= array_map(function ($mapper) use ($ids) {
+            return $this->mapped($mapper, ...$ids);
+        }, $mappers);
 
         foreach ($factories as $id => $factory) {
-            $factories[$id] = $pass->processed($id, $factory);
+            $factories[$id] = $this->extended($factory, ...($extensions[$id] ?? []));
         }
 
         return $factories;
     }
 
     /**
-     * Return an array of aliases provided by the given configuration pass for
-     * the given ids.
+     * Return a tag from the given mapper and ids.
      *
-     * @param \Quanta\Container\ProcessingPassInterface $pass
-     * @param string                                    ...$ids
-     * @return array
+     * @param callable  $mapper
+     * @param string    ...$ids
+     * @return callable
      */
-    private function aliases(ProcessingPassInterface $pass, string ...$ids): array
+    private function mapped(callable $mapper, string ...$ids): callable
     {
-        $factories = [];
-
-        foreach ($ids as $id) {
-            foreach ($pass->aliases($id) as $alias) {
-                $factories[$alias] = new Alias($id);
-            }
-        }
-
-        return $factories;
+        return new Tag(...array_filter($ids, $mapper));
     }
 
     /**
-     * Return an array of tags provided by the given configuration pass for the
-     * given ids.
+     * Return an extension from the given callables.
      *
-     * @param \Quanta\Container\ProcessingPassInterface $pass
-     * @param string                                    ...$ids
-     * @return array
+     * @param callable $factory
+     * @param callable ...$extensions
+     * @return callable
      */
-    private function tags(ProcessingPassInterface $pass, string ...$ids): array
+    private function extended(callable $factory, callable ...$extensions): callable
     {
-        $factories = [];
-
-        foreach ($pass->tags(...$ids) as $tag => $ids) {
-            $factories[$tag] = new Tag(...$ids);
-        }
-
-        return $factories;
+        return array_reduce($extensions, function ($factory, $extension) {
+            return new Extension($factory, $extension);
+        }, $factory);
     }
 }

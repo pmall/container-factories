@@ -5,7 +5,6 @@ use function Eloquent\Phony\Kahlan\mock;
 use Quanta\Container\DefinitionProxy;
 use Quanta\Container\AutowiredInstance;
 use Quanta\Container\Parsing\ParameterParserInterface;
-use Quanta\Container\Configuration\ConfigurationUnit;
 use Quanta\Container\Configuration\ConfigurationInterface;
 use Quanta\Container\Configuration\AutowiringConfiguration;
 
@@ -51,13 +50,37 @@ describe('AutowiringConfiguration', function () {
 
                 });
 
-                describe('->unit()', function () {
+                describe('->factories()', function () {
 
-                    it('should return a configuration unit with an empty autowired factory map', function () {
+                    it('should return a an empty array', function () {
 
-                        $test = $this->configuration->unit();
+                        $test = $this->configuration->factories();
 
-                        expect($test)->toEqual(new ConfigurationUnit([]));
+                        expect($test)->toEqual([]);
+
+                    });
+
+                });
+
+                describe('->mappers()', function () {
+
+                    it('should return a an empty array', function () {
+
+                        $test = $this->configuration->mappers();
+
+                        expect($test)->toEqual([]);
+
+                    });
+
+                });
+
+                describe('->extensions()', function () {
+
+                    it('should return a an empty array', function () {
+
+                        $test = $this->configuration->extensions();
+
+                        expect($test)->toEqual([]);
 
                     });
 
@@ -83,13 +106,37 @@ describe('AutowiringConfiguration', function () {
 
                 });
 
-                describe('->unit()', function () {
+                describe('->factories()', function () {
 
-                    it('should return a configuration unit with an empty autowired factory map', function () {
+                    it('should return a an empty array', function () {
 
-                        $test = $this->configuration->unit();
+                        $test = $this->configuration->factories();
 
-                        expect($test)->toEqual(new ConfigurationUnit([]));
+                        expect($test)->toEqual([]);
+
+                    });
+
+                });
+
+                describe('->mappers()', function () {
+
+                    it('should return a an empty array', function () {
+
+                        $test = $this->configuration->mappers();
+
+                        expect($test)->toEqual([]);
+
+                    });
+
+                });
+
+                describe('->extensions()', function () {
+
+                    it('should return a an empty array', function () {
+
+                        $test = $this->configuration->extensions();
+
+                        expect($test)->toEqual([]);
 
                     });
 
@@ -117,13 +164,37 @@ describe('AutowiringConfiguration', function () {
 
                 });
 
-                describe('->unit()', function () {
+                describe('->factories()', function () {
 
-                    it('should return a configuration unit with an empty autowired factory map', function () {
+                    it('should return a an empty array', function () {
 
-                        $test = $this->configuration->unit();
+                        $test = $this->configuration->factories();
 
-                        expect($test)->toEqual(new ConfigurationUnit([]));
+                        expect($test)->toEqual([]);
+
+                    });
+
+                });
+
+                describe('->mappers()', function () {
+
+                    it('should return a an empty array', function () {
+
+                        $test = $this->configuration->mappers();
+
+                        expect($test)->toEqual([]);
+
+                    });
+
+                });
+
+                describe('->extensions()', function () {
+
+                    it('should return a an empty array', function () {
+
+                        $test = $this->configuration->extensions();
+
+                        expect($test)->toEqual([]);
 
                     });
 
@@ -191,13 +262,13 @@ describe('AutowiringConfiguration', function () {
 
                     });
 
-                    describe('->unit()', function () {
+                    describe('->factories()', function () {
 
-                        it('should return a configuration unit with an autowired factory map', function () {
+                        it('should return an autowired factory map', function () {
 
-                            $test = $this->configuration->unit();
+                            $test = $this->configuration->factories();
 
-                            expect($test)->toEqual(new ConfigurationUnit([
+                            expect($test)->toEqual([
                                 Test\SomeClass1::class => new DefinitionProxy(
                                     new AutowiredInstance($this->parser->get(), Test\SomeClass1::class)
                                 ),
@@ -216,7 +287,31 @@ describe('AutowiringConfiguration', function () {
                                 Test\Ns3\SomeClass::class => new DefinitionProxy(
                                     new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class)
                                 ),
-                            ]));
+                            ]);
+
+                        });
+
+                    });
+
+                    describe('->mappers()', function () {
+
+                        it('should return a an empty array', function () {
+
+                            $test = $this->configuration->mappers();
+
+                            expect($test)->toEqual([]);
+
+                        });
+
+                    });
+
+                    describe('->extensions()', function () {
+
+                        it('should return a an empty array', function () {
+
+                            $test = $this->configuration->extensions();
+
+                            expect($test)->toEqual([]);
 
                         });
 
@@ -242,13 +337,13 @@ describe('AutowiringConfiguration', function () {
 
                     });
 
-                    describe('->unit()', function () {
+                    describe('->factories()', function () {
 
-                        it('should return a configuration unit with an autowired factory map', function () {
+                        it('should return an autowired factory map', function () {
 
-                            $test = $this->configuration->unit();
+                            $test = $this->configuration->factories();
 
-                            expect($test)->toEqual(new ConfigurationUnit([
+                            expect($test)->toEqual([
                                 Test\SomeClass1::class => new DefinitionProxy(
                                     new AutowiredInstance($this->parser->get(), Test\SomeClass1::class)
                                 ),
@@ -267,7 +362,31 @@ describe('AutowiringConfiguration', function () {
                                 Test\Ns3\SomeClass::class => new DefinitionProxy(
                                     new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class)
                                 ),
-                            ]));
+                            ]);
+
+                        });
+
+                    });
+
+                    describe('->mappers()', function () {
+
+                        it('should return a an empty array', function () {
+
+                            $test = $this->configuration->mappers();
+
+                            expect($test)->toEqual([]);
+
+                        });
+
+                    });
+
+                    describe('->extensions()', function () {
+
+                        it('should return a an empty array', function () {
+
+                            $test = $this->configuration->extensions();
+
+                            expect($test)->toEqual([]);
 
                         });
 
@@ -301,13 +420,13 @@ describe('AutowiringConfiguration', function () {
 
                     });
 
-                    describe('->unit()', function () {
+                    describe('->factories()', function () {
 
-                        it('should return a configuration unit with an autowired factory map', function () {
+                        it('should return an autowired factory map', function () {
 
-                            $test = $this->configuration->unit();
+                            $test = $this->configuration->factories();
 
-                            expect($test)->toEqual(new ConfigurationUnit([
+                            expect($test)->toEqual([
                                 Test\SomeClass1::class => new DefinitionProxy(
                                     new AutowiredInstance($this->parser->get(), Test\SomeClass1::class)
                                 ),
@@ -326,7 +445,31 @@ describe('AutowiringConfiguration', function () {
                                 Test\Ns3\SomeClass::class => new DefinitionProxy(
                                     new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class)
                                 ),
-                            ]));
+                            ]);
+
+                        });
+
+                    });
+
+                    describe('->mappers()', function () {
+
+                        it('should return a an empty array', function () {
+
+                            $test = $this->configuration->mappers();
+
+                            expect($test)->toEqual([]);
+
+                        });
+
+                    });
+
+                    describe('->extensions()', function () {
+
+                        it('should return a an empty array', function () {
+
+                            $test = $this->configuration->extensions();
+
+                            expect($test)->toEqual([]);
 
                         });
 
@@ -389,13 +532,13 @@ describe('AutowiringConfiguration', function () {
 
                         });
 
-                        describe('->unit()', function () {
+                        describe('->factories()', function () {
 
-                            it('should return a configuration unit with an autowired factory map', function () {
+                            it('should return an autowired factory map', function () {
 
-                                $test = $this->configuration->unit();
+                                $test = $this->configuration->factories();
 
-                                expect($test)->toEqual(new ConfigurationUnit([
+                                expect($test)->toEqual([
                                     Test\SomeClass1::class => new DefinitionProxy(
                                         new AutowiredInstance($this->parser->get(), Test\SomeClass1::class, [
                                             '$parameter1' => 'value11',
@@ -434,7 +577,31 @@ describe('AutowiringConfiguration', function () {
                                             '$parameter3' => 'value63',
                                         ])
                                     ),
-                                ]));
+                                ]);
+
+                            });
+
+                        });
+
+                        describe('->mappers()', function () {
+
+                            it('should return a an empty array', function () {
+
+                                $test = $this->configuration->mappers();
+
+                                expect($test)->toEqual([]);
+
+                            });
+
+                        });
+
+                        describe('->extensions()', function () {
+
+                            it('should return a an empty array', function () {
+
+                                $test = $this->configuration->extensions();
+
+                                expect($test)->toEqual([]);
 
                             });
 
@@ -460,13 +627,13 @@ describe('AutowiringConfiguration', function () {
 
                         });
 
-                        describe('->unit()', function () {
+                        describe('->factories()', function () {
 
-                            it('should return a configuration unit with an autowired factory map', function () {
+                            it('should return an autowired factory map', function () {
 
-                                $test = $this->configuration->unit();
+                                $test = $this->configuration->factories();
 
-                                expect($test)->toEqual(new ConfigurationUnit([
+                                expect($test)->toEqual([
                                     Test\SomeClass1::class => new DefinitionProxy(
                                         new AutowiredInstance($this->parser->get(), Test\SomeClass1::class, [
                                             '$parameter1' => 'value11',
@@ -505,7 +672,31 @@ describe('AutowiringConfiguration', function () {
                                             '$parameter3' => 'value63',
                                         ])
                                     ),
-                                ]));
+                                ]);
+
+                            });
+
+                        });
+
+                        describe('->mappers()', function () {
+
+                            it('should return a an empty array', function () {
+
+                                $test = $this->configuration->mappers();
+
+                                expect($test)->toEqual([]);
+
+                            });
+
+                        });
+
+                        describe('->extensions()', function () {
+
+                            it('should return a an empty array', function () {
+
+                                $test = $this->configuration->extensions();
+
+                                expect($test)->toEqual([]);
 
                             });
 
@@ -539,13 +730,13 @@ describe('AutowiringConfiguration', function () {
 
                         });
 
-                        describe('->unit()', function () {
+                        describe('->factories()', function () {
 
-                            it('should return a configuration unit with an autowired factory map', function () {
+                            it('should return an autowired factory map', function () {
 
-                                $test = $this->configuration->unit();
+                                $test = $this->configuration->factories();
 
-                                expect($test)->toEqual(new ConfigurationUnit([
+                                expect($test)->toEqual([
                                     Test\SomeClass1::class => new DefinitionProxy(
                                         new AutowiredInstance($this->parser->get(), Test\SomeClass1::class, [
                                             '$parameter1' => 'value11',
@@ -584,7 +775,31 @@ describe('AutowiringConfiguration', function () {
                                             '$parameter3' => 'value63',
                                         ])
                                     ),
-                                ]));
+                                ]);
+
+                            });
+
+                        });
+
+                        describe('->mappers()', function () {
+
+                            it('should return a an empty array', function () {
+
+                                $test = $this->configuration->mappers();
+
+                                expect($test)->toEqual([]);
+
+                            });
+
+                        });
+
+                        describe('->extensions()', function () {
+
+                            it('should return a an empty array', function () {
+
+                                $test = $this->configuration->extensions();
+
+                                expect($test)->toEqual([]);
 
                             });
 

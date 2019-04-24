@@ -35,10 +35,24 @@ final class ParameterArray implements ConfigurationInterface
     /**
      * @inheritdoc
      */
-    public function unit(): ConfigurationUnitInterface
+    public function factories(): array
     {
-        return new ConfigurationUnit(
-            array_map($this->parser, $this->parameters)
-        );
+        return array_map($this->parser, $this->parameters);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function mappers(): array
+    {
+        return [];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function extensions(): array
+    {
+        return [];
     }
 }

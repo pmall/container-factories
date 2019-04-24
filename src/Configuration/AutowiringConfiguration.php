@@ -52,7 +52,10 @@ final class AutowiringConfiguration implements ConfigurationInterface
         $this->options = $options;
     }
 
-    public function unit(): ConfigurationUnitInterface
+    /**
+     * @inheritdoc
+     */
+    public function factories(): array
     {
         $map = [];
 
@@ -76,12 +79,26 @@ final class AutowiringConfiguration implements ConfigurationInterface
             }
         }
 
-        return new ConfigurationUnit(
-            (array) array_combine($classes, array_map(function ($class, $options) {
-                return new DefinitionProxy(
-                    new AutowiredInstance($this->parser, $class, $options)
-                );
-            }, $classes, $map))
-        );
+        return (array) array_combine($classes, array_map(function ($class, $options) {
+            return new DefinitionProxy(
+                new AutowiredInstance($this->parser, $class, $options)
+            );
+        }, $classes, $map));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function mappers(): array
+    {
+        return [];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function extensions(): array
+    {
+        return [];
     }
 }

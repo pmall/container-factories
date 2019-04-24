@@ -1,14 +1,15 @@
 <?php
 
+use function Eloquent\Phony\Kahlan\stub;
 use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\Tag;
 use Quanta\Container\Alias;
+use Quanta\Container\Extension;
 use Quanta\Container\FactoryMap;
 use Quanta\Container\FactoryMapInterface;
-use Quanta\Container\ProcessingPassInterface;
 use Quanta\Container\Configuration\ConfigurationInterface;
-use Quanta\Container\Configuration\ConfigurationUnitInterface;
+use Quanta\Container\Configuration\ConfigurationSourceInterface;
 
 require_once __DIR__ . '/.test/classes.php';
 
@@ -16,9 +17,9 @@ describe('FactoryMap', function () {
 
     beforeEach(function () {
 
-        $this->configuration = mock(ConfigurationInterface::class);
+        $this->source = mock(ConfigurationSourceInterface::class);
 
-        $this->map = new FactoryMap($this->configuration->get());
+        $this->map = new FactoryMap($this->source->get());
 
     });
 
@@ -30,64 +31,70 @@ describe('FactoryMap', function () {
 
     describe('->factories()', function () {
 
-        it('should get a configuration unit from the configuration only once', function () {
+        it('should get the configuration provided by the configuration source only once', function () {
 
             $test = $this->map->factories();
 
             expect($test)->toBeAn('array');
 
-            $this->configuration->unit->once()->called();
+            $this->source->configuration->once()->called();
 
         });
 
-        it('should return an associative array of factories from the configuration', function () {
+        it('should return an associative array of factories from the configuration source', function () {
 
-            $unit = mock(ConfigurationUnitInterface::class);
-            $pass = mock(ProcessingPassInterface::class);
+            $configuration = mock(ConfigurationInterface::class);
 
-            $this->configuration->unit->returns($unit);
+            $this->source->configuration->returns($configuration);
 
-            $unit->factories->returns([
+            $configuration->factories->returns([
                 'id1' => $factory1 = function () {},
                 'id2' => $factory2 = function () {},
                 'id3' => $factory3 = function () {},
             ]);
 
-            $unit->pass->returns($pass);
+            $configuration->mappers->returns([
+                'tag1' => $predicate1 = stub(),
+                'tag2' => $predicate2 = stub(),
+                'tag3' => $predicate3 = stub(),
 
-            $pass->aliases->with('id1')->returns(['alias1', 'alias3']);
-            $pass->aliases->with('id2')->returns([]);
-            $pass->aliases->with('id3')->returns(['alias2']);
-
-            $pass->tags->with('id1', 'id2', 'id3')->returns([
-                'tag1' => ['id1', 'id2'],
-                'tag2' => [],
-                'tag3' => ['id3'],
+                // here to show tags can't overwrite factory.
+                'id1' => function () { return true; },
+                'id2' => function () { return true; },
+                'id3' => function () { return true; },
             ]);
 
-            $pass->processed->with('id1', Kahlan\Arg::toBe($factory1))->returns($processed1 = function () {});
-            $pass->processed->with('id2', Kahlan\Arg::toBe($factory2))->returns($processed2 = function () {});
-            $pass->processed->with('id3', Kahlan\Arg::toBe($factory3))->returns($processed3 = function () {});
-            $pass->processed->with('alias1', new Alias('id1'))->returns($processed4 = function () {});
-            $pass->processed->with('alias2', new Alias('id3'))->returns($processed5 = function () {});
-            $pass->processed->with('alias3', new Alias('id1'))->returns($processed6 = function () {});
-            $pass->processed->with('tag1', new Tag('id1', 'id2'))->returns($processed7 = function () {});
-            $pass->processed->with('tag2', new Tag)->returns($processed8 = function () {});
-            $pass->processed->with('tag3', new Tag('id3'))->returns($processed9 = function () {});
+            $configuration->extensions->returns([
+                'id1' => [$extension11 = function () {}],
+                'id3' => [$extension31 = function () {}, $extension32 = function () {}],
+                'tag1' => [$extension41 = function () {}],
+                'tag3' => [$extension61 = function () {}, $extension62 = function () {}],
+
+                // here to show extensions without factories are left out.
+                'id4' => [$extension71 = function () {}, $extension72 = function () {}],
+                'tag4' => [$extension81 = function () {}, $extension82 = function () {}],
+            ]);
+
+            $predicate1->with('id1')->returns(true);
+            $predicate1->with('id2')->returns(false);
+            $predicate1->with('id3')->returns(true);
+            $predicate2->with('id1')->returns(false);
+            $predicate2->with('id2')->returns(false);
+            $predicate2->with('id3')->returns(false);
+            $predicate3->with('id1')->returns(false);
+            $predicate3->with('id2')->returns(true);
+            $predicate3->with('id3')->returns(false);
 
             $test = $this->map->factories();
 
-            expect($test)->toBeAn('array');
-            expect($test)->toHaveLength(9);
-            expect($test['id1'])->toBe($processed1);
-            expect($test['id2'])->toBe($processed2);
-            expect($test['id3'])->toBe($processed3);
-            expect($test['alias1'])->toBe($processed4);
-            expect($test['alias2'])->toBe($processed5);
-            expect($test['alias3'])->toBe($processed6);
-            expect($test['tag1'])->toBe($processed7);
-            expect($test['tag2'])->toBe($processed8);
-            expect($test['tag3'])->toBe($processed9);
+            expect($test)->toEqual([
+                'id1' => new Extension($factory1, $extension11),
+                'id2' => $factory2,
+                'id3' => new Extension(new Extension($factory3, $extension31), $extension32),
+                'tag1' => new Extension(new Tag('id1', 'id3'), $extension41),
+                'tag2' => new Tag,
+                'tag3' => new Extension(new Extension(new Tag('id2'), $extension61), $extension62),
+            ]);
 
         });
 

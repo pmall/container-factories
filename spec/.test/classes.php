@@ -61,6 +61,21 @@ final class TestFactory
         //
     }
 
+    public static function createStatic1()
+    {
+        //
+    }
+
+    public static function createStatic2()
+    {
+        //
+    }
+
+    public static function createStatic3()
+    {
+        //
+    }
+
     public function create()
     {
         //

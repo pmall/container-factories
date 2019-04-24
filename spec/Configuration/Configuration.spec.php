@@ -8,27 +8,131 @@ use Quanta\Container\Configuration\ConfigurationUnitInterface;
 
 describe('Configuration', function () {
 
-    beforeEach(function () {
+    context('when a value of the associative array of factories is not a callable', function () {
 
-        $this->unit = mock(ConfigurationUnitInterface::class);
+        it('should throw an InvalidArgumentException', function () {
 
-        $this->configuration = new Configuration($this->unit->get());
+            $test = function () {
+                new Configuration([
+                    'id1' => function () {},
+                    'id2' => 1,
+                    'id3' => function () {},
+                ], [], []);
+            };
+
+            expect($test)->toThrow(new InvalidArgumentException);
+
+        });
 
     });
 
-    it('should implement ConfigurationInterface', function () {
+    context('when a value of the associative array of mappers is not a callable', function () {
 
-        expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
+        it('should throw an InvalidArgumentException', function () {
+
+            $test = function () {
+                new Configuration([], [
+                    'id1' => function () {},
+                    'id2' => 1,
+                    'id3' => function () {},
+                ], []);
+            };
+
+            expect($test)->toThrow(new InvalidArgumentException);
+
+        });
 
     });
 
-    describe('->unit()', function () {
+    context('when a value of the associative array of extensions is not a callable', function () {
 
-        it('should return the configuration unit', function () {
+        it('should throw an InvalidArgumentException', function () {
 
-            $test = $this->configuration->unit();
+            $test = function () {
+                new Configuration([], [], [
+                    'id1' => function () {},
+                    'id2' => 1,
+                    'id3' => function () {},
+                ]);
+            };
 
-            expect($test)->toEqual($this->unit->get());
+            expect($test)->toThrow(new InvalidArgumentException);
+
+        });
+
+    });
+
+    context('when all the values of the associative arrays are callables', function () {
+
+        beforeEach(function () {
+
+            $this->configuration = new Configuration([
+                'id1' => $this->factory1 = function () {},
+                'id2' => $this->factory2 = function () {},
+                'id3' => $this->factory3 = function () {},
+            ], [
+                'id1' => $this->mapper1 = function () {},
+                'id2' => $this->mapper2 = function () {},
+                'id3' => $this->mapper3 = function () {},
+            ], [
+                'id1' => $this->extension1 = function () {},
+                'id2' => $this->extension2 = function () {},
+                'id3' => $this->extension3 = function () {},
+            ]);
+
+        });
+
+        it('should implement ConfigurationInterface', function () {
+
+            expect($this->configuration)->toBeAnInstanceOf(ConfigurationInterface::class);
+
+        });
+
+        describe('->factories()', function () {
+
+            it('should return the associative array of factories', function () {
+
+                $test = $this->configuration->factories();
+
+                expect($test)->toEqual([
+                    'id1' => $this->factory1,
+                    'id2' => $this->factory2,
+                    'id3' => $this->factory3,
+                ]);
+
+            });
+
+        });
+
+        describe('->mappers()', function () {
+
+            it('should return the associative array of mappers', function () {
+
+                $test = $this->configuration->mappers();
+
+                expect($test)->toEqual([
+                    'id1' => $this->mapper1,
+                    'id2' => $this->mapper2,
+                    'id3' => $this->mapper3,
+                ]);
+
+            });
+
+        });
+
+        describe('->extensions()', function () {
+
+            it('should return the associative array of extensions wrapped inside arrays', function () {
+
+                $test = $this->configuration->extensions();
+
+                expect($test)->toEqual([
+                    'id1' => [$this->extension1],
+                    'id2' => [$this->extension2],
+                    'id3' => [$this->extension3],
+                ]);
+
+            });
 
         });
 

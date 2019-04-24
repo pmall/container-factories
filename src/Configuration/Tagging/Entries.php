@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Quanta\Container\Tagging;
+namespace Quanta\Container\Configuration\Tagging;
 
 final class Entries
 {
