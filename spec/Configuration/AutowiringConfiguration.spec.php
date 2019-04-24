@@ -4,17 +4,13 @@ use function Eloquent\Phony\Kahlan\mock;
 
 use Quanta\Container\DefinitionProxy;
 use Quanta\Container\AutowiredInstance;
+use Quanta\Container\Parsing\ParameterParser;
 use Quanta\Container\Parsing\ParameterParserInterface;
+use Quanta\Container\Parsing\CompositeParameterParser;
 use Quanta\Container\Configuration\ConfigurationInterface;
 use Quanta\Container\Configuration\AutowiringConfiguration;
 
 describe('AutowiringConfiguration', function () {
-
-    beforeEach(function () {
-
-        $this->parser = mock(ParameterParserInterface::class);
-
-    });
 
     context('when the class name collection is empty', function () {
 
@@ -22,9 +18,9 @@ describe('AutowiringConfiguration', function () {
 
             it('should use an empty option array', function () {
 
-                $test = new AutowiringConfiguration($this->parser->get(), []);
+                $test = new AutowiringConfiguration([]);
 
-                expect($test)->toEqual(new AutowiringConfiguration($this->parser->get(), [], []));
+                expect($test)->toEqual(new AutowiringConfiguration([], []));
 
             });
 
@@ -36,11 +32,7 @@ describe('AutowiringConfiguration', function () {
 
                 beforeEach(function () {
 
-                    $this->configuration = new AutowiringConfiguration(
-                        $this->parser->get(),
-                        [],
-                        []
-                    );
+                    $this->configuration = new AutowiringConfiguration([], []);
 
                 });
 
@@ -93,7 +85,6 @@ describe('AutowiringConfiguration', function () {
                 beforeEach(function () {
 
                     $this->configuration = new AutowiringConfiguration(
-                        $this->parser->get(),
                         new ArrayIterator([]),
                         []
                     );
@@ -149,7 +140,6 @@ describe('AutowiringConfiguration', function () {
                 beforeEach(function () {
 
                     $this->configuration = new AutowiringConfiguration(
-                        $this->parser->get(),
                         new class implements IteratorAggregate {
                             public function getIterator() { yield from []; }
                         },
@@ -228,10 +218,9 @@ describe('AutowiringConfiguration', function () {
 
             it('should use an empty option array', function () {
 
-                $test = new AutowiringConfiguration($this->parser->get(), $this->classes);
+                $test = new AutowiringConfiguration($this->classes);
 
                 expect($test)->toEqual(new AutowiringConfiguration(
-                    $this->parser->get(),
                     $this->classes,
                     []
                 ));
@@ -249,7 +238,6 @@ describe('AutowiringConfiguration', function () {
                     beforeEach(function () {
 
                         $this->configuration = new AutowiringConfiguration(
-                            $this->parser->get(),
                             $this->classes,
                             []
                         );
@@ -270,22 +258,40 @@ describe('AutowiringConfiguration', function () {
 
                             expect($test)->toEqual([
                                 Test\SomeClass1::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\SomeClass1::class)
+                                    new AutowiredInstance(
+                                        Test\SomeClass1::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\SomeClass2::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\SomeClass2::class)
+                                    new AutowiredInstance(
+                                        Test\SomeClass2::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\SomeClass3::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\SomeClass3::class)
+                                    new AutowiredInstance(
+                                        Test\SomeClass3::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\Ns1\SomeClass::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\Ns1\SomeClass::class)
+                                    new AutowiredInstance(
+                                        Test\Ns1\SomeClass::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\Ns2\SomeClass::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\Ns2\SomeClass::class)
+                                    new AutowiredInstance(
+                                        Test\Ns2\SomeClass::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\Ns3\SomeClass::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class)
+                                    new AutowiredInstance(
+                                        Test\Ns3\SomeClass::class,
+                                        new ParameterParser
+                                    )
                                 ),
                             ]);
 
@@ -324,7 +330,6 @@ describe('AutowiringConfiguration', function () {
                     beforeEach(function () {
 
                         $this->configuration = new AutowiringConfiguration(
-                            $this->parser->get(),
                             new ArrayIterator($this->classes),
                             []
                         );
@@ -345,22 +350,40 @@ describe('AutowiringConfiguration', function () {
 
                             expect($test)->toEqual([
                                 Test\SomeClass1::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\SomeClass1::class)
+                                    new AutowiredInstance(
+                                        Test\SomeClass1::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\SomeClass2::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\SomeClass2::class)
+                                    new AutowiredInstance(
+                                        Test\SomeClass2::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\SomeClass3::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\SomeClass3::class)
+                                    new AutowiredInstance(
+                                        Test\SomeClass3::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\Ns1\SomeClass::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\Ns1\SomeClass::class)
+                                    new AutowiredInstance(
+                                        Test\Ns1\SomeClass::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\Ns2\SomeClass::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\Ns2\SomeClass::class)
+                                    new AutowiredInstance(
+                                        Test\Ns2\SomeClass::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\Ns3\SomeClass::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class)
+                                    new AutowiredInstance(
+                                        Test\Ns3\SomeClass::class,
+                                        new ParameterParser
+                                    )
                                 ),
                             ]);
 
@@ -399,7 +422,6 @@ describe('AutowiringConfiguration', function () {
                     beforeEach(function () {
 
                         $this->configuration = new AutowiringConfiguration(
-                            $this->parser->get(),
                             new class ($this->classes) implements IteratorAggregate {
                                 private $classes;
                                 public function __construct($classes) {
@@ -428,22 +450,40 @@ describe('AutowiringConfiguration', function () {
 
                             expect($test)->toEqual([
                                 Test\SomeClass1::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\SomeClass1::class)
+                                    new AutowiredInstance(
+                                        Test\SomeClass1::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\SomeClass2::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\SomeClass2::class)
+                                    new AutowiredInstance(
+                                        Test\SomeClass2::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\SomeClass3::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\SomeClass3::class)
+                                    new AutowiredInstance(
+                                        Test\SomeClass3::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\Ns1\SomeClass::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\Ns1\SomeClass::class)
+                                    new AutowiredInstance(
+                                        Test\Ns1\SomeClass::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\Ns2\SomeClass::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\Ns2\SomeClass::class)
+                                    new AutowiredInstance(
+                                        Test\Ns2\SomeClass::class,
+                                        new ParameterParser
+                                    )
                                 ),
                                 Test\Ns3\SomeClass::class => new DefinitionProxy(
-                                    new AutowiredInstance($this->parser->get(), Test\Ns3\SomeClass::class)
+                                    new AutowiredInstance(
+                                        Test\Ns3\SomeClass::class,
+                                        new ParameterParser
+                                    )
                                 ),
                             ]);
 
@@ -485,31 +525,20 @@ describe('AutowiringConfiguration', function () {
 
                     beforeEach(function () {
 
+                        $this->parser1 = mock(ParameterParserInterface::class);
+                        $this->parser2 = mock(ParameterParserInterface::class);
+                        $this->parser3 = mock(ParameterParserInterface::class);
+                        $this->parser4 = mock(ParameterParserInterface::class);
+                        $this->parser5 = mock(ParameterParserInterface::class);
+                        $this->parser6 = mock(ParameterParserInterface::class);
+
                         $this->options = [
-                            '*' => [
-                                '$parameter1' => 'value11',
-                            ],
-                            Test\SomeClass2::class => [
-                                '$parameter2' => 'value22',
-                                '$parameter3' => 'value23',
-                            ],
-                            Test\SomeClass3::class => [
-                                '$parameter1' => 'value31',
-                                '$parameter2' => 'value32',
-                                '$parameter3' => 'value33',
-                            ],
-                            'Test\\*\\SomeClass' => [
-                                '$parameter1' => 'value41',
-                            ],
-                            Test\Ns2\SomeClass::class => [
-                                '$parameter2' => 'value52',
-                                '$parameter3' => 'value53',
-                            ],
-                            Test\Ns3\SomeClass::class => [
-                                '$parameter1' => 'value61',
-                                '$parameter2' => 'value62',
-                                '$parameter3' => 'value63',
-                            ],
+                            '*' => $this->parser1->get(),
+                            Test\SomeClass2::class => $this->parser2->get(),
+                            Test\SomeClass3::class => $this->parser3->get(),
+                            'Test\\*\\SomeClass' => $this->parser4->get(),
+                            Test\Ns2\SomeClass::class => $this->parser5->get(),
+                            Test\Ns3\SomeClass::class => $this->parser6->get(),
                         ];
 
                     });
@@ -519,7 +548,6 @@ describe('AutowiringConfiguration', function () {
                         beforeEach(function () {
 
                             $this->configuration = new AutowiringConfiguration(
-                                $this->parser->get(),
                                 $this->classes,
                                 $this->options
                             );
@@ -540,42 +568,64 @@ describe('AutowiringConfiguration', function () {
 
                                 expect($test)->toEqual([
                                     Test\SomeClass1::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass1::class, [
-                                            '$parameter1' => 'value11',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\SomeClass1::class,
+                                            new CompositeParameterParser(
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                     Test\SomeClass2::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass2::class, [
-                                            '$parameter1' => 'value11',
-                                            '$parameter2' => 'value22',
-                                            '$parameter3' => 'value23',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\SomeClass2::class,
+                                            new CompositeParameterParser(
+                                                $this->parser2->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                     Test\SomeClass3::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass3::class, [
-                                            '$parameter1' => 'value31',
-                                            '$parameter2' => 'value32',
-                                            '$parameter3' => 'value33',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\SomeClass3::class,
+                                            new CompositeParameterParser(
+                                                $this->parser3->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                     Test\Ns1\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(),Test\Ns1\SomeClass::class, [
-                                            '$parameter1' => 'value41',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\Ns1\SomeClass::class,
+                                            new CompositeParameterParser(
+                                                $this->parser4->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            ))
                                     ),
                                     Test\Ns2\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(),Test\Ns2\SomeClass::class, [
-                                            '$parameter1' => 'value41',
-                                            '$parameter2' => 'value52',
-                                            '$parameter3' => 'value53',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\Ns2\SomeClass::class,
+                                            new CompositeParameterParser(
+                                                $this->parser5->get(),
+                                                $this->parser4->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                     Test\Ns3\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(),Test\Ns3\SomeClass::class, [
-                                            '$parameter1' => 'value61',
-                                            '$parameter2' => 'value62',
-                                            '$parameter3' => 'value63',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\Ns3\SomeClass::class,
+                                            new CompositeParameterParser(
+                                                $this->parser6->get(),
+                                                $this->parser4->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                 ]);
 
@@ -614,7 +664,6 @@ describe('AutowiringConfiguration', function () {
                         beforeEach(function () {
 
                             $this->configuration = new AutowiringConfiguration(
-                                $this->parser->get(),
                                 new ArrayIterator($this->classes),
                                 $this->options
                             );
@@ -635,42 +684,64 @@ describe('AutowiringConfiguration', function () {
 
                                 expect($test)->toEqual([
                                     Test\SomeClass1::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass1::class, [
-                                            '$parameter1' => 'value11',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\SomeClass1::class,
+                                            new CompositeParameterParser(
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                     Test\SomeClass2::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass2::class, [
-                                            '$parameter1' => 'value11',
-                                            '$parameter2' => 'value22',
-                                            '$parameter3' => 'value23',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\SomeClass2::class,
+                                            new CompositeParameterParser(
+                                                $this->parser2->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                     Test\SomeClass3::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass3::class, [
-                                            '$parameter1' => 'value31',
-                                            '$parameter2' => 'value32',
-                                            '$parameter3' => 'value33',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\SomeClass3::class,
+                                            new CompositeParameterParser(
+                                                $this->parser3->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                     Test\Ns1\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(),Test\Ns1\SomeClass::class, [
-                                            '$parameter1' => 'value41',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\Ns1\SomeClass::class,
+                                            new CompositeParameterParser(
+                                                $this->parser4->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            ))
                                     ),
                                     Test\Ns2\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(),Test\Ns2\SomeClass::class, [
-                                            '$parameter1' => 'value41',
-                                            '$parameter2' => 'value52',
-                                            '$parameter3' => 'value53',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\Ns2\SomeClass::class,
+                                            new CompositeParameterParser(
+                                                $this->parser5->get(),
+                                                $this->parser4->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                     Test\Ns3\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(),Test\Ns3\SomeClass::class, [
-                                            '$parameter1' => 'value61',
-                                            '$parameter2' => 'value62',
-                                            '$parameter3' => 'value63',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\Ns3\SomeClass::class,
+                                            new CompositeParameterParser(
+                                                $this->parser6->get(),
+                                                $this->parser4->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                 ]);
 
@@ -709,7 +780,6 @@ describe('AutowiringConfiguration', function () {
                         beforeEach(function () {
 
                             $this->configuration = new AutowiringConfiguration(
-                                $this->parser->get(),
                                 new class ($this->classes) implements IteratorAggregate {
                                     private $classes;
                                     public function __construct($classes) {
@@ -738,42 +808,64 @@ describe('AutowiringConfiguration', function () {
 
                                 expect($test)->toEqual([
                                     Test\SomeClass1::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass1::class, [
-                                            '$parameter1' => 'value11',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\SomeClass1::class,
+                                            new CompositeParameterParser(
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                     Test\SomeClass2::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass2::class, [
-                                            '$parameter1' => 'value11',
-                                            '$parameter2' => 'value22',
-                                            '$parameter3' => 'value23',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\SomeClass2::class,
+                                            new CompositeParameterParser(
+                                                $this->parser2->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                     Test\SomeClass3::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(), Test\SomeClass3::class, [
-                                            '$parameter1' => 'value31',
-                                            '$parameter2' => 'value32',
-                                            '$parameter3' => 'value33',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\SomeClass3::class,
+                                            new CompositeParameterParser(
+                                                $this->parser3->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                     Test\Ns1\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(),Test\Ns1\SomeClass::class, [
-                                            '$parameter1' => 'value41',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\Ns1\SomeClass::class,
+                                            new CompositeParameterParser(
+                                                $this->parser4->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            ))
                                     ),
                                     Test\Ns2\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(),Test\Ns2\SomeClass::class, [
-                                            '$parameter1' => 'value41',
-                                            '$parameter2' => 'value52',
-                                            '$parameter3' => 'value53',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\Ns2\SomeClass::class,
+                                            new CompositeParameterParser(
+                                                $this->parser5->get(),
+                                                $this->parser4->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                     Test\Ns3\SomeClass::class => new DefinitionProxy(
-                                        new AutowiredInstance($this->parser->get(),Test\Ns3\SomeClass::class, [
-                                            '$parameter1' => 'value61',
-                                            '$parameter2' => 'value62',
-                                            '$parameter3' => 'value63',
-                                        ])
+                                        new AutowiredInstance(
+                                            Test\Ns3\SomeClass::class,
+                                            new CompositeParameterParser(
+                                                $this->parser6->get(),
+                                                $this->parser4->get(),
+                                                $this->parser1->get(),
+                                                new ParameterParser
+                                            )
+                                        )
                                     ),
                                 ]);
 
@@ -814,7 +906,7 @@ describe('AutowiringConfiguration', function () {
                     it('should throw an InvalidArgumentException', function () {
 
                         $test = function () {
-                            new AutowiringConfiguration($this->parser->get(), $this->classes, [
+                            new AutowiringConfiguration($this->classes, [
                                 Test\Ns1\SomeClass::class => [],
                                 Test\Ns2\SomeClass::class => 1,
                                 Test\Ns3\SomeClass::class => [],

@@ -19,38 +19,136 @@ describe('AutowiredInstance', function () {
 
     });
 
-    context('when there is no option array', function () {
+    context('when the string is not a class name', function () {
 
-        it('should use an empty option array', function () {
+        beforeEach(function () {
 
-            $test = new AutowiredInstance($this->parser->get(), Test\SomeClass::class);
+            $this->definition = new AutowiredInstance('value', $this->parser->get());
 
-            expect($test)->toEqual(new AutowiredInstance(
-                $this->parser->get(),
-                Test\SomeClass::class,
-                []
-            ));
+        });
+
+        it('should implement DefinitionInterface', function () {
+
+            expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
+
+        });
+
+        describe('->factory()', function () {
+
+            it('should return an instance with the string and no argument', function () {
+
+                $test = $this->definition->factory();
+
+                expect($test)->toEqual(new Instance('value'));
+
+            });
 
         });
 
     });
 
-    context('when there is an option array', function () {
+    context('when the string is an interface name', function () {
 
         beforeEach(function () {
 
-            $this->options = ['key1' => 'value1', 'key2' => 'value2', 'key3' => 'value3'];
+            $this->definition = new AutowiredInstance(
+                Test\TestInterface::class,
+                $this->parser->get()
+            );
 
         });
 
-        context('when the string is not a class name', function () {
+        it('should implement DefinitionInterface', function () {
+
+            expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
+
+        });
+
+        describe('->factory()', function () {
+
+            it('should return an instance with the interface name and no argument', function () {
+
+                $test = $this->definition->factory();
+
+                expect($test)->toEqual(new Instance(Test\TestInterface::class));
+
+            });
+
+        });
+
+    });
+
+    context('when the string is an abstract class name', function () {
+
+        beforeEach(function () {
+
+            $this->definition = new AutowiredInstance(
+                Test\TestAbstractClass::class,
+                $this->parser->get()
+            );
+
+        });
+
+        it('should implement DefinitionInterface', function () {
+
+            expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
+
+        });
+
+        describe('->factory()', function () {
+
+            it('should return an instance with the abstract class name and no argument', function () {
+
+                $test = $this->definition->factory();
+
+                expect($test)->toEqual(new Instance(Test\TestAbstractClass::class));
+
+            });
+
+        });
+
+    });
+
+    context('when the string is a trait name', function () {
+
+        beforeEach(function () {
+
+            $this->definition = new AutowiredInstance(
+                Test\TestTrait::class,
+                $this->parser->get()
+            );
+
+        });
+
+        it('should implement DefinitionInterface', function () {
+
+            expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
+
+        });
+
+        describe('->factory()', function () {
+
+            it('should return an instance with the trait name and no argument', function () {
+
+                $test = $this->definition->factory();
+
+                expect($test)->toEqual(new Instance(Test\TestTrait::class));
+
+            });
+
+        });
+
+    });
+
+    context('when the string is a class name', function () {
+
+        context('when the class has no constructor', function () {
 
             beforeEach(function () {
 
                 $this->definition = new AutowiredInstance(
-                    $this->parser->get(),
-                    'value',
-                    $this->options
+                    Test\TestClassWithNoConstructor::class,
+                    $this->parser->get()
                 );
 
             });
@@ -63,11 +161,11 @@ describe('AutowiredInstance', function () {
 
             describe('->factory()', function () {
 
-                it('should return an instance with the string and no argument', function () {
+                it('should return an instance with the class name and no argument', function () {
 
                     $test = $this->definition->factory();
 
-                    expect($test)->toEqual(new Instance('value'));
+                    expect($test)->toEqual(new Instance(Test\TestClassWithNoConstructor::class));
 
                 });
 
@@ -75,112 +173,15 @@ describe('AutowiredInstance', function () {
 
         });
 
-        context('when the string is an interface name', function () {
+        context('when the class has a constructor', function () {
 
-            beforeEach(function () {
-
-                $this->definition = new AutowiredInstance(
-                    $this->parser->get(),
-                    Test\TestInterface::class,
-                    $this->options
-                );
-
-            });
-
-            it('should implement DefinitionInterface', function () {
-
-                expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
-
-            });
-
-            describe('->factory()', function () {
-
-                it('should return an instance with the interface name and no argument', function () {
-
-                    $test = $this->definition->factory();
-
-                    expect($test)->toEqual(new Instance(Test\TestInterface::class));
-
-                });
-
-            });
-
-        });
-
-        context('when the string is an abstract class name', function () {
-
-            beforeEach(function () {
-
-                $this->definition = new AutowiredInstance(
-                    $this->parser->get(),
-                    Test\TestAbstractClass::class,
-                    $this->options
-                );
-
-            });
-
-            it('should implement DefinitionInterface', function () {
-
-                expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
-
-            });
-
-            describe('->factory()', function () {
-
-                it('should return an instance with the abstract class name and no argument', function () {
-
-                    $test = $this->definition->factory();
-
-                    expect($test)->toEqual(new Instance(Test\TestAbstractClass::class));
-
-                });
-
-            });
-
-        });
-
-        context('when the string is a trait name', function () {
-
-            beforeEach(function () {
-
-                $this->definition = new AutowiredInstance(
-                    $this->parser->get(),
-                    Test\TestTrait::class,
-                    $this->options
-                );
-
-            });
-
-            it('should implement DefinitionInterface', function () {
-
-                expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
-
-            });
-
-            describe('->factory()', function () {
-
-                it('should return an instance with the trait name and no argument', function () {
-
-                    $test = $this->definition->factory();
-
-                    expect($test)->toEqual(new Instance(Test\TestTrait::class));
-
-                });
-
-            });
-
-        });
-
-        context('when the string is a class name', function () {
-
-            context('when the class has no constructor', function () {
+            context('when the constructor has no parameter', function () {
 
                 beforeEach(function () {
 
                     $this->definition = new AutowiredInstance(
-                        $this->parser->get(),
-                        Test\TestClassWithNoConstructor::class,
-                        $this->options
+                        Test\TestClassWithNoParameter::class,
+                        $this->parser->get()
                     );
 
                 });
@@ -197,7 +198,7 @@ describe('AutowiredInstance', function () {
 
                         $test = $this->definition->factory();
 
-                        expect($test)->toEqual(new Instance(Test\TestClassWithNoConstructor::class));
+                        expect($test)->toEqual(new Instance(Test\TestClassWithNoParameter::class));
 
                     });
 
@@ -205,168 +206,136 @@ describe('AutowiredInstance', function () {
 
             });
 
-            context('when the class has a constructor', function () {
+            context('when the constructor has parameters', function () {
 
-                context('when the constructor has no parameter', function () {
+                beforeEach(function () {
 
-                    beforeEach(function () {
-
-                        $this->definition = new AutowiredInstance(
-                            $this->parser->get(),
-                            Test\TestClassWithNoParameter::class,
-                            $this->options
-                        );
-
-                    });
-
-                    it('should implement DefinitionInterface', function () {
-
-                        expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
-
-                    });
-
-                    describe('->factory()', function () {
-
-                        it('should return an instance with the class name and no argument', function () {
-
-                            $test = $this->definition->factory();
-
-                            expect($test)->toEqual(new Instance(Test\TestClassWithNoParameter::class));
-
-                        });
-
-                    });
+                    $this->definition = new AutowiredInstance(
+                        Test\TestClassWithParameters::class,
+                        $this->parser->get()
+                    );
 
                 });
 
-                context('when the constructor has parameters', function () {
+                it('should implement DefinitionInterface', function () {
+
+                    expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
+
+                });
+
+                describe('->factory()', function () {
 
                     beforeEach(function () {
 
-                        $this->definition = new AutowiredInstance(
-                            $this->parser->get(),
-                            Test\TestClassWithParameters::class,
-                            $this->options
-                        );
+                        $reflection = new ReflectionClass(Test\TestClassWithParameters::class);
+
+                        $this->parameters = $reflection->getConstructor()->getParameters();
+
+                        $this->factory1 = mock(FactoryInterface::class);
+                        $this->factory2 = mock(FactoryInterface::class);
+                        $this->factory3 = mock(FactoryInterface::class);
+
+                        $this->parsed1 = mock(ParsedFactoryInterface::class);
+                        $this->parsed2 = mock(ParsedFactoryInterface::class);
+                        $this->parsed3 = mock(ParsedFactoryInterface::class);
+                        $this->parsed4 = mock(ParsedFactoryInterface::class);
+
+                        $this->parser->__invoke
+                            ->with($this->parameters[0])
+                            ->returns($this->parsed1);
+
+                        $this->parser->__invoke
+                            ->with($this->parameters[1])
+                            ->returns($this->parsed2);
+
+                        $this->parser->__invoke
+                            ->with($this->parameters[2])
+                            ->returns($this->parsed3);
+
+                        $this->parser->__invoke
+                            ->with($this->parameters[3])
+                            ->returns($this->parsed4);
+
+                        $this->parsed1->factory->returns($this->factory1);
+                        $this->parsed2->factory->returns($this->factory2);
+                        $this->parsed3->factory->returns($this->factory3);
 
                     });
 
-                    it('should implement DefinitionInterface', function () {
+                    context('when all the constructor parameters are successfully parsed as factories', function () {
 
-                        expect($this->definition)->toBeAnInstanceOf(DefinitionInterface::class);
+                        it('should return an instance with the class name and the parsed factories', function () {
+
+                            $this->parsed1->isParsed->returns(true);
+                            $this->parsed2->isParsed->returns(true);
+                            $this->parsed3->isParsed->returns(true);
+                            $this->parsed4->isParsed->returns(false);
+
+                            $test = $this->definition->factory();
+
+                            expect($test)->toEqual(new Instance(Test\TestClassWithParameters::class, ...[
+                                $this->factory1->get(),
+                                $this->factory2->get(),
+                                $this->factory3->get(),
+                            ]));
+
+                        });
 
                     });
 
-                    describe('->factory()', function () {
+                    context('when one constructor parameter is not successfully parsed as a factory', function () {
 
-                        beforeEach(function () {
+                        it('should throw a LogicException containing the parameter string representation', function () {
 
-                            $reflection = new ReflectionClass(Test\TestClassWithParameters::class);
+                            $this->parsed1->isParsed->returns(true);
+                            $this->parsed2->isParsed->returns(false);
+                            $this->parsed3->isParsed->returns(true);
+                            $this->parsed4->isParsed->returns(false);
 
-                            $this->parameters = $reflection->getConstructor()->getParameters();
+                            $test = '';
 
-                            $this->factory1 = mock(FactoryInterface::class);
-                            $this->factory2 = mock(FactoryInterface::class);
-                            $this->factory3 = mock(FactoryInterface::class);
+                            try {
+                                $this->definition->factory();
+                            }
 
-                            $this->parsed1 = mock(ParsedFactoryInterface::class);
-                            $this->parsed2 = mock(ParsedFactoryInterface::class);
-                            $this->parsed3 = mock(ParsedFactoryInterface::class);
+                            catch (LogicException $e) {
+                                $test = $e->getMessage();
+                            }
 
-                            $this->parser->__invoke
-                                ->with($this->parameters[0], $this->options)
-                                ->returns($this->parsed1);
-
-                            $this->parser->__invoke
-                                ->with($this->parameters[1], $this->options)
-                                ->returns($this->parsed2);
-
-                            $this->parser->__invoke
-                                ->with($this->parameters[2], $this->options)
-                                ->returns($this->parsed3);
-
-                            $this->parsed1->factory->returns($this->factory1);
-                            $this->parsed2->factory->returns($this->factory2);
-                            $this->parsed3->factory->returns($this->factory3);
+                            expect($test)->not->toContain((string) $this->parameters[0]);
+                            expect($test)->toContain((string) $this->parameters[1]);
+                            expect($test)->not->toContain((string) $this->parameters[2]);
 
                         });
 
-                        context('when all the constructor parameters are successfully parsed as factories', function () {
+                    });
 
-                            it('should return an instance with the class name and the parsed factories', function () {
+                    context('when more than one constructor parameter is not successfully parsed as a factory', function () {
 
-                                $this->parsed1->isParsed->returns(true);
-                                $this->parsed2->isParsed->returns(true);
-                                $this->parsed3->isParsed->returns(true);
+                        it('should throw a LogicException containing the parameters string representation', function () {
 
-                                $test = $this->definition->factory();
+                            $this->parsed1->isParsed->returns(false);
+                            $this->parsed2->isParsed->returns(false);
+                            $this->parsed3->isParsed->returns(false);
+                            $this->parsed4->isParsed->returns(false);
 
-                                expect($test)->toEqual(new Instance(Test\TestClassWithParameters::class, ...[
-                                    $this->factory1->get(),
-                                    $this->factory2->get(),
-                                    $this->factory3->get(),
-                                ]));
+                            $test = '';
 
-                                // ensure variadic parameters are not parsed.
-                                $this->parser->__invoke->never()->calledWith($this->parameters[3]);
+                            try {
+                                $this->definition->factory();
+                            }
 
-                            });
+                            catch (LogicException $e) {
+                                $test = $e->getMessage();
+                            }
 
-                        });
-
-                        context('when one constructor parameter is not successfully parsed as a factory', function () {
-
-                            it('should throw a LogicException containing the parameter string representation', function () {
-
-                                $this->parsed1->isParsed->returns(true);
-                                $this->parsed2->isParsed->returns(false);
-                                $this->parsed3->isParsed->returns(true);
-
-                                $test = '';
-
-                                try {
-                                    $this->definition->factory();
-                                }
-
-                                catch (LogicException $e) {
-                                    $test = $e->getMessage();
-                                }
-
-                                expect($test)->not->toContain((string) $this->parameters[0]);
-                                expect($test)->toContain((string) $this->parameters[1]);
-                                expect($test)->not->toContain((string) $this->parameters[2]);
-
-                            });
-
-                        });
-
-                        context('when more than one constructor parameter is not successfully parsed as a factory', function () {
-
-                            it('should throw a LogicException containing the parameters string representation', function () {
-
-                                $this->parsed1->isParsed->returns(false);
-                                $this->parsed2->isParsed->returns(false);
-                                $this->parsed3->isParsed->returns(false);
-
-                                $test = '';
-
-                                try {
-                                    $this->definition->factory();
-                                }
-
-                                catch (LogicException $e) {
-                                    $test = $e->getMessage();
-                                }
-
-                                expect($test)->toContain(implode('', [
-                                    (string) $this->parameters[0],
-                                    ', ',
-                                    (string) $this->parameters[1],
-                                    ' and ',
-                                    (string) $this->parameters[2],
-                                ]));
-
-                            });
+                            expect($test)->toContain(implode('', [
+                                (string) $this->parameters[0],
+                                ', ',
+                                (string) $this->parameters[1],
+                                ' and ',
+                                (string) $this->parameters[2],
+                            ]));
 
                         });
 

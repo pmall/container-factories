@@ -10,13 +10,6 @@ use Quanta\Container\Parsing\ParameterParserInterface;
 final class AutowiredInstance implements DefinitionInterface
 {
     /**
-     * The parser used to parse constructor parameter reflections as factories.
-     *
-     * @var \Quanta\Container\Parsing\ParameterParserInterface
-     */
-    private $parser;
-
-    /**
      * The name of the class to instantiate.
      *
      * @var string
@@ -24,24 +17,22 @@ final class AutowiredInstance implements DefinitionInterface
     private $class;
 
     /**
-     * The autowiring options.
+     * The parser used to parse constructor parameter reflections as factories.
      *
-     * @var array
+     * @var \Quanta\Container\Parsing\ParameterParserInterface
      */
-    private $options;
+    private $parser;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Parsing\ParameterParserInterface    $parser
      * @param string                                                $class
-     * @param array                                                 $options
+     * @param \Quanta\Container\Parsing\ParameterParserInterface    $parser
      */
-    public function __construct(ParameterParserInterface $parser, string $class, array $options = [])
+    public function __construct(string $class, ParameterParserInterface $parser)
     {
-        $this->parser = $parser;
         $this->class = $class;
-        $this->options = $options;
+        $this->parser = $parser;
     }
 
     /**
@@ -53,7 +44,7 @@ final class AutowiredInstance implements DefinitionInterface
         $unbound = [];
 
         foreach ($this->parameters() as $parameter) {
-            $result = ($this->parser)($parameter, $this->options);
+            $result = ($this->parser)($parameter);
 
             if ($result->isParsed()) {
                 $factories[] = $result->factory();

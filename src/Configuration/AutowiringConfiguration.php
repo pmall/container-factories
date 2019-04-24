@@ -4,17 +4,12 @@ namespace Quanta\Container\Configuration;
 
 use Quanta\Container\DefinitionProxy;
 use Quanta\Container\AutowiredInstance;
+use Quanta\Container\Parsing\ParameterParser;
 use Quanta\Container\Parsing\ParameterParserInterface;
+use Quanta\Container\Parsing\CompositeParameterParser;
 
 final class AutowiringConfiguration implements ConfigurationInterface
 {
-    /**
-     * The parser used to produce factories from reflection parameters.
-     *
-     * @var \Quanta\Container\Parsing\ParameterParserInterface
-     */
-    private $parser;
-
     /**
      * The collection of class name to autowire.
      *
@@ -23,31 +18,29 @@ final class AutowiringConfiguration implements ConfigurationInterface
     private $classes;
 
     /**
-     * The associative array of pattern to autowiring options.
+     * The associative array of pattern to parameter parser.
      *
-     * @var array[]
+     * @var \Quanta\Container\Parsing\ParameterParserInterface[]
      */
     private $options;
 
     /**
      * Constructor.
      *
-     * @param \Quanta\Container\Parsing\ParameterParserInterface    $parser
      * @param iterable                                              $classes
-     * @param array[]                                               $options
+     * @param \Quanta\Container\Parsing\ParameterParserInterface[]  $options
      * @throws \InvalidArgumentException
      */
-    public function __construct(ParameterParserInterface $parser, iterable $classes, array $options = [])
+    public function __construct(iterable $classes, array $options = [])
     {
-        $result = \Quanta\ArrayTypeCheck::result($options, 'array');
+        $result = \Quanta\ArrayTypeCheck::result($options, ParameterParserInterface::class);
 
         if (! $result->isValid()) {
             throw new \InvalidArgumentException(
-                $result->message()->constructor($this, 3)
+                $result->message()->constructor($this, 2)
             );
         }
 
-        $this->parser = $parser;
         $this->classes = $classes;
         $this->options = $options;
     }
@@ -61,7 +54,7 @@ final class AutowiringConfiguration implements ConfigurationInterface
 
         foreach ($this->classes as $class) {
             if (is_string($class)) {
-                $map[$class] = [];
+                $map[$class] = [new ParameterParser];
             }
         }
 
@@ -71,19 +64,26 @@ final class AutowiringConfiguration implements ConfigurationInterface
             return strlen((string) $a) - strlen((string) $b);
         });
 
-        foreach ($this->options as $pattern => $options) {
+        foreach ($this->options as $pattern => $parser) {
             $pattern = '/' . str_replace('\\*', '.+?', preg_quote($pattern)) . '/';
 
             foreach (preg_grep($pattern, $classes) as $matched) {
-                $map[$matched] = $options + $map[$matched];
+                array_unshift($map[$matched], $parser);
             }
         }
 
-        return (array) array_combine($classes, array_map(function ($class, $options) {
-            return new DefinitionProxy(
-                new AutowiredInstance($this->parser, $class, $options)
+        $factories = [];
+
+        foreach ($map as $class => $parsers) {
+            $factories[$class] = new DefinitionProxy(
+                new AutowiredInstance($class, count($parsers) > 1
+                    ? new CompositeParameterParser(...$parsers)
+                    : $parsers[0]
+                )
             );
-        }, $classes, $map));
+        }
+
+        return $factories;
     }
 
     /**
